@@ -1,3 +1,5 @@
+package chat;
+
 class chatObject
 {
     private User sourceUser;

@@ -1,3 +1,5 @@
+package chat;
+
 class chatManager
 {
     public chatManager()

@@ -1,3 +1,5 @@
+package chat;
+
 class User implements Serializable
 {
     private String username;
