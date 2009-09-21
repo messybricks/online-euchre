@@ -1,5 +1,7 @@
 package chat;
 
+import java.io.Serializable;
+
 class User implements Serializable
 {
     private String username;
@@ -9,7 +11,7 @@ class User implements Serializable
         username = user;
     }
 
-    public String getUsername
+    public String getUsername()
     {
         return username;
     }
