@@ -21,6 +21,7 @@ public class IMApplet extends JApplet implements ActionListener{
 	private JLabel userWindow;
 	private JTextField inputText;
 	private JButton submit;
+	private chatManager manager;
 
 	/**
 	 * Initializes the chat window interface
@@ -94,6 +95,8 @@ public class IMApplet extends JApplet implements ActionListener{
 	 */
 	public void submitMessage(String text) {
 		messageWindow.append(text + "\n");
+		chatObject obj = new chatObject(new User(username), new User("destination"), text);
+		manager.send(obj);
 	}
 
 }
