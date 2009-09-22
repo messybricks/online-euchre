@@ -15,5 +15,10 @@ class User implements Serializable
     {
         return username;
     }
+    
+    public String toString()
+    {
+    	return username;
+    }
 
 }
