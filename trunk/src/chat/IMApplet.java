@@ -18,7 +18,7 @@ public class IMApplet extends JApplet implements ActionListener{
 	private String username = "Your Username";
 	
 	private JTextArea messageWindow;
-	private JLabel userWindow;
+	private JTextArea userWindow;
 	private JTextField inputText;
 	private JButton submit;
 	private chatManager manager;
@@ -29,13 +29,14 @@ public class IMApplet extends JApplet implements ActionListener{
 	public void init() {
 		//initialize fields for applet.
 		messageWindow = new JTextArea(10,10);
-		userWindow = new JLabel();         
+		userWindow = new JTextArea(10,10);         
 		inputText = new JTextField(10);
 		submit = new JButton("Submit");
 		
-		//set up the text areas
-		userWindow.setVerticalAlignment(JLabel.TOP);					
-		userWindow.setText("Users currently in chat:");						//cannot get new lines!!!!
+		//set up the text areas				
+		userWindow.setText("Users currently in chat: \n" + username );
+		userWindow.setEditable(false);
+		userWindow.setBackground(Color.LIGHT_GRAY);
 		messageWindow.setBorder(BorderFactory.createEtchedBorder());
 		userWindow.setBorder(BorderFactory.createEtchedBorder());
 		
