@@ -40,4 +40,14 @@ class ChatObject
     {
         return destUser;
     }
+    
+    /**
+     * Get the text of the message
+     * 
+     * @return the message
+     */
+    public String getMessage()
+    {
+    	return message;
+    }
 }
