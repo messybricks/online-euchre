@@ -6,9 +6,9 @@ import java.awt.event.*;
 
 
 /**
- * IMApplet is a JApplet that implements a basic chat window interface. * 
+ * IMApplet is a JApplet that implements a basic chat window interface. 
  * 
- * @author Ryan Hurtubise and Mike Mesenbring *
+ * @author Ryan Hurtubise and Mike Mesenbring
  */
 
 public class IMApplet extends JApplet implements ActionListener{
