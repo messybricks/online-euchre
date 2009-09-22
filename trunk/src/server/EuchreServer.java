@@ -29,7 +29,8 @@ public class EuchreServer
 			// the ip address '0.0.0.0' refers to a universal bind point. any address will be able to connect to it.
 			// the 4 refers to the socket backlog, which is how many connections it will allow at any given time
 			serverSocket = new ServerSocket(port, 4, Inet4Address.getByAddress(new byte[] { 0, 0, 0, 0 }));
-		} catch (IOException e)
+		}
+		catch (IOException e)
 		{
 			Trace.dprint("Could not listen on port: %d", port);
 			Trace.dprint("Exception message: %s", e.getMessage());
@@ -40,11 +41,11 @@ public class EuchreServer
 		{
 			// close the socket
 			serverSocket.close();
-		} catch (IOException e)
+		}
+		catch (IOException e)
 		{
 			Trace.dprint("Could not close socket. Message: %s", e.getMessage());
 		}
-
 	}
 
 }
