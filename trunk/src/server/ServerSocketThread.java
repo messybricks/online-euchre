@@ -5,7 +5,7 @@ import java.net.*;
 import java.util.*;
 import java.util.Map.Entry;
 
-import utility.Trace;
+import utility.*;
 
 /**
  * Represents a thread in which a socket will block while waiting for incoming connections.
@@ -17,7 +17,14 @@ public class ServerSocketThread extends Thread
 	
 	private volatile boolean exitThread = false;
 	
+	// block server socket thread this many milliseconds waiting to accept a connection
 	private static final int SOCKET_TIMEOUT = 200;
+	// ping clients every this many milliseconds to ensure connection validity
+	private static final int PING_FREQUENCY = 10000;
+	// client times out and is disconnected if a pong takes this many milliseconds
+	private static final int PING_TIMEOUT = 3000;
+	// wait this many milliseconds to kill a client thread peacefully
+	private static final int THREAD_KILL_TIMEOUT = 600;
 
 	/**
 	 * Creates a new instance of the ServerSocketThread class.
@@ -49,6 +56,55 @@ public class ServerSocketThread extends Thread
 		{
 			try
 			{
+				// run game logic
+				for(Entry<String, PacketQueueThread> entry : clientMapping.entrySet())
+				{
+					if(entry.getValue().hasInbound())
+					{
+						Packet inbound = entry.getValue().receive();
+
+						if(inbound.getOpcode() == Opcode.Pong)
+						{
+							Trace.dprint("Received pong packet from client id '%s'", entry.getKey());
+							entry.getValue().setPong();
+						}
+					}
+				}
+				
+				// manage connections
+				long time = System.currentTimeMillis();
+				Set<String> invalidated = new HashSet<String>();
+				
+				for(Entry<String, PacketQueueThread> entry : clientMapping.entrySet())
+				{
+					if(time - entry.getValue().getLastPing() > PING_FREQUENCY)
+					{
+						Trace.dprint("Sending ping request to client id '%s'", entry.getKey());
+						entry.getValue().ping();
+					}
+					
+					if(entry.getValue().getLastPong() < entry.getValue().getLastPing() && time - entry.getValue().getLastPing() > PING_TIMEOUT)
+					{
+						Trace.dprint("Client id '%s' has timed out.", entry.getKey());
+						invalidated.add(entry.getKey());
+					}
+				}
+				
+				// remove invalidated connections
+				for(String key : invalidated)
+				{
+					clientMapping.get(key).stopThread();
+					try
+					{
+						clientMapping.get(key).join(THREAD_KILL_TIMEOUT);
+					}
+					catch (InterruptedException ex)
+					{
+						Trace.dprint("ServerSocketThread was interrupted while joining client thread! Message: %s", ex.getMessage());
+					}
+					clientMapping.remove(key);
+				}
+				
 				// if socket.accept() does not return null, we have an incoming connection and must spawn a thread to manage it
 				Socket accepted = socket.accept();
 				if(accepted != null)

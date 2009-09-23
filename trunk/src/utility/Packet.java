@@ -35,6 +35,24 @@ public class Packet
 	}
 	
 	/**
+	 * Returns this packet's opcode.
+	 * @return this packet's opcode
+	 */
+	public Opcode getOpcode()
+	{
+		return opcode;
+	}
+	
+	/**
+	 * Returns this packet's datum.
+	 * @return this packet's datum
+	 */
+	public Serializable getData()
+	{
+		return data;
+	}
+	
+	/**
 	 * Recreates a packet from a byte array created using the Packet.flatten() method.
 	 * @param array A byte array created using the Packet.flatten() method
 	 * @throws InvalidPacketException if the given array does not represent a valid flattened Packet object
