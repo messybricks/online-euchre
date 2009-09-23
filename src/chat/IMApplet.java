@@ -11,7 +11,7 @@ import java.awt.event.*;
  * @author Ryan Hurtubise and Mike Mesenbring
  */
 
-public class IMApplet extends JApplet implements ActionListener{
+public class IMApplet extends JApplet implements ActionListener, KeyListener{
 
 	private static final long serialVersionUID = 1L;
 
@@ -77,6 +77,7 @@ public class IMApplet extends JApplet implements ActionListener{
 		//Attach a listener to the button.
 		submit.addActionListener(this);
 		inputText.addActionListener(this);
+		inputText.addKeyListener(this);
 
 		//initialize the ChatManager object.
 		manager = new ChatManager();
@@ -87,8 +88,19 @@ public class IMApplet extends JApplet implements ActionListener{
 	 * or the enter key is pressed.
 	 */
 	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() == submit)
+		{
+			onSubmit();
+			
+		}
+			
+	}
+
+
+	private void onSubmit() {
 		//if the message is not empty
-		if (inputText.getText() != "") {
+		if (inputText.getText() != "") 
+		{
 			//if the user has not signed in, then create a new user.
 			if(currentUser == null) {
 				//Create the new user.
@@ -107,8 +119,8 @@ public class IMApplet extends JApplet implements ActionListener{
 				inputText.requestFocus();
 			}
 		}
+		
 	}
-
 
 	/**
 	 * Adds a message to the chat window, followed by a newline character.
@@ -132,6 +144,27 @@ public class IMApplet extends JApplet implements ActionListener{
 	 */
 	public void receiveMessage(ChatObject message) {
 		messageWindow.append(message.getSource() + ": " + message.getMessage() + "\n");
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		if(e.getKeyChar() == '\n')
+		{
+			onSubmit();
+		}
+		
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
