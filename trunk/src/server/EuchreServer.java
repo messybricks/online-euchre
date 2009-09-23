@@ -6,19 +6,21 @@ import utility.*;
 
 public class EuchreServer
 {
+	private static final int DEFAULT_PORT = 36212;
 
 	/**
+	 * Server application entry point.
 	 * @param args argument 1 is a port number to listen on. it is optional; port 36212 will be used if it is omitted.
 	 */
 	public static void main(String[] args)
 	{
 		// the default listen port is 36212
-		int port = 36212;
+		int port = DEFAULT_PORT;
 		ServerSocket serverSocket = null;
 
-		// the first argument is the port (the zeroith is the program name)
-		if (args.length >= 2)
-			port = Integer.parseInt(args[1]);
+		// the zeroth argument is the port
+		if (args.length > 0)
+			port = Integer.parseInt(args[0]);
 
 		// make sure the port is valid
 		if (port < 100 || port > 65534)
