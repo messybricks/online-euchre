@@ -114,7 +114,7 @@ if(e.getSource() == submit)
 				inputText.select(0, inputText.getText().length());
 			}
 			else {
-				sendMessage(currentUser + ": " + inputText.getText());
+				sendMessage(inputText.getText(), currentUser);
 				//clear the text.
 				inputText.setText("");
 				//set focus back to the text back for easy message passing.
@@ -129,9 +129,9 @@ if(e.getSource() == submit)
 	 * 
 	 * @param text the message to be added to the window
 	 */
-	public void sendMessage(String text) {
+	public void sendMessage(String text, User user) {
 		//add message to current users window.
-		messageWindow.append(text + "\n");
+		messageWindow.append(user.getUsername() + ": " + text + "\n");
 		//send out message to other users.
 		//WILL NEED TO MODIFY LATER FOR MULTIUSERS.
 		//TODO
