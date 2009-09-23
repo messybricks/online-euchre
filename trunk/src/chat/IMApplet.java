@@ -1,8 +1,12 @@
 package chat;
 
 import javax.swing.*;
+
+import utility.Trace;
+
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Vector;
 
 
 /**
@@ -21,7 +25,6 @@ public class IMApplet extends JApplet implements ActionListener, KeyListener{
 	private JTextArea userWindow;
 	private JTextField inputText;
 	private JButton submit;
-	private ChatManager manager;
 
 	/**
 	 * Initializes the chat window interface
@@ -37,11 +40,9 @@ public class IMApplet extends JApplet implements ActionListener, KeyListener{
 		messageWindow.setText("Welcome to Online Euchre. \nPlease submit your username below.\n");
 		userWindow.setText("Users currently in chat:\n");
 		userWindow.setBackground(Color.LIGHT_GRAY);
-
 		//set up borders
 		messageWindow.setBorder(BorderFactory.createEtchedBorder());
 		userWindow.setBorder(BorderFactory.createEtchedBorder());
-
 		//make both text areas not editable.
 		messageWindow.setEditable(false);
 		userWindow.setEditable(false);
@@ -80,7 +81,7 @@ public class IMApplet extends JApplet implements ActionListener, KeyListener{
 		inputText.addKeyListener(this);
 
 		//initialize the ChatManager object.
-		manager = new ChatManager();
+		//manager = new ChatManager();
 	}
 
 	/**
@@ -88,19 +89,19 @@ public class IMApplet extends JApplet implements ActionListener, KeyListener{
 	 * or the enter key is pressed.
 	 */
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() == submit)
+
+if(e.getSource() == submit)
 		{
 			onSubmit();
 			
 		}
-			
+
 	}
 
-
-	private void onSubmit() {
+	private void onSubmit(){
+		String text = inputText.getText().trim();		
 		//if the message is not empty
-		if (inputText.getText() != "") 
-		{
+		if (!text.equals("")) {
 			//if the user has not signed in, then create a new user.
 			if(currentUser == null) {
 				//Create the new user.
@@ -108,6 +109,7 @@ public class IMApplet extends JApplet implements ActionListener, KeyListener{
 				//Update the user window.
 				userWindow.append(currentUser.getUsername());
 				//Set up the message text field.
+				//TODO Might need to remove if all screens only share one text area, rather then sharing the data in the area.
 				inputText.setText("Enter your messages here.");
 				inputText.select(0, inputText.getText().length());
 			}
@@ -118,9 +120,9 @@ public class IMApplet extends JApplet implements ActionListener, KeyListener{
 				//set focus back to the text back for easy message passing.
 				inputText.requestFocus();
 			}
-		}
-		
+		}	
 	}
+
 
 	/**
 	 * Adds a message to the chat window, followed by a newline character.
@@ -134,7 +136,9 @@ public class IMApplet extends JApplet implements ActionListener, KeyListener{
 		//WILL NEED TO MODIFY LATER FOR MULTIUSERS.
 		//TODO
 		ChatObject obj = new ChatObject(currentUser, new User("destination"), text);
-		manager.send(obj);
+		
+		//Have client send obj to chatmanager
+		//client.send(obj);
 	}
 
 	/**
@@ -144,6 +148,20 @@ public class IMApplet extends JApplet implements ActionListener, KeyListener{
 	 */
 	public void receiveMessage(ChatObject message) {
 		messageWindow.append(message.getSource() + ": " + message.getMessage() + "\n");
+	}
+	
+	/**
+	 * updates the user window with the users in the given vector of users
+	 * 
+	 * @param users the vector containing the users to be added
+	 */
+	public void setUserWindow(Vector<User> users) {
+		//reset the user window
+		userWindow.setText("Users currently in chat:\n");
+		//add each user to the user window.
+		for(User user : users) {
+			userWindow.append(user.getUsername());
+		}
 	}
 
 	@Override
@@ -166,5 +184,4 @@ public class IMApplet extends JApplet implements ActionListener, KeyListener{
 		// TODO Auto-generated method stub
 		
 	}
-
 }
