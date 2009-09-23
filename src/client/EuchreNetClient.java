@@ -2,8 +2,7 @@ package client;
 
 import java.net.*;
 import java.io.*;
-
-import utility.Trace;
+import utility.*;
 
 /**
  * Establishes a connection with the Euchre server.
@@ -12,6 +11,7 @@ public class EuchreNetClient
 {
 	private Socket socket = null;
 	private boolean valid = false;
+	private NetClientThread thread = null;
 	
 	/**
 	 * Creates a new instance of the EuchreNetClient by initializing a socket with the given address and port.
@@ -23,6 +23,7 @@ public class EuchreNetClient
 		try
 		{
 			socket = new Socket(address, port);
+			thread = new NetClientThread(socket);
 			valid = true;
 		}
 		catch (IOException ex)

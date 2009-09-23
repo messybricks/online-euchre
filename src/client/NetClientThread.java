@@ -1,4 +1,4 @@
-package server;
+package client;
 
 import java.io.*;
 import java.net.*;
@@ -8,9 +8,9 @@ import utility.*;
 /**
  * This thread manages two queues; one for sending data over the network and one for receiving it.
  */
-public class PacketQueueThread extends NetworkThread
+public class NetClientThread extends NetworkThread
 {
-	public PacketQueueThread(Socket client)
+	public NetClientThread(Socket client)
 	{
 		super(client);
 	}
