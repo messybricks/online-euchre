@@ -14,7 +14,6 @@ import java.util.Vector;
  * 
  * @author Ryan Hurtubise and Mike Mesenbring
  */
-
 public class IMApplet extends JApplet implements ActionListener, KeyListener{
 
 	private static final long serialVersionUID = 1L;
@@ -48,7 +47,7 @@ public class IMApplet extends JApplet implements ActionListener, KeyListener{
 		userWindow.setEditable(false);
 		messageWindow.setLineWrap(true);
 
-		//initialize size of the applet <REMOVE LATER>
+		//TODO: initialize size of the applet <REMOVE LATER>
 		setSize(500, 500);
 
 		//set the layout manager to BorderLayout
@@ -60,7 +59,6 @@ public class IMApplet extends JApplet implements ActionListener, KeyListener{
 		JPanel userArea = new JPanel (new GridLayout(1,1));
 		JPanel inputArea = new JPanel ();
 		JScrollPane messageScroll = new JScrollPane(messageWindow);
-
 		inputArea.setLayout(new BoxLayout (inputArea,BoxLayout.LINE_AXIS));
 
 		//add the fields to the panels
@@ -80,24 +78,11 @@ public class IMApplet extends JApplet implements ActionListener, KeyListener{
 		inputText.addActionListener(this);
 		inputText.addKeyListener(this);
 
-		//initialize the ChatManager object.
-		//manager = new ChatManager();
 	}
 
 	/**
-	 * Submits the input text to the chat window when the submit button is pressed 
-	 * or the enter key is pressed.
+	 * sets the user name or calls the sendMessage function to send a message, using the input text
 	 */
-	public void actionPerformed(ActionEvent e) {
-
-if(e.getSource() == submit)
-		{
-			onSubmit();
-			
-		}
-
-	}
-
 	private void onSubmit(){
 		String text = inputText.getText().trim();		
 		//if the message is not empty
@@ -136,7 +121,7 @@ if(e.getSource() == submit)
 		//WILL NEED TO MODIFY LATER FOR MULTIUSERS.
 		//TODO
 		ChatObject obj = new ChatObject(currentUser, new User("destination"), text);
-		
+
 		//Have client send obj to chatmanager
 		//client.send(obj);
 	}
@@ -149,7 +134,7 @@ if(e.getSource() == submit)
 	public void receiveMessage(ChatObject message) {
 		messageWindow.append(message.getSource() + ": " + message.getMessage() + "\n");
 	}
-	
+
 	/**
 	 * updates the user window with the users in the given vector of users
 	 * 
@@ -164,24 +149,37 @@ if(e.getSource() == submit)
 		}
 	}
 
-	@Override
-	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
+	/**
+	 * calls the onSubmit method when the submit button is pressed (submits input text) 
+	 */
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() == submit)
+		{
+			onSubmit();
+		}
 	}
 
+	/**
+	 * calls the onSubmit method when the enter key is released (submits input text) 
+	 */
 	@Override
 	public void keyReleased(KeyEvent e) {
 		if(e.getKeyChar() == '\n')
 		{
 			onSubmit();
 		}
-		
+
 	}
 
+	/**
+	 * not implemented
+	 */
 	@Override
-	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void keyPressed(KeyEvent e) {}
+	
+	/**
+	 * not implemented
+	 */
+	@Override
+	public void keyTyped(KeyEvent e) {}
 }
