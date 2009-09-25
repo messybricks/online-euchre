@@ -17,10 +17,10 @@ public class ServerSocketThread extends Thread
 	
 	private volatile boolean exitThread = false;
 	
-	// block server socket thread this many milliseconds waiting to accept a connection
+	// block server socket thread this many milliseconds waiting to accept a connection. acts as a thread tick timer
 	private static final int SOCKET_TIMEOUT = 200;
 	// ping clients every this many milliseconds to ensure connection validity
-	private static final int PING_FREQUENCY = 10000;
+	private static final int PING_FREQUENCY = 15000;
 	// client times out and is disconnected if a pong takes this many milliseconds
 	private static final int PING_TIMEOUT = 3000;
 	// wait this many milliseconds to kill a client thread peacefully
@@ -56,21 +56,6 @@ public class ServerSocketThread extends Thread
 		{
 			try
 			{
-				// run game logic
-				for(Entry<String, PacketQueueThread> entry : clientMapping.entrySet())
-				{
-					if(entry.getValue().hasInbound())
-					{
-						Packet inbound = entry.getValue().receive();
-
-						if(inbound.getOpcode() == Opcode.Pong)
-						{
-							Trace.dprint("Received pong packet from client id '%s'", entry.getKey());
-							entry.getValue().setPong();
-						}
-					}
-				}
-				
 				// manage connections
 				long time = System.currentTimeMillis();
 				Set<String> invalidated = new HashSet<String>();
@@ -79,7 +64,6 @@ public class ServerSocketThread extends Thread
 				{
 					if(time - entry.getValue().getLastPing() > PING_FREQUENCY)
 					{
-						Trace.dprint("Sending ping request to client id '%s'", entry.getKey());
 						entry.getValue().ping();
 					}
 					
@@ -110,7 +94,7 @@ public class ServerSocketThread extends Thread
 				if(accepted != null)
 				{
 					String hostName = accepted.getInetAddress().getHostName();
-					Trace.dprint("Accepting connection from %s...", hostName);
+					Trace.dprint("Accepting connection from '%s'...", hostName);
 					
 					PacketQueueThread clientThread = new PacketQueueThread(accepted);
 					clientMapping.put(hostName, clientThread);

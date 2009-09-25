@@ -18,6 +18,12 @@ public class EuchreApplet extends Applet
 			JOptionPane.showMessageDialog(this, "Unable to establish connection with server. Cannot continue.");
 			System.exit(-1);
 		}
+		
+		if(!client.start())
+		{
+			JOptionPane.showMessageDialog(this, "Unable to start client core.");
+			System.exit(-1);
+		}
 	}
 
 	public void destroy()

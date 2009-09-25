@@ -2,6 +2,9 @@ package utility;
 
 public enum Opcode
 {
+	// no operation. having 0 mean no operation makes debugging packet stuff easier.
+	Nop,
+	
 	// server/client connection commands
 	Ping,
 	Pong,

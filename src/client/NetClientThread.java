@@ -12,6 +12,20 @@ public class NetClientThread extends NetworkThread
 {
 	public NetClientThread(Socket client)
 	{
-		super(client);
+		super(client, "NetClient");
+	}
+	
+	protected void processPacket()
+	{
+		Packet packet = receive();
+		
+		if(packet.getOpcode() == Opcode.Ping)
+		{
+			send(new Packet(Opcode.Pong));
+		}
+		else
+		{
+			Trace.dprint("Received packet with unimplemented opcode '%s' - ignoring.", packet.getOpcode().toString());
+		}
 	}
 }
