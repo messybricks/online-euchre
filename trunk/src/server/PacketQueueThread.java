@@ -13,9 +13,11 @@ public class PacketQueueThread extends NetworkThread
 	private long lastPing = 0;
 	private long lastPong = 0;
 	
+	private static int uid = 0;
+	
 	public PacketQueueThread(Socket client)
 	{
-		super(client);
+		super(client, "PacketQueue_" + ++uid);
 	}
 	
 	public long getLastPing()
@@ -37,5 +39,19 @@ public class PacketQueueThread extends NetworkThread
 	{
 		send(new Packet(Opcode.Ping));
 		lastPing = System.currentTimeMillis();
+	}
+	
+	protected void processPacket()
+	{
+		Packet packet = receive();
+		
+		if(packet.getOpcode() == Opcode.Pong)
+		{
+			setPong();
+		}
+		else
+		{
+			Trace.dprint("Received packet with unimplemented opcode '%s' - ignoring.", packet.getOpcode().toString());
+		}
 	}
 }

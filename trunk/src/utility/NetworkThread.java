@@ -7,28 +7,31 @@ import java.util.*;
 /**
  * This thread implements a generic queue-based client/server communications system.
  */
-public class NetworkThread extends Thread
+public abstract class NetworkThread extends Thread
 {
 	private Socket socket = null;
 	private Queue<Packet> inbound = null;
 	private Queue<Packet> outbound = null;
 	private DataInputStream reader = null;
 	private DataOutputStream writer = null;
-	
+
 	private volatile boolean exitThread = false;
-	
+
+	// number of milliseconds to wait between management thread ticks
+	private static final int THREAD_TICK_MS = 100;
+
 	/**
 	 * Creates a new instance of the PacketQueueThread using the given client connection.
 	 * @param client A socket bound to the client to communicate with.
 	 */
-	public NetworkThread(Socket client)
+	public NetworkThread(Socket client, String name)
 	{
-		super("NetworkThread");
+		super("NetworkThread_" + name);
 		socket = client;
-		
+
 		inbound = new LinkedList<Packet>();
 		outbound = new LinkedList<Packet>();
-		
+
 		try
 		{
 			reader = new DataInputStream(socket.getInputStream());
@@ -39,7 +42,12 @@ public class NetworkThread extends Thread
 			Trace.dprint("Unable to attach socket stream to NetworkThread. Message: %s", ex.getMessage());
 		}
 	}
-	
+
+	/**
+	 * This event is raised by the thread managing the socket whenever there are new packets available to be processed.
+	 */
+	protected abstract void processPacket();
+
 	public void run()
 	{
 		while(true)
@@ -51,15 +59,20 @@ public class NetworkThread extends Thread
 					try
 					{
 						// if the reader has bytes available to be read, we can convert them to a packet and add to inbound
-						if(reader.available() > 0)
+						if(reader.available() >= Packet.HEADER_SIZE)
 						{
-							int byteIn = 0;
+							int byteIn = -1;
 							ByteArrayOutputStream dataStream = new ByteArrayOutputStream();
-							
-							while((byteIn = reader.read()) != -1)
+
+							while(reader.available() > 0)
+							{
+								byteIn = reader.read();
 								dataStream.write(byteIn);
-							
-							inbound.add(new Packet(dataStream.toByteArray()));
+							}
+
+							Packet inPacket = new Packet(dataStream.toByteArray());
+							Trace.dprint("NetworkThread << %s [%d]", inPacket.getOpcode().toString(), dataStream.size() - Packet.HEADER_SIZE);
+							inbound.add(inPacket);
 						}
 					}
 					catch (IOException ex)
@@ -70,13 +83,19 @@ public class NetworkThread extends Thread
 					{
 						Trace.dprint("Received a corrupt packet from input stream on NetworkThread. Message: %s", ex.getMessage());
 					}
-					
+
+					if(!inbound.isEmpty())
+						processPacket();
+
 					try
 					{
 						// if outbound is not empty, we can flatten a packet and send it on its merry way
 						if(!outbound.isEmpty())
 						{
-							byte[] flattened = outbound.remove().flatten();
+							Packet outPacket = outbound.remove();
+							byte[] flattened = outPacket.flatten();
+
+							Trace.dprint("NetworkThread >> %s [%d]", outPacket.getOpcode().toString(), flattened.length - Packet.HEADER_SIZE);
 							writer.write(flattened);
 						}
 					}
@@ -91,9 +110,11 @@ public class NetworkThread extends Thread
 				// if exitThread is true, the parent thread has requested a soft termination of this thread
 				if(exitThread)
 					break;
+
+				sleep(THREAD_TICK_MS);
 			}
 		}
-		
+
 		try
 		{
 			writer.close();
@@ -105,7 +126,7 @@ public class NetworkThread extends Thread
 			Trace.dprint("Unable to close client socket in NetworkThread.");
 		}
 	}
-	
+
 	/**
 	 * Enqueues a packet to be sent to the server.
 	 * @param packet Packet to send
@@ -114,7 +135,23 @@ public class NetworkThread extends Thread
 	{
 		outbound.add(packet);
 	}
-	
+
+	/**
+	 * Causes this NetworkThread to pause execution for a specified amount of time.
+	 * @param milliseconds Number of milliseconds to sleep for
+	 */
+	protected void sleep(int milliseconds)
+	{
+		try
+		{
+			Thread.sleep(milliseconds);
+		}
+		catch (InterruptedException ex)
+		{
+			Trace.dprint("NetworkThread was interrupted while sleeping!");
+		}
+	}
+
 	/**
 	 * Receives the next packet sent by this NetworkThread's server. This method returns null if there are no inbound packets.
 	 * @return Next packet sent by server or null if no such packet exists
@@ -126,7 +163,7 @@ public class NetworkThread extends Thread
 		else
 			return inbound.remove();
 	}
-	
+
 	/**
 	 * Returns true if the server has sent a packet
 	 * @return True if the server has sent a packet
@@ -135,7 +172,7 @@ public class NetworkThread extends Thread
 	{
 		return !inbound.isEmpty();
 	}
-	
+
 	/**
 	 * Sets a flag which will attempt to safely terminate this thread.
 	 */

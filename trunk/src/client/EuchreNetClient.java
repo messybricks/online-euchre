@@ -34,6 +34,22 @@ public class EuchreNetClient
 	}
 	
 	/**
+	 * Checks the state of this client and starts the socket thread if everything is in order.
+	 * @return True if the client has started successfully
+	 */
+	public boolean start()
+	{
+		if(isValid())
+		{
+			thread.start();
+			Trace.dprint("NetClientThread started...");
+			return true;
+		}
+		else
+			return false;
+	}
+	
+	/**
 	 * Disposes of this EuchreNetClient by closing the socket and releasing resources.
 	 */
 	public void dispose()
@@ -42,11 +58,24 @@ public class EuchreNetClient
 		{
 			try
 			{
-				socket.close();
+				thread.stopThread();
+				thread.join();
+				Trace.dprint("NetClientThread stopped...");
 			}
-			catch (IOException ex)
+			catch(InterruptedException ex)
 			{
-				Trace.dprint("Unable to close client socket.");
+				Trace.dprint("Client window thread interrupted while joining NetClientThread!");
+			}
+			finally
+			{
+				try
+				{
+					socket.close();
+				}
+				catch (IOException ex)
+				{
+					Trace.dprint("Unable to close client socket.");
+				}
 			}
 		}
 	}

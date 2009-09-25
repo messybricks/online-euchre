@@ -12,7 +12,7 @@ public class Packet
 	private Opcode opcode;
 	private Serializable data;
 	
-	private static final int HEADER_SIZE = 8;
+	public static final int HEADER_SIZE = 8;
 
 	/**
 	 * Creates a new instance of the Packet class.
@@ -118,8 +118,8 @@ public class Packet
 				// if data is null, we create a simple packet of 8 bytes. it contains the opcode, and signifies that there is no data by writing a size of 0.
 				stream = new ByteArrayOutputStream(HEADER_SIZE);
 				bitConverter = new DataOutputStream(stream);
-				bitConverter.write(opcode.ordinal());
-				bitConverter.write(0);
+				bitConverter.writeInt(opcode.ordinal());
+				bitConverter.writeInt(0);
 			}
 			else
 			{
