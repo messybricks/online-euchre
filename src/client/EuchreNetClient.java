@@ -13,6 +13,9 @@ public class EuchreNetClient
 	private boolean valid = false;
 	private NetClientThread thread = null;
 	
+	// waits this many milliseconds to ensure the server receives this client's Quit packet upon disposal
+	private static final int QUIT_SLEEP_MS = 200;
+	
 	/**
 	 * Creates a new instance of the EuchreNetClient by initializing a socket with the given address and port.
 	 * @param address Address to connect to
@@ -56,6 +59,20 @@ public class EuchreNetClient
 	{
 		if(socket != null)
 		{
+			// send a quit packet to the server
+			thread.send(Opcode.Quit);
+			
+			// sleep for a short time to give the network thread time to send the quit packet
+			try
+			{
+				Thread.sleep(QUIT_SLEEP_MS);
+			}
+			catch (InterruptedException ex)
+			{
+				Trace.dprint("Main thread was interrupted while waiting to send Quit packet!");
+			}
+			
+			// stop the network thread
 			try
 			{
 				thread.stopThread();
@@ -68,6 +85,7 @@ public class EuchreNetClient
 			}
 			finally
 			{
+				// close the socket
 				try
 				{
 					socket.close();

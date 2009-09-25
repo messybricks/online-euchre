@@ -46,7 +46,7 @@ public abstract class NetworkThread extends Thread
 	/**
 	 * This event is raised by the thread managing the socket whenever there are new packets available to be processed.
 	 */
-	protected abstract void processPacket();
+	protected abstract void processPacket(Packet packet);
 
 	public void run()
 	{
@@ -71,7 +71,7 @@ public abstract class NetworkThread extends Thread
 							}
 
 							Packet inPacket = new Packet(dataStream.toByteArray());
-							Trace.dprint("NetworkThread << %s [%d]", inPacket.getOpcode().toString(), dataStream.size() - Packet.HEADER_SIZE);
+							Trace.nprint("NetworkThread << %s [%d]", inPacket.getOpcode().toString(), dataStream.size() - Packet.HEADER_SIZE);
 							inbound.add(inPacket);
 						}
 					}
@@ -84,8 +84,9 @@ public abstract class NetworkThread extends Thread
 						Trace.dprint("Received a corrupt packet from input stream on NetworkThread. Message: %s", ex.getMessage());
 					}
 
+					// process packets on the queue
 					if(!inbound.isEmpty())
-						processPacket();
+						processPacket(inbound.remove());
 
 					try
 					{
@@ -95,7 +96,7 @@ public abstract class NetworkThread extends Thread
 							Packet outPacket = outbound.remove();
 							byte[] flattened = outPacket.flatten();
 
-							Trace.dprint("NetworkThread >> %s [%d]", outPacket.getOpcode().toString(), flattened.length - Packet.HEADER_SIZE);
+							Trace.nprint("NetworkThread >> %s [%d]", outPacket.getOpcode().toString(), flattened.length - Packet.HEADER_SIZE);
 							writer.write(flattened);
 						}
 					}
@@ -137,6 +138,25 @@ public abstract class NetworkThread extends Thread
 	}
 
 	/**
+	 * Enqueues a new packet to be sent to the server.
+	 * @param opcode Opcode to assign to the new packet
+	 */
+	public synchronized void send(Opcode opcode)
+	{
+		outbound.add(new Packet(opcode));
+	}
+
+	/**
+	 * Enqueues a packet to be sent to the server.
+	 * @param opcode Opcode to assign to the new packet
+	 * @param datum A serializable object to attach to the packet
+	 */
+	public synchronized void send(Opcode opcode, Serializable datum)
+	{
+		outbound.add(new Packet(opcode, datum));
+	}
+
+	/**
 	 * Causes this NetworkThread to pause execution for a specified amount of time.
 	 * @param milliseconds Number of milliseconds to sleep for
 	 */
@@ -150,18 +170,6 @@ public abstract class NetworkThread extends Thread
 		{
 			Trace.dprint("NetworkThread was interrupted while sleeping!");
 		}
-	}
-
-	/**
-	 * Receives the next packet sent by this NetworkThread's server. This method returns null if there are no inbound packets.
-	 * @return Next packet sent by server or null if no such packet exists
-	 */
-	public synchronized Packet receive()
-	{
-		if(inbound.isEmpty())
-			return null;
-		else
-			return inbound.remove();
 	}
 
 	/**

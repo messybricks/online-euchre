@@ -62,16 +62,22 @@ public class ServerSocketThread extends Thread
 				
 				for(Entry<String, PacketQueueThread> entry : clientMapping.entrySet())
 				{
+					// ping clients every so often
 					if(time - entry.getValue().getLastPing() > PING_FREQUENCY)
 					{
 						entry.getValue().ping();
 					}
 					
+					// check to see if they have disconnected due to network problems
 					if(entry.getValue().getLastPong() < entry.getValue().getLastPing() && time - entry.getValue().getLastPing() > PING_TIMEOUT)
 					{
 						Trace.dprint("Client id '%s' has timed out.", entry.getKey());
 						invalidated.add(entry.getKey());
 					}
+					
+					// check to see if they have disconnected of their own volition
+					if(entry.getValue().hasQuit())
+						invalidated.add(entry.getKey());
 				}
 				
 				// remove invalidated connections
@@ -141,5 +147,52 @@ public class ServerSocketThread extends Thread
 	public void stopThread()
 	{
 		exitThread = true;
+	}
+	
+	/**
+	 * Sends the given opcode to every client connected to this ServerSocketThread.
+	 * @param opcode Opcode of packet to generate
+	 */
+	public void sendGlobal(Opcode opcode)
+	{
+		sendGlobal(opcode, null);
+	}
+
+	/**
+	 * Sends the given opcode with an associated datum to every client connected to this ServerSocketThread.
+	 * @param opcode Opcode of packet to generate
+	 * @param datum An optional object to associate with the generated packet
+	 */
+	public void sendGlobal(Opcode opcode, Serializable datum)
+	{
+		Packet global = new Packet(opcode, datum);
+		
+		for(PacketQueueThread thread : clientMapping.values())
+			thread.send(global);
+	}
+
+	/**
+	 * Sends the given opcode with an associated datum to a specified client.
+	 * @param client Client to send the packet to
+	 * @param opcode Opcode of packet to generate
+	 */
+	public void sendSpecified(String client, Opcode opcode)
+	{
+		sendSpecified(client, opcode, null);
+	}
+
+	/**
+	 * Sends the given opcode with an associated datum to a specified client. If the client given does not exist, a
+	 * warning is sent to dprint.
+	 * @param client Client to send the packet to
+	 * @param opcode Opcode of packet to generate
+	 * @param datum An optional object to associate with the generated packet
+	 */
+	public void sendSpecified(String client, Opcode opcode, Serializable datum)
+	{
+		if(clientMapping.containsKey(client))
+			clientMapping.get(client).send(opcode, datum);
+		else
+			Trace.dprint("WARNING: Attempted to send a packet with opcode '%s' to nonexistent client '%s'.", opcode.toString(), client);
 	}
 }

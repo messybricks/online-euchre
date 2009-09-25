@@ -6,7 +6,10 @@ import utility.*;
 
 public class EuchreServer
 {
+	// default port to listen for connections on if no specific port is given at command line
 	private static final int DEFAULT_PORT = 36212;
+	// waits this many milliseconds to ensure the clients receive this server's Quit packet upon disposal
+	private static final int QUIT_SLEEP_MS = 200;
 
 	/**
 	 * Server application entry point.
@@ -17,7 +20,7 @@ public class EuchreServer
 		// say hi
 		System.out.println("EuchreServer v0.1");
 		Trace.dprint("Initializing...");
-		
+
 		// the default listen port is 36212
 		int port = DEFAULT_PORT;
 		ServerSocket serverSocket = null;
@@ -48,22 +51,22 @@ public class EuchreServer
 			Trace.dprint("Exception message: %s", e.getMessage());
 			System.exit(-1);
 		}
-		
+
 		// initialize the server socket thread
 		Trace.dprint("Initializing ServerSocketThread...");
 		ServerSocketThread thread = new ServerSocketThread(serverSocket);
 		Trace.dprint("Starting ServerSocketThread...");
 		thread.start();
-		
+
 		// implements a server management thread
 		Trace.dprint("Starting management loop...");
 		while(true)
 		{
 			String[] command = null;
 			BufferedReader reader = null;
-			
+
 			System.out.print("[server] > ");
-			
+
 			try
 			{
 				reader = new BufferedReader(new InputStreamReader(System.in));
@@ -73,21 +76,22 @@ public class EuchreServer
 			{
 				Trace.dprint("Unable to read from System.in. Message: %s", ex.getMessage());
 			}
-			
+
 			if(command.length < 1)
 				continue;
-			
+
 			if(command[0].equals("exit"))
 				break;
 			else
 				System.out.println("Unknown command '" + command[0] + '\'');
 		}
-		
+
 		try
 		{
-			Trace.dprint("Stopping ServerSocketThread...");
-			thread.stopThread();
-			thread.join();
+			Trace.dprint("Sending global '%s' packet...", Opcode.Quit.toString());
+			thread.sendGlobal(Opcode.Quit);
+			
+			Thread.sleep(QUIT_SLEEP_MS);
 		}
 		catch (InterruptedException ex)
 		{
@@ -97,16 +101,29 @@ public class EuchreServer
 		{
 			try
 			{
-				// close the socket
-				Trace.dprint("Closing server socket...");
-				serverSocket.close();
+				Trace.dprint("Stopping ServerSocketThread...");
+				thread.stopThread();
+				thread.join();
 			}
-			catch (IOException e)
+			catch (InterruptedException ex)
 			{
-				Trace.dprint("Could not close socket. Message: %s", e.getMessage());
+				Trace.dprint("Main thread was interrupted while joining ServerSocketThread!");
+			}
+			finally
+			{
+				try
+				{
+					// close the socket
+					Trace.dprint("Closing server socket...");
+					serverSocket.close();
+				}
+				catch (IOException e)
+				{
+					Trace.dprint("Could not close socket. Message: %s", e.getMessage());
+				}
 			}
 		}
-		
+
 		Trace.dprint("Terminated.");
 	}
 }

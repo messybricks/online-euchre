@@ -39,4 +39,14 @@ public class Trace
 		string.append(']');
 		dprint(string.toString());
 	}
+
+	/**
+	 * Prints a network debugging string to the console if this is a network debugging build.
+	 * @param format Format string to print
+	 * @param args Optional arguments to the format string
+	 */
+	public static void nprint(String format, Object... args)
+	{
+		dprint(format, args);
+	}
 }
