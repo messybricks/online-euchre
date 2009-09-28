@@ -10,6 +10,7 @@ public class PacketQueueThread extends NetworkThread
 {
 	private long lastPing = 0;
 	private long lastPong = 0;
+	private int latency = -1;
 	private boolean quit = false;
 	
 	private static int uid = 0;
@@ -53,6 +54,15 @@ public class PacketQueueThread extends NetworkThread
 	}
 	
 	/**
+	 * Gets the latency (in milliseconds) of the connection to this client.
+	 * @return Millisecond delay in communication between client and server
+	 */
+	public int getLatency()
+	{
+		return latency;
+	}
+	
+	/**
 	 * Gets a flag indicating whether this client has intentionally disconnected.
 	 * @return True if the client has disconnected; false otherwise
 	 */
@@ -88,6 +98,7 @@ public class PacketQueueThread extends NetworkThread
 	private void onPong(Packet packet)
 	{
 		lastPong = System.currentTimeMillis();
+		latency = (int)(lastPong - lastPing);
 	}
 	
 	/**
