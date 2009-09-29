@@ -2,7 +2,7 @@ package chat;
 
 import java.io.Serializable;
 
-class User implements Serializable
+public class User implements Serializable
 {
     private String username;
 
