@@ -1,10 +1,12 @@
 package chat;
 
+import java.io.*;
+
 /**
  * Class to hold everything needed in a chat object.
  * 
  */
-public class ChatObject
+public class ChatObject implements Serializable
 {
     private User sourceUser;
     private User destUser;

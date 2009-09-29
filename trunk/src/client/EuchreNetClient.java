@@ -3,6 +3,7 @@ package client;
 import java.net.*;
 import java.io.*;
 import utility.*;
+import chat.*;
 
 /**
  * Establishes a connection with the Euchre server.
@@ -105,5 +106,15 @@ public class EuchreNetClient
 	public boolean isValid()
 	{
 		return valid;
+	}
+	
+	/**
+	 * Sends a chat message to every client connected to the same server as this NetClient.
+	 * @param from ID representing this client's user
+	 * @param message A string to be sent
+	 */
+	public void sendGlobalChatMessage(User from, String message)
+	{
+		thread.send(Opcode.SendMessage, new ChatObject(from, null, message));
 	}
 }
