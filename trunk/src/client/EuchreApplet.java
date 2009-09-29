@@ -60,6 +60,9 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		messageWindow.setEditable(false);
 		userWindow.setEditable(false);
 		messageWindow.setLineWrap(true);
+		//TODO: get this to work like the "Enter your messages here" thing
+		inputText.setText("Enter your username here.");
+		inputText.select(0, inputText.getText().length());
 
 		//TODO: initialize size of the applet <REMOVE LATER>
 		setSize(500, 500);
