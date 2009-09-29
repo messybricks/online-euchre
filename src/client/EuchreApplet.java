@@ -132,12 +132,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		//add message to current users window.
 		messageWindow.append(user.getUsername() + ": " + text + "\n");
 		//send out message to other users.
-		//WILL NEED TO MODIFY LATER FOR MULTIUSERS.
-		//TODO
-		ChatObject obj = new ChatObject(currentUser, new User("destination"), text);
-
-		//Have client send obj to chatmanager
-		//client.send(obj);
+		client.sendGlobalChatMessage(user, text);
 	}
 
 	/**

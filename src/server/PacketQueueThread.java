@@ -2,6 +2,7 @@ package server;
 
 import java.net.*;
 import utility.*;
+import chat.*;
 
 /**
  * This thread manages two queues; one for sending data over the network and one for receiving it.
@@ -87,6 +88,8 @@ public class PacketQueueThread extends NetworkThread
 			onPong(packet);
 		else if(packet.getOpcode() == Opcode.Quit)
 			onQuit(packet);
+		else if(packet.getOpcode() == Opcode.SendMessage)
+			onSendMessage(packet);
 		else
 			Trace.dprint("Received packet with unimplemented opcode '%s' - ignoring.", packet.getOpcode().toString());
 	}
@@ -108,5 +111,15 @@ public class PacketQueueThread extends NetworkThread
 	private void onQuit(Packet packet)
 	{
 		quit = true;
+	}
+	
+	/**
+	 * Processes a SendMessage packet.
+	 * @param packet Packet to process
+	 */
+	private void onSendMessage(Packet packet)
+	{
+		ChatObject object = (ChatObject)packet.getData();
+		Trace.dprint("User '%s' says: %s", object.getSource().getUsername(), object.getMessage());
 	}
 }
