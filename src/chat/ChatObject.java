@@ -4,7 +4,7 @@ package chat;
  * Class to hold everything needed in a chat object.
  * 
  */
-class ChatObject
+public class ChatObject
 {
     private User sourceUser;
     private User destUser;
