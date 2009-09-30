@@ -6,6 +6,8 @@ import utility.Trace;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Vector;
+import java.io.*;
+import java.net.InetAddress;
 
 import chat.ChatObject;
 import chat.User;
@@ -21,6 +23,8 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	private JTextArea userWindow;
 	private JTextField inputText;
 	private JButton submit;
+	private Process server;
+	private boolean madeserver=false;
 
 	/**
 	 * Initializes the chat window interface
@@ -28,7 +32,54 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	public void init() {
 		//set up the client
 		//TODO: ask for server IP address
-		client = new EuchreNetClient("127.0.0.1", 36212);
+		Object[] options = {"Host","Join" };
+		int n = JOptionPane.showOptionDialog(this,
+					"Would you like to host or join a game?",
+					"",
+					JOptionPane.YES_NO_CANCEL_OPTION,
+					JOptionPane.QUESTION_MESSAGE,
+					null,
+					options,
+					options[1]);
+		if(n==0)
+			madeserver=true;
+		String myAddress,serverNums,serverIP="",port="";
+		if(madeserver)
+		{
+			try
+			{		
+				myAddress= InetAddress.getLocalHost().getHostAddress();
+				port =JOptionPane.showInputDialog("your IP is " + myAddress +"\n port:", "36212");
+				//TODO deal with improper port values
+				String [] args= {port};
+				serverIP="127.0.0.1";
+				server = Runtime.getRuntime().exec("java server/EuchreServer",args);
+			}
+			catch(IOException e)
+			{
+				Trace.dprint("server failed to start: %s", e.getMessage());
+			}
+			//sleeps to give server time to initialize
+			try 
+			{
+				Thread.sleep(1000);
+			} 
+			catch (InterruptedException e) 
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		else
+		{
+			//TODO deal with improper input
+			serverNums=JOptionPane.showInputDialog("Enter the Server IP:port","127.0.0.1:36212");
+			serverIP=serverNums.substring(0, serverNums.indexOf(':')).trim();
+			port=serverNums.substring(serverNums.indexOf(':')+1).trim();
+			Trace.dprint("the server ip is: %s and the port is %s", serverIP,port);
+		}
+		client = new EuchreNetClient(serverIP, new Integer(port).intValue());
 		//error messages
 		if(!client.isValid())
 		{
@@ -168,6 +219,17 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	public void destroy()
 	{
 		client.dispose();
+		if(madeserver){
+			try 
+			{
+				new BufferedWriter(new OutputStreamWriter(server.getOutputStream())).write("exit");
+				server.destroy(); //currently called because the above command is not working
+			} 
+			catch (IOException e) 
+			{
+				Trace.dprint("unable to tell server to exit: %s", e.getMessage());
+			}
+		}
 	}
 
 	/**
