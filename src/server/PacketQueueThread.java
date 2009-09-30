@@ -13,6 +13,8 @@ public class PacketQueueThread extends NetworkThread
 	private long lastPong = 0;
 	private int latency = -1;
 	private boolean quit = false;
+	private boolean verified = false;
+	private User associate = null;
 	
 	private static int uid = 0;
 	
@@ -72,6 +74,32 @@ public class PacketQueueThread extends NetworkThread
 		return quit;
 	}
 	
+	/**
+	 * Verifies and sets as final this thread's user. After the user is verified, it cannot be changed.
+	 */
+	public void verify()
+	{
+		verified = true;
+	}
+	
+	/**
+	 * Returns true if this PacketQueueThread has been processed and has a verified associated user.
+	 * @return True if this thread has a verified associated User object; false otherwise
+	 */
+	public boolean isAuthenticated()
+	{
+		return associate != null;
+	}
+	
+	/**
+	 * Returns the User object associated with this thread.
+	 * @return User object associated with this thread
+	 */
+	public User getUser()
+	{
+		return associate;
+	}
+	
 	// processing packets starts here. you can change code below this line as you see fit.
 	//  please try to maintain the same style i have created here. for each packet you
 	//  implement, add an "else if" statement in processPacket, which points directly to
@@ -86,6 +114,8 @@ public class PacketQueueThread extends NetworkThread
 	{
 		if(packet.getOpcode() == Opcode.Pong)
 			onPong(packet);
+		else if(packet.getOpcode() == Opcode.Auth)
+			onAuth(packet);
 		else if(packet.getOpcode() == Opcode.Quit)
 			onQuit(packet);
 		else if(packet.getOpcode() == Opcode.SendMessage)
@@ -102,6 +132,18 @@ public class PacketQueueThread extends NetworkThread
 	{
 		lastPong = System.currentTimeMillis();
 		latency = (int)(lastPong - lastPing);
+	}
+	
+	/**
+	 * Processes an Auth packet.
+	 * @param packet Packet to process
+	 */
+	private void onAuth(Packet packet)
+	{
+		if(verified)
+			Trace.dprint("Received '%s' packet from verified user '%s'; ignoring.", packet.getOpcode().toString(), associate.getUsername());
+		else
+			associate = (User)packet.getData();
 	}
 	
 	/**

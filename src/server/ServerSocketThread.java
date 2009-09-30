@@ -56,7 +56,7 @@ public class ServerSocketThread extends Thread
 		{
 			try
 			{
-				// manage connections
+				// play ping-pong
 				long time = System.currentTimeMillis();
 				Set<String> invalidated = new HashSet<String>();
 				
@@ -78,6 +78,21 @@ public class ServerSocketThread extends Thread
 					// check to see if they have disconnected of their own volition
 					if(entry.getValue().hasQuit())
 						invalidated.add(entry.getKey());
+				}
+				
+				// authenticate clients
+				for(Entry<String, PacketQueueThread> entry : clientMapping.entrySet())
+				{
+					if(!entry.getValue().isAuthenticated())
+					{
+						if(entry.getValue().getUser() != null)
+						{
+							PacketQueueThread tempThread = entry.getValue();
+							invalidated.add(entry.getKey());
+							tempThread.verify();
+							clientMapping.put(tempThread.getUser().getUsername(), tempThread);
+						}
+					}
 				}
 				
 				// remove invalidated connections

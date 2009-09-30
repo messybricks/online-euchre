@@ -8,6 +8,7 @@ public enum Opcode
 	// server/client connection commands
 	Ping,
 	Pong,
+	Auth,
 	Quit,
 
 	// chat commands

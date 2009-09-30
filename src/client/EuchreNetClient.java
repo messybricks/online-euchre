@@ -10,6 +10,7 @@ import chat.*;
  */
 public class EuchreNetClient
 {
+	private User associate = null;
 	private Socket socket = null;
 	private boolean valid = false;
 	private NetClientThread thread = null;
@@ -113,8 +114,26 @@ public class EuchreNetClient
 	 * @param from ID representing this client's user
 	 * @param message A string to be sent
 	 */
-	public void sendGlobalChatMessage(User from, String message)
+	public void sendGlobalChatMessage(String message)
 	{
-		thread.send(Opcode.SendMessage, new ChatObject(from, null, message));
+		if(associate == null)
+			Trace.dprint("Cannot send a message before the client has authenticated.");
+		else
+			thread.send(Opcode.SendMessage, new ChatObject(associate, null, message));
+	}
+	
+	/**
+	 * Assigns a User object to this client. This method will do nothing if this client is already authenticated.
+	 * @param me User object to associate with this client
+	 */
+	public void authenticate(User me)
+	{
+		if(associate == null)
+		{
+			associate = me;
+			thread.send(Opcode.Auth, me);
+		}
+		else
+			Trace.dprint("Client '%s' tried to authenticate twice. Ignoring.", associate.getUsername());
 	}
 }
