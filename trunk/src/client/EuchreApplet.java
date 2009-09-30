@@ -114,6 +114,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 				//TODO Might need to remove if all screens only share one text area, rather then sharing the data in the area.
 				inputText.setText("Enter your messages here.");
 				inputText.select(0, inputText.getText().length());
+				client.authenticate(currentUser);
 			}
 			else {
 				sendMessage(inputText.getText(), currentUser);
@@ -135,7 +136,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		//add message to current users window.
 		messageWindow.append(user.getUsername() + ": " + text + "\n");
 		//send out message to other users.
-		client.sendGlobalChatMessage(user, text);
+		client.sendGlobalChatMessage(text);
 	}
 
 	/**
