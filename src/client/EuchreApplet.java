@@ -27,77 +27,96 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	private boolean madeserver=false;
 
 	/**
-	 * Initializes the chat window interface
+	 * Initializes the client and applet, calls helper methods setUpClient and setUpApplet
 	 */
 	public void init() {
+		
 		//set up the client
-		//TODO: ask for server IP address
-//<<<<<<< .working
-		client = new EuchreNetClient("127.0.0.1", 36212, this);
-//=======
-		Object[] options = {"Host","Join" };
-		int n = JOptionPane.showOptionDialog(this,
-					"Would you like to host or join a game?",
-					"",
-					JOptionPane.YES_NO_CANCEL_OPTION,
-					JOptionPane.QUESTION_MESSAGE,
-					null,
-					options,
-					options[1]);
-		if(n==0)
-			madeserver=true;
-		String myAddress,serverNums,serverIP="",port="";
-		if(madeserver)
-		{
-			try
-			{		
-				myAddress= InetAddress.getLocalHost().getHostAddress();
-				port =JOptionPane.showInputDialog("your IP is " + myAddress +"\n port:", "36212");
-				//TODO deal with improper port values
-				String [] args= {port};
-				serverIP="127.0.0.1";
-				server = Runtime.getRuntime().exec("java server/EuchreServer",args);
-			}
-			catch(IOException e)
-			{
-				Trace.dprint("server failed to start: %s", e.getMessage());
-			}
-			//sleeps to give server time to initialize
-			try 
-			{
-				Thread.sleep(1000);
-			} 
-			catch (InterruptedException e) 
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-		}
-		else
-		{
-			//TODO deal with improper input
-			serverNums=JOptionPane.showInputDialog("Enter the Server IP:port","127.0.0.1:36212");
-			serverIP=serverNums.substring(0, serverNums.indexOf(':')).trim();
-			port=serverNums.substring(serverNums.indexOf(':')+1).trim();
-			Trace.dprint("the server ip is: %s and the port is %s", serverIP,port);
-		}
-		client = new EuchreNetClient(serverIP, new Integer(port).intValue(), this);
-//>>>>>>> .merge-right.r48
-		//error messages
-		if(!client.isValid())
-		{
-			JOptionPane.showMessageDialog(this, "Unable to establish connection with server. Cannot continue.");
-			System.exit(-1);
-		}
+		setUpClient();
 		
-		if(!client.start())
-		{
-			JOptionPane.showMessageDialog(this, "Unable to start client core.");
-			System.exit(-1);
-		}
+		//set up the applet
+		setUpApplet();
 		
-		
+
+	}
+	 /**
+	  * uses JOptionPanes to ask user to join or host a game, then sets up a client and server (if applicable)
+	  */
+	private void setUpClient(){
+		//set up the client
+		//<<<<<<< .working
+				client = new EuchreNetClient("127.0.0.1", 36212, this);
+		//=======
+				Object[] options = {"Host","Join" };
+				int n = JOptionPane.showOptionDialog(this,
+							"Would you like to host or join a game?",
+							"",
+							JOptionPane.YES_NO_CANCEL_OPTION,
+							JOptionPane.QUESTION_MESSAGE,
+							null,
+							options,
+							options[1]);
+				if(n==0)
+					madeserver=true;
+				String myAddress,serverNums,serverIP="",port="";
+				if(madeserver)
+				{
+					try
+					{		
+						String myName = InetAddress.getLocalHost().getHostName();
+						myAddress= InetAddress.getLocalHost().getHostAddress();
+						port =JOptionPane.showInputDialog("Your IP is " + myAddress +", your name is " + myName + "\n Choose Port:", "36212");
+						//TODO deal with improper port values
+						String [] args= {port};
+						serverIP="127.0.0.1";
+						server = Runtime.getRuntime().exec("java server/EuchreServer",args);
+					}
+					catch(IOException e)
+					{
+						Trace.dprint("server failed to start: %s", e.getMessage());
+					}
+					//sleeps to give server time to initialize
+					try 
+					{
+						Thread.sleep(1000);
+					} 
+					catch (InterruptedException e) 
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+				}
+				else
+				{
+					//TODO deal with improper input
+					serverNums=JOptionPane.showInputDialog("Enter the Server IP:port","127.0.0.1:36212");
+					serverIP=serverNums.substring(0, serverNums.indexOf(':')).trim();
+					port=serverNums.substring(serverNums.indexOf(':')+1).trim();
+					Trace.dprint("the server ip is: %s and the port is %s", serverIP,port);
+				}
+				client = new EuchreNetClient(serverIP, new Integer(port).intValue(), this);
+		//>>>>>>> .merge-right.r48
+				//error messages
+				if(!client.isValid())
+				{
+					JOptionPane.showMessageDialog(this, "Unable to establish connection with server. Cannot continue.");
+					System.exit(-1);
+				}
+				
+				if(!client.start())
+				{
+					JOptionPane.showMessageDialog(this, "Unable to start client core.");
+					System.exit(-1);
+				}
+				
+	}
+	
+	/**
+	 * initializes the layout and fields of the Applet
+	 */
+	private void setUpApplet(){
+
 		//initialize fields for applet.
 		messageWindow = new JTextArea(10,10);
 		userWindow = new JTextArea(10,10);         
@@ -115,9 +134,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		messageWindow.setEditable(false);
 		userWindow.setEditable(false);
 		messageWindow.setLineWrap(true);
-		//TODO: get this to work like the "Enter your messages here" thing
-		inputText.setText("Enter your username here.");
-		inputText.select(0, inputText.getText().length());
+
 
 		//TODO: initialize size of the applet <REMOVE LATER>
 		setSize(500, 500);
@@ -149,7 +166,11 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		submit.addActionListener(this);
 		inputText.addActionListener(this);
 		inputText.addKeyListener(this);
-
+		
+		//TODO: get this to work like the "Enter your messages here" thing
+		inputText.setText("Enter your username here.");
+		inputText.select(0, inputText.getText().length());
+		
 	}
 
 	/**
