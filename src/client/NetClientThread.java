@@ -2,6 +2,7 @@ package client;
 
 import java.net.*;
 import utility.*;
+import chat.*;
 
 /**
  * This thread manages two queues; one for sending data over the network and one for receiving it.
@@ -9,14 +10,17 @@ import utility.*;
 public class NetClientThread extends NetworkThread
 {
 	// do not modify code here! anything you may want to change is found below, in packet processing
+	private EuchreApplet euchreApplet;
 	
 	/**
 	 * Creates a new instance of the NetClientThread class wrapping the given socket.
 	 * @param client Socket connection to server
+	 * @param applet 
 	 */
-	public NetClientThread(Socket client)
+	public NetClientThread(Socket client, EuchreApplet applet)
 	{
 		super(client, "NetClient");
+		euchreApplet = applet;
 	}
 	
 	// processing packets starts here. you can change code below this line as you see fit.
@@ -35,6 +39,8 @@ public class NetClientThread extends NetworkThread
 			onPing(packet);
 		else if(packet.getOpcode() == Opcode.Quit)
 			onQuit(packet);
+		else if(packet.getOpcode() == Opcode.SendMessage)
+			onSendMessage(packet);
 		else
 			Trace.dprint("Received packet with unimplemented opcode '%s' - ignoring.", packet.getOpcode().toString());
 	}
@@ -55,5 +61,15 @@ public class NetClientThread extends NetworkThread
 	private void onQuit(Packet packet)
 	{
 		// TODO: Implement client Quit packet
+	}
+	
+	/**
+	 * Processes a SendMessage packet.
+	 * @param packet Packet to process
+	 */
+	private void onSendMessage(Packet packet)
+	{
+		ChatObject chat = (ChatObject)packet.getData();
+		euchreApplet.receiveMessage(chat);
 	}
 }
