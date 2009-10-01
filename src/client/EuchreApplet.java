@@ -97,6 +97,8 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 			serverIP=serverNums.substring(0, serverNums.indexOf(':')).trim();
 			port=serverNums.substring(serverNums.indexOf(':')+1).trim();
 			Trace.dprint("the server ip is: %s and the port is %s", serverIP,port);
+			username =JOptionPane.showInputDialog("Enter username: ");
+			initializeUser(username);
 		}
 		client = new EuchreNetClient(serverIP, new Integer(port).intValue(), this);
 		//>>>>>>> .merge-right.r48
