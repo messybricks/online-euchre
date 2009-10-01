@@ -14,6 +14,7 @@ public class EuchreNetClient
 	private Socket socket = null;
 	private boolean valid = false;
 	private NetClientThread thread = null;
+	private EuchreApplet euchreApplet;
 	
 	// waits this many milliseconds to ensure the server receives this client's Quit packet upon disposal
 	private static final int QUIT_SLEEP_MS = 200;
@@ -23,12 +24,13 @@ public class EuchreNetClient
 	 * @param address Address to connect to
 	 * @param port Port to connect via
 	 */
-	public EuchreNetClient(String address, int port)
+	public EuchreNetClient(String address, int port, EuchreApplet applet)
 	{
+		euchreApplet = applet;
 		try
 		{
 			socket = new Socket(address, port);
-			thread = new NetClientThread(socket);
+			thread = new NetClientThread(socket, applet);
 			valid = true;
 		}
 		catch (IOException ex)
