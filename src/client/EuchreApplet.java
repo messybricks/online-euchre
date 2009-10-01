@@ -32,6 +32,9 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	public void init() {
 		//set up the client
 		//TODO: ask for server IP address
+//<<<<<<< .working
+		client = new EuchreNetClient("127.0.0.1", 36212, this);
+//=======
 		Object[] options = {"Host","Join" };
 		int n = JOptionPane.showOptionDialog(this,
 					"Would you like to host or join a game?",
@@ -79,7 +82,8 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 			port=serverNums.substring(serverNums.indexOf(':')+1).trim();
 			Trace.dprint("the server ip is: %s and the port is %s", serverIP,port);
 		}
-		client = new EuchreNetClient(serverIP, new Integer(port).intValue());
+		client = new EuchreNetClient(serverIP, new Integer(port).intValue(), this);
+//>>>>>>> .merge-right.r48
 		//error messages
 		if(!client.isValid())
 		{
@@ -185,7 +189,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	 */
 	public void sendMessage(String text, User user) {
 		//add message to current users window.
-		messageWindow.append(user.getUsername() + ": " + text + "\n");
+	//	messageWindow.append(user.getUsername() + ": " + text + "\n");
 		//send out message to other users.
 		client.sendGlobalChatMessage(text);
 	}
