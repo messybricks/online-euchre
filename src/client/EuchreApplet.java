@@ -58,7 +58,8 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 							options[1]);
 				if(n==0)
 					madeserver=true;
-				String myAddress,serverNums,serverIP="",port="";
+				String myAddress,serverNums;
+				String serverIP="",port="", username="";
 				if(madeserver)
 				{
 					try
@@ -66,6 +67,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 						String myName = InetAddress.getLocalHost().getHostName();
 						myAddress= InetAddress.getLocalHost().getHostAddress();
 						port =JOptionPane.showInputDialog("Your IP is " + myAddress +", your name is " + myName + "\n Choose Port:", "36212");
+						username =JOptionPane.showInputDialog("Enter username:");
 						//TODO deal with improper port values
 						String [] args= {port};
 						serverIP="127.0.0.1";
@@ -109,7 +111,8 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 					JOptionPane.showMessageDialog(this, "Unable to start client core.");
 					System.exit(-1);
 				}
-				
+				//initialize user
+				initializeUser(username);
 	}
 	
 	/**
@@ -126,6 +129,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		//set up the text areas				
 		messageWindow.setText("Welcome to Online Euchre. \nPlease submit your username below.\n");
 		userWindow.setText("Users currently in chat:\n");
+		userWindow.append(currentUser.getUsername());
 		userWindow.setBackground(Color.LIGHT_GRAY);
 		//set up borders
 		messageWindow.setBorder(BorderFactory.createEtchedBorder());
@@ -167,12 +171,28 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		inputText.addActionListener(this);
 		inputText.addKeyListener(this);
 		
-		//TODO: get this to work like the "Enter your messages here" thing
-		inputText.setText("Enter your username here.");
+		//TODO: get this to work 
+		inputText.setText("Enter your messages here");
 		inputText.select(0, inputText.getText().length());
 		
 	}
 
+	/**
+	 * initialize the user
+	 * @param username the name inputed by user
+	 */
+	private void initializeUser(String username){
+		//Create the new user.
+		currentUser = new User(username);
+		//Update the user window.
+		//userWindow.append(currentUser.getUsername());
+		//Set up the message text field.
+		//TODO Might need to remove if all screens only share one text area, rather then sharing the data in the area.
+		//inputText.setText("Enter your messages here.");
+		//inputText.select(0, inputText.getText().length());
+		client.authenticate(currentUser);
+	}
+	
 	/**
 	 * sets the user name or calls the sendMessage function to send a message, using the input text
 	 */
@@ -182,15 +202,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		if (!text.equals("")) {
 			//if the user has not signed in, then create a new user.
 			if(currentUser == null) {
-				//Create the new user.
-				currentUser = new User(inputText.getText());
-				//Update the user window.
-				userWindow.append(currentUser.getUsername());
-				//Set up the message text field.
-				//TODO Might need to remove if all screens only share one text area, rather then sharing the data in the area.
-				inputText.setText("Enter your messages here.");
-				inputText.select(0, inputText.getText().length());
-				client.authenticate(currentUser);
+
 			}
 			else {
 				sendMessage(inputText.getText(), currentUser);
