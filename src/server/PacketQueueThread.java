@@ -18,15 +18,18 @@ public class PacketQueueThread extends NetworkThread
 	
 	private static int uid = 0;
 	
+	private ChatManager chatMan;
+	
 	// do not modify code here! anything you may want to change is found below, in packet processing
 	
 	/**
 	 * Creates a new instance of the PacketQueueThread class wrapping the given socket.
 	 * @param client Socket connected to client
 	 */
-	public PacketQueueThread(Socket client)
+	public PacketQueueThread(Socket client, ChatManager chatManager)
 	{
 		super(client, "PacketQueue_" + ++uid);
+		chatMan = chatManager;
 	}
 
 	/**
@@ -162,6 +165,7 @@ public class PacketQueueThread extends NetworkThread
 	private void onSendMessage(Packet packet)
 	{
 		ChatObject object = (ChatObject)packet.getData();
+		chatMan.send(object);
 		Trace.dprint("User '%s' says: %s", object.getSource().getUsername(), object.getMessage());
 	}
 }
