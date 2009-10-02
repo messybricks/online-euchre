@@ -253,8 +253,10 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		if(madeserver){
 			try 
 			{
-				new BufferedWriter(new OutputStreamWriter(server.getOutputStream())).write("exit");
-				server.destroy(); //currently called because the above command is not working
+				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
+				writer.write("exit\r\n");
+				writer.flush();
+				writer.close();
 			} 
 			catch (IOException e) 
 			{
