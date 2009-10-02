@@ -12,7 +12,7 @@ import java.net.InetAddress;
 import chat.ChatObject;
 import chat.User;
 
-public class EuchreApplet extends JApplet implements ActionListener, KeyListener
+public class EuchreApplet extends JApplet implements ActionListener, KeyListener, MouseListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -174,6 +174,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		submit.addActionListener(this);
 		inputText.addActionListener(this);
 		inputText.addKeyListener(this);
+		inputText.addMouseListener(this);
 
 		//TODO: get this to work 
 		inputText.setText("Enter your messages here");
@@ -285,6 +286,16 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	}
 
 	/**
+	 * clears the text when the user first clicks on the input text area
+	 */
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		if(inputText.getText().equals("Enter your messages here"))
+			inputText.setText("");
+		
+	}
+
+	/**
 	 * not implemented
 	 */
 	@Override
@@ -295,6 +306,27 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	 */
 	@Override
 	public void keyTyped(KeyEvent e) {}
+	
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 
 
 
