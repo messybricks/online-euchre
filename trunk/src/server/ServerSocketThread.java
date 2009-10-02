@@ -4,7 +4,7 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 import java.util.Map.Entry;
-
+import chat.*;
 import utility.*;
 
 /**
@@ -25,6 +25,8 @@ public class ServerSocketThread extends Thread
 	private static final int PING_TIMEOUT = 3000;
 	// wait this many milliseconds to kill a client thread peacefully
 	private static final int THREAD_KILL_TIMEOUT = 600;
+	
+	private ChatManager chatManager;
 
 	/**
 	 * Creates a new instance of the ServerSocketThread class.
@@ -43,6 +45,8 @@ public class ServerSocketThread extends Thread
 		{
 			Trace.dprint("Unable to set socket accept timeout parameter to %d. Message: %s", SOCKET_TIMEOUT, ex.getMessage());
 		}
+		
+		chatManager = new ChatManager(this);
 		
 		clientMapping = new HashMap<String, PacketQueueThread>();
 	}

@@ -1,5 +1,7 @@
 package chat;
 
+import server.ServerSocketThread;
+import utility.Opcode;
 import utility.Packet;
 
 /**
@@ -8,13 +10,16 @@ import utility.Packet;
  * @author Jason King
  *
  */
-class ChatManager
+public class ChatManager
 {
+	private ServerSocketThread thread;
+	
 	/*
 	 * Default Constructor.
 	 */
-    public ChatManager()
+    public ChatManager(ServerSocketThread serverSocketThread)
     {
+    	thread = serverSocketThread;
     }
 
     /*
@@ -26,6 +31,14 @@ class ChatManager
     public boolean send(ChatObject obj)
     {
         User dest = obj.getDest();
+        if(obj.getDest() == null)
+        {
+        	thread.sendGlobal(Opcode.SendMessage, obj);
+        }
+        else
+        {
+        	thread.sendSpecified(dest.getUsername(), Opcode.SendMessage, obj);
+        }
       //Packet pckt = new Packet(opcode, obj);
         return false;
     }
