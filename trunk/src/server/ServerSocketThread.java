@@ -121,7 +121,7 @@ public class ServerSocketThread extends Thread
 					String hostName = accepted.getInetAddress().getHostName();
 					Trace.dprint("Accepting connection from '%s'...", hostName);
 					
-					PacketQueueThread clientThread = new PacketQueueThread(accepted);
+					PacketQueueThread clientThread = new PacketQueueThread(accepted, chatManager);
 					clientMapping.put(hostName, clientThread);
 					clientThread.start();
 				}
