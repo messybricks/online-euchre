@@ -117,6 +117,8 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 
 		//ask for username
 		username =JOptionPane.showInputDialog("Enter username:");
+		while((username.compareTo("") == 0) || (!isAlphaNumeric(username)))
+			username =JOptionPane.showInputDialog("Enter username:");
 
 		//initialize user
 		initializeUser(username);
@@ -346,6 +348,19 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		
 	}
 
+	private boolean isAlphaNumeric(final String s) 
+	{
+		  final char[] chars = s.toCharArray();
+		  for (int x = 0; x < chars.length; x++) {      
+		    final char c = chars[x];
+		    if ((c >= 'a') && (c <= 'z')) continue; // lowercase
+		    if ((c >= 'A') && (c <= 'Z')) continue; // uppercase
+		    if ((c >= '0') && (c <= '9')) continue; // numeric
+		    return false;
+		  }  
+		  return true;
+		}
 
 
+	
 }
