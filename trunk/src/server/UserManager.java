@@ -25,7 +25,7 @@ public class UserManager
     public UserManager(ServerSocketThread serverSocketThread)
     {
     	thread = serverSocketThread;
-    	users = new ArrayList();
+    	users = new ArrayList<User>();
     }
 
     /*
@@ -37,6 +37,20 @@ public class UserManager
     public boolean add(User usr)
     {
     	users.add(usr);
+       	thread.sendGlobal(Opcode.AddUser, users);
+      //Packet pckt = new Packet(opcode, obj);
+        return false;
+    }
+
+    /*
+     * Send a chat object.
+     * 
+     * @param obj The chat object to send
+     * @return boolean True if it was sent succesfully, false otherwise
+     */
+    public boolean remove(User usr)
+    {
+    	users.remove(usr);
        	thread.sendGlobal(Opcode.AddUser, users);
       //Packet pckt = new Packet(opcode, obj);
         return false;
