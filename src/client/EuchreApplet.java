@@ -193,6 +193,15 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		//authenticate the client
 		client.authenticate(currentUser);
 	}
+	
+	/**
+	 * adds the username of a new user to the user window
+	 * @param userJoining the user whose name is to be added
+	 */
+	public void addUserToWindow(User userJoining)
+	{
+		userWindow.append(userJoining.getUsername());
+	}
 
 	/**
 	 * sets the user name or calls the sendMessage function to send a message, using the input text
