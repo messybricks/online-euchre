@@ -72,6 +72,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 				String [] args= {port};
 				serverIP="127.0.0.1";
 				server = Runtime.getRuntime().exec("java server/EuchreServer",args);
+				
 			}
 			catch(IOException e)
 			{
@@ -85,7 +86,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 			catch (InterruptedException e) 
 			{
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				
 			}
 
 		}
@@ -261,6 +262,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 			catch (IOException e) 
 			{
 				Trace.dprint("unable to tell server to exit: %s", e.getMessage());
+			
 			}
 		}
 	}
