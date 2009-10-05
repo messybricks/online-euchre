@@ -41,6 +41,8 @@ public class NetClientThread extends NetworkThread
 			onQuit(packet);
 		else if(packet.getOpcode() == Opcode.SendMessage)
 			onSendMessage(packet);
+		else if(packet.getOpcode() == Opcode.Auth)
+			onAuth(packet);
 		else
 			Trace.dprint("Received packet with unimplemented opcode '%s' - ignoring.", packet.getOpcode().toString());
 	}
@@ -71,5 +73,15 @@ public class NetClientThread extends NetworkThread
 	{
 		ChatObject chat = (ChatObject)packet.getData();
 		euchreApplet.receiveMessage(chat);
+	}
+	
+	/**
+	 * Processes a Ping packet.
+	 * @param packet Packet to process
+	 */
+	private void onAuth(Packet packet)
+	{
+		User userJoining = (User)packet.getData();
+		euchreApplet.addUserToWindow(userJoining);
 	}
 }
