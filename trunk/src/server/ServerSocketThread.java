@@ -27,6 +27,7 @@ public class ServerSocketThread extends Thread
 	private static final int THREAD_KILL_TIMEOUT = 600;
 	
 	private ChatManager chatManager;
+	private UserManager userManager;
 
 	/**
 	 * Creates a new instance of the ServerSocketThread class.
@@ -47,6 +48,7 @@ public class ServerSocketThread extends Thread
 		}
 		
 		chatManager = new ChatManager(this);
+		userManager = new UserManager(this);
 		
 		clientMapping = new HashMap<String, PacketQueueThread>();
 	}
@@ -121,7 +123,7 @@ public class ServerSocketThread extends Thread
 					String hostName = accepted.getInetAddress().getHostName();
 					Trace.dprint("Accepting connection from '%s'...", hostName);
 					
-					PacketQueueThread clientThread = new PacketQueueThread(accepted, chatManager);
+					PacketQueueThread clientThread = new PacketQueueThread(accepted, chatManager, userManager);
 					clientMapping.put(hostName, clientThread);
 					clientThread.start();
 				}

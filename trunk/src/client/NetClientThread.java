@@ -1,6 +1,8 @@
 package client;
 
 import java.net.*;
+import java.util.ArrayList;
+
 import utility.*;
 import chat.*;
 
@@ -43,6 +45,8 @@ public class NetClientThread extends NetworkThread
 			onSendMessage(packet);
 		else if(packet.getOpcode() == Opcode.Auth)
 			onAuth(packet);
+		else if(packet.getOpcode() == Opcode.AddUser)
+			onAddUser(packet);
 		else
 			Trace.dprint("Received packet with unimplemented opcode '%s' - ignoring.", packet.getOpcode().toString());
 	}
@@ -82,6 +86,17 @@ public class NetClientThread extends NetworkThread
 	private void onAuth(Packet packet)
 	{
 		User userJoining = (User)packet.getData();
-		euchreApplet.addUserToWindow(userJoining);
+//		euchreApplet.addUserToWindow(userJoining);
+	}
+	
+	/**
+	 * Processes a Ping packet.
+	 * @param packet Packet to process
+	 */
+	private void onAddUser(Packet packet)
+	{
+		ArrayList<User> users = (ArrayList<User>) packet.getData();
+		//User userJoining = (User)packet.getData();
+		euchreApplet.addUserToWindow(users);
 	}
 }
