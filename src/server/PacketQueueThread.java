@@ -19,6 +19,7 @@ public class PacketQueueThread extends NetworkThread
 	private static int uid = 0;
 	
 	private ChatManager chatMan;
+	private UserManager userMan;
 	
 	// do not modify code here! anything you may want to change is found below, in packet processing
 	
@@ -26,10 +27,11 @@ public class PacketQueueThread extends NetworkThread
 	 * Creates a new instance of the PacketQueueThread class wrapping the given socket.
 	 * @param client Socket connected to client
 	 */
-	public PacketQueueThread(Socket client, ChatManager chatManager)
+	public PacketQueueThread(Socket client, ChatManager chatManager, UserManager userManager)
 	{
 		super(client, "PacketQueue_" + ++uid);
 		chatMan = chatManager;
+		userMan = userManager;
 	}
 
 	/**
@@ -146,7 +148,10 @@ public class PacketQueueThread extends NetworkThread
 		if(verified)
 			Trace.dprint("Received '%s' packet from verified user '%s'; ignoring.", packet.getOpcode().toString(), associate.getUsername());
 		else
+		{
 			associate = (User)packet.getData();
+			userMan.add(associate);
+		}
 	}
 	
 	/**

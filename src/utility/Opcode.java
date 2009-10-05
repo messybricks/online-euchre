@@ -12,7 +12,8 @@ public enum Opcode
 	Quit,
 
 	// chat commands
-	SendMessage;
+	SendMessage, 
+	AddUser;
 
 	/**
 	 * Generates an instance of Opcode with the given ordinal value.

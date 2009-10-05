@@ -5,6 +5,7 @@ import javax.swing.*;
 import utility.Trace;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.Vector;
 import java.io.*;
 import java.net.InetAddress;
@@ -25,6 +26,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	private JButton submit;
 	private Process server;
 	private boolean madeserver=false;
+	private ArrayList<User> users;
 
 	/**
 	 * Initializes the client and applet, calls helper methods setUpClient and setUpApplet
@@ -196,11 +198,14 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	
 	/**
 	 * adds the username of a new user to the user window
-	 * @param userJoining the user whose name is to be added
+	 * @param users the user whose name is to be added
 	 */
-	public void addUserToWindow(User userJoining)
+	public void addUserToWindow(ArrayList<User> newUsers)
 	{
-		userWindow.append(userJoining.getUsername());
+		users = newUsers;
+		userWindow.setText("Users currently in chat:");
+		for(int x = 0; x < users.size(); x++)
+			userWindow.append("\n" + users.get(x).getUsername());
 	}
 
 	/**
