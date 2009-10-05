@@ -264,7 +264,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	 */
 	public void destroy()
 	{
-		client.dispose();
+		client.dispose(currentUser);
 		if(madeserver){
 			try 
 			{

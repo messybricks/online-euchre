@@ -59,12 +59,12 @@ public class EuchreNetClient
 	/**
 	 * Disposes of this EuchreNetClient by closing the socket and releasing resources.
 	 */
-	public void dispose()
+	public void dispose(User usr)
 	{
 		if(socket != null)
 		{
 			// send a quit packet to the server
-			thread.send(Opcode.Quit);
+			thread.send(Opcode.Quit, usr);
 			
 			// sleep for a short time to give the network thread time to send the quit packet
 			try
