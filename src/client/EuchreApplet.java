@@ -69,7 +69,11 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 				String myName = InetAddress.getLocalHost().getHostName();
 				myAddress= InetAddress.getLocalHost().getHostAddress();
 				port =JOptionPane.showInputDialog("Your IP is " + myAddress +", your name is " + myName + "\n Choose Port:", "36212");
-
+				
+				//if the cancel button is pressed, exit the system
+				if(port == null)
+					System.exit(ABORT);
+				
 				//TODO deal with improper port values
 				String [] args= {port};
 				serverIP="127.0.0.1";
@@ -96,6 +100,11 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		{
 			//TODO deal with improper input
 			serverNums=JOptionPane.showInputDialog("Enter the Server IP:port","127.0.0.1:36212");
+			
+			//if the cancel button is pressed, exit the system
+			if(serverNums == null)
+				System.exit(ABORT);
+			
 			serverIP=serverNums.substring(0, serverNums.indexOf(':')).trim();
 			port=serverNums.substring(serverNums.indexOf(':')+1).trim();
 			Trace.dprint("the server ip is: %s and the port is %s", serverIP,port);
