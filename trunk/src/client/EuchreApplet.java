@@ -406,7 +406,10 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 					ignore.setBackground(Color.WHITE);
 					if(temp.getText(2, temp.getText().length()-2).compareTo(currentUser.getUsername()) == 0)
 					{
-						userInfo.add(new JTextArea("This is you!"));
+						JTextArea tempText = new JTextArea("This is you!");
+						tempText.setEditable(false);
+						tempText.setFocusable(false);
+						userInfo.add(tempText);
 						//ignore.setEnabled(false);
 					}
 					else
