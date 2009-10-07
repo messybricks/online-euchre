@@ -281,6 +281,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	 */
 	public void receiveMessage(ChatObject message) {
 		messageWindow.append(message.getSource() + ": " + message.getMessage() + "\n");
+		messageWindow.setCaretPosition(messageWindow.getDocument().getLength());
 	}
 
 	/**
@@ -307,7 +308,8 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 			try 
 			{
 				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
-				writer.write("exit\r\n");
+				writer.write("exit ");
+				writer.newLine();
 				writer.flush();
 				writer.close();
 			} 
