@@ -26,15 +26,25 @@ public class EuchreServer
 		ServerSocket serverSocket = null;
 
 		// the zeroth argument is the port
+			
 		if (args.length > 0)
-			port = Integer.parseInt(args[0]);
+		{
+			try
+			{
+				port = Integer.parseInt(args[0]);
+			}
+			catch(NumberFormatException e)
+			{
+				Trace.dprint("givin port not a number; using default port %d",DEFAULT_PORT);
+			}
+		}
 		else
 			Trace.dprint("No port specified; using default port %d...", DEFAULT_PORT);
 
 		// make sure the port is valid
-		if (port < 100 || port > 65534)
+		if (port < 1024 || port > 65534)
 		{
-			System.out.println(port + " is not a valid port to listen on. Please enter a number between 100 and 65534.");
+			System.out.println(port + " is not a valid port to listen on. Please enter a number between 1024 and 65534.");
 			System.exit(-1);
 		}
 
