@@ -81,6 +81,9 @@ public class ServerSocketThread extends Thread
 						{
 							Trace.dprint("Client id '%s' has timed out.", entry.getKey());
 							invalidated.add(entry.getKey());
+							
+							if(entry.getValue().isAuthenticated())
+								userManager.remove(entry.getValue().getUser());
 						}
 
 						// check to see if they have disconnected of their own volition

@@ -17,10 +17,12 @@ import utility.Packet;
 public class UserManager
 {
 	private ServerSocketThread thread;
-	ArrayList<User> users;
+	private ArrayList<User> users;
 	
-	/*
+	/**
 	 * Default Constructor.
+	 * 
+	 * @param serverSocketThread Socket thread to send messages via
 	 */
     public UserManager(ServerSocketThread serverSocketThread)
     {
@@ -28,27 +30,23 @@ public class UserManager
     	users = new ArrayList<User>();
     }
 
-    /*
-     * Send a chat object.
+    /**
+     * Adds a user to this manager's client list.
      * 
-     * @param obj The chat object to send
-     * @return boolean True if it was sent succesfully, false otherwise
+     * @param usr User to add
      */
-    public boolean add(User usr)
+    public void add(User usr)
     {
     	users.add(usr);
        	thread.sendGlobal(Opcode.AddUser, users);
-      //Packet pckt = new Packet(opcode, obj);
-        return false;
     }
 
-    /*
-     * Send a chat object.
+    /**
+     * Removes a user from this manager's client list.
      * 
-     * @param obj The chat object to send
-     * @return boolean True if it was sent succesfully, false otherwise
+     * @param usr User to remove
      */
-    public boolean remove(User usr)
+    public void remove(User usr)
     {
     	int removeIndex = 0;
     	for(int x = 0; x < users.size(); x++)
@@ -56,12 +54,11 @@ public class UserManager
     		if(users.get(x).getUsername().compareTo(usr.getUsername()) == 0)
     		{
     			removeIndex = x;
+    			break;
     		}
     	}
+    	
     	users.remove(removeIndex);
-    	//users.remove(usr);
        	thread.sendGlobal(Opcode.AddUser, users);
-      //Packet pckt = new Packet(opcode, obj);
-        return false;
     }
 }
