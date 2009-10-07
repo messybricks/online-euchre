@@ -22,11 +22,13 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 
 	private JTextArea messageWindow;
 	private JTextArea userWindow;
+	private ArrayList<JTextArea> userNames;
 	private JTextField inputText;
 	private JButton submit;
 	private Process server;
 	private boolean madeserver=false;
 	private ArrayList<User> users;
+	private JPanel userArea;
 
 	/**
 	 * Initializes the client and applet, calls helper methods setUpClient and setUpApplet
@@ -138,16 +140,20 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	 */
 	private void setUpApplet(){
 
+		userNames = new ArrayList<JTextArea>();
+		
 		//initialize fields for applet.
 		messageWindow = new JTextArea(10,10);
-		userWindow = new JTextArea(10,10);         
+		userWindow = new JTextArea(0,1);         
 		inputText = new JTextField(10);
 		submit = new JButton("Submit");
 
 		//set up the text areas				
 		messageWindow.setText("Welcome to Online Euchre. \nType messages below.\n");
 		userWindow.setText("Users currently in chat:\n");
-		userWindow.append(currentUser.getUsername());
+		userNames.add(new JTextArea(1,10));
+		userNames.get(0).setText(currentUser.getUsername());
+		//userWindow.append(currentUser.getUsername());
 		userWindow.setBackground(Color.LIGHT_GRAY);
 		//set up borders
 		messageWindow.setBorder(BorderFactory.createEtchedBorder());
@@ -167,7 +173,8 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		//initialize JPanels & ScrollPane
 		JPanel centerArea = new JPanel (new GridLayout(1,2));
 		JPanel messageArea = new JPanel(new GridLayout(1,1));
-		JPanel userArea = new JPanel (new GridLayout(1,1));
+		userArea = new JPanel ();
+		userArea.setLayout(new BoxLayout(userArea,BoxLayout.Y_AXIS));
 		JPanel inputArea = new JPanel ();
 		JScrollPane messageScroll = new JScrollPane(messageWindow);
 		inputArea.setLayout(new BoxLayout (inputArea,BoxLayout.LINE_AXIS));
@@ -175,6 +182,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		//add the fields to the panels
 		messageArea.add(messageScroll);
 		userArea.add(userWindow);
+		userArea.add(userNames.get(0));
 		inputArea.add(submit);
 		inputArea.add(inputText);
 
@@ -215,8 +223,27 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	{
 		users = newUsers;
 		userWindow.setText("Users currently in chat:");
+		userArea.removeAll();
+		userArea.add(userWindow);
+		for(int x = 0; x < userNames.size(); x++)
+		{
+			//userArea.remove(userNames.get(x));
+			userNames.remove(x);
+		}
 		for(User x : users)
-			userWindow.append("\n" + x.getUsername());
+		{
+			JTextArea temp = new JTextArea(1,1);
+			temp.setText("  " + x.getUsername());
+			temp.setEditable(false);
+			temp.addMouseListener(this);
+			temp.setBackground(Color.LIGHT_GRAY);
+			temp.setFocusable(false);
+			userNames.add(temp);
+			userArea.add(userNames.get(userNames.lastIndexOf(temp)));
+			//userWindow.append("\n" + x.getUsername());
+		}
+		userArea.add(Box.createRigidArea(new Dimension(5,500)));
+		userArea.doLayout();
 	}
 
 	/**
@@ -319,8 +346,6 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	 */
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		if(inputText.getText().equals("Enter your messages here"))
-			inputText.setText("");
 		
 	}
 
@@ -348,7 +373,24 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	}
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
+		if((inputText.getText().equals("Enter your messages here")) && (e.getSource() == inputText))
+			inputText.setText("");
+		else if(e.getSource() != inputText);
+		{
+			try
+			{
+				JTextArea temp = (JTextArea) e.getComponent();
+				if(temp.getForeground() != Color.RED)
+					temp.setForeground(Color.RED);
+				else if(temp.getForeground() == Color.RED)
+					temp.setForeground(Color.GREEN);
+					
+			}
+			catch(Exception e1)
+			{
+				
+			}
+		}
 		
 	}
 	@Override
