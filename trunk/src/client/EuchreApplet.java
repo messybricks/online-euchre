@@ -215,8 +215,8 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	{
 		users = newUsers;
 		userWindow.setText("Users currently in chat:");
-		for(int x = 0; x < users.size(); x++)
-			userWindow.append("\n" + users.get(x).getUsername());
+		for(User x : users)
+			userWindow.append("\n" + x.getUsername());
 	}
 
 	/**
