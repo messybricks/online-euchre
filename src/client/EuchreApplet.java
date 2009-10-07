@@ -378,7 +378,8 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 				
 			}
 		}
-		clicked = (JTextArea) e.getComponent();
+		if(e.getSource() != inputText)
+			clicked = (JTextArea) e.getComponent();
 	}
 
 	/**
