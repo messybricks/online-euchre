@@ -14,9 +14,9 @@ public class ServerSocketThread extends Thread
 {
 	private ServerSocket socket = null;
 	private Map<String, PacketQueueThread> clientMapping = null;
-	
+
 	private volatile boolean exitThread = false;
-	
+
 	// block server socket thread this many milliseconds waiting to accept a connection. acts as a thread tick timer
 	private static final int SOCKET_TIMEOUT = 200;
 	// ping clients every this many milliseconds to ensure connection validity
@@ -25,7 +25,7 @@ public class ServerSocketThread extends Thread
 	private static final int PING_TIMEOUT = 3000;
 	// wait this many milliseconds to kill a client thread peacefully
 	private static final int THREAD_KILL_TIMEOUT = 600;
-	
+
 	private ChatManager chatManager;
 	private UserManager userManager;
 
@@ -37,7 +37,7 @@ public class ServerSocketThread extends Thread
 	{
 		super("ServerSocketThread");
 		this.socket = socket;
-		
+
 		try
 		{
 			socket.setSoTimeout(SOCKET_TIMEOUT);
@@ -46,10 +46,10 @@ public class ServerSocketThread extends Thread
 		{
 			Trace.dprint("Unable to set socket accept timeout parameter to %d. Message: %s", SOCKET_TIMEOUT, ex.getMessage());
 		}
-		
+
 		chatManager = new ChatManager(this);
 		userManager = new UserManager(this);
-		
+
 		clientMapping = new HashMap<String, PacketQueueThread>();
 	}
 
@@ -65,66 +65,78 @@ public class ServerSocketThread extends Thread
 				// play ping-pong
 				long time = System.currentTimeMillis();
 				Set<String> invalidated = new HashSet<String>();
-				
-				for(Entry<String, PacketQueueThread> entry : clientMapping.entrySet())
+
+				synchronized(clientMapping)
 				{
-					// ping clients every so often
-					if(time - entry.getValue().getLastPing() > PING_FREQUENCY)
+					for(Entry<String, PacketQueueThread> entry : clientMapping.entrySet())
 					{
-						entry.getValue().ping();
-					}
-					
-					// check to see if they have disconnected due to network problems
-					if(entry.getValue().getLastPong() < entry.getValue().getLastPing() && time - entry.getValue().getLastPing() > PING_TIMEOUT)
-					{
-						Trace.dprint("Client id '%s' has timed out.", entry.getKey());
-						invalidated.add(entry.getKey());
-					}
-					
-					// check to see if they have disconnected of their own volition
-					if(entry.getValue().hasQuit())
-						invalidated.add(entry.getKey());
-				}
-				
-				// authenticate clients
-				for(Entry<String, PacketQueueThread> entry : clientMapping.entrySet())
-				{
-					if(!entry.getValue().isAuthenticated())
-					{
-						if(entry.getValue().getUser() != null)
+						// ping clients every so often
+						if(time - entry.getValue().getLastPing() > PING_FREQUENCY)
 						{
-							PacketQueueThread tempThread = entry.getValue();
+							entry.getValue().ping();
+						}
+
+						// check to see if they have disconnected due to network problems
+						if(entry.getValue().getLastPong() < entry.getValue().getLastPing() && time - entry.getValue().getLastPing() > PING_TIMEOUT)
+						{
+							Trace.dprint("Client id '%s' has timed out.", entry.getKey());
 							invalidated.add(entry.getKey());
-							tempThread.verify();
-							clientMapping.put(tempThread.getUser().getUsername(), tempThread);
+						}
+
+						// check to see if they have disconnected of their own volition
+						if(entry.getValue().hasQuit())
+							invalidated.add(entry.getKey());
+					}
+				}
+
+				// authenticate clients
+				synchronized(clientMapping)
+				{
+					for(Entry<String, PacketQueueThread> entry : clientMapping.entrySet())
+					{
+						if(!entry.getValue().isAuthenticated())
+						{
+							if(entry.getValue().getUser() != null)
+							{
+								PacketQueueThread tempThread = entry.getValue();
+								invalidated.add(entry.getKey());
+								tempThread.verify();
+								clientMapping.put(tempThread.getUser().getUsername(), tempThread);
+							}
 						}
 					}
 				}
-				
+
 				// remove invalidated connections
-				for(String key : invalidated)
+				synchronized(clientMapping)
 				{
-					clientMapping.get(key).stopThread();
-					try
+					for(String key : invalidated)
 					{
-						clientMapping.get(key).join(THREAD_KILL_TIMEOUT);
+						clientMapping.get(key).stopThread();
+						try
+						{
+							clientMapping.get(key).join(THREAD_KILL_TIMEOUT);
+						}
+						catch (InterruptedException ex)
+						{
+							Trace.dprint("ServerSocketThread was interrupted while joining client thread! Message: %s", ex.getMessage());
+						}
+						clientMapping.remove(key);
 					}
-					catch (InterruptedException ex)
-					{
-						Trace.dprint("ServerSocketThread was interrupted while joining client thread! Message: %s", ex.getMessage());
-					}
-					clientMapping.remove(key);
 				}
-				
+
 				// if socket.accept() does not return null, we have an incoming connection and must spawn a thread to manage it
 				Socket accepted = socket.accept();
 				if(accepted != null)
 				{
 					String hostName = accepted.getInetAddress().getHostName();
 					Trace.dprint("Accepting connection from '%s'...", hostName);
-					
+
 					PacketQueueThread clientThread = new PacketQueueThread(accepted, chatManager, userManager);
-					clientMapping.put(hostName, clientThread);
+					synchronized(clientMapping)
+					{
+						clientMapping.put(hostName, clientThread);
+					}
 					clientThread.start();
 				}
 			}
@@ -143,25 +155,28 @@ public class ServerSocketThread extends Thread
 					break;
 			}
 		}
-		
+
 		// close client connections
-		for(Entry<String, PacketQueueThread> entry : clientMapping.entrySet())
+		synchronized(clientMapping)
 		{
-			try
+			for(Entry<String, PacketQueueThread> entry : clientMapping.entrySet())
 			{
-				Trace.dprint("Stopping PacketQueueThread with id '%s'...", entry.getKey());
-				entry.getValue().stopThread();
-				entry.getValue().join();
-			}
-			catch (InterruptedException ex)
-			{
-				Trace.dprint("ServerSocketThread was interrupted while joining PacketQueueThread!");
+				try
+				{
+					Trace.dprint("Stopping PacketQueueThread with id '%s'...", entry.getKey());
+					entry.getValue().stopThread();
+					entry.getValue().join();
+				}
+				catch (InterruptedException ex)
+				{
+					Trace.dprint("ServerSocketThread was interrupted while joining PacketQueueThread!");
+				}
 			}
 		}
-		
+
 		Trace.dprint("ServerSocketThread has exited. Joining...");
 	}
-	
+
 	/**
 	 * Sets a flag which will attempt to safely terminate this thread.
 	 */
@@ -169,7 +184,7 @@ public class ServerSocketThread extends Thread
 	{
 		exitThread = true;
 	}
-	
+
 	/**
 	 * Sends the given opcode to every client connected to this ServerSocketThread.
 	 * @param opcode Opcode of packet to generate
@@ -187,9 +202,12 @@ public class ServerSocketThread extends Thread
 	public void sendGlobal(Opcode opcode, Serializable datum)
 	{
 		Packet global = new Packet(opcode, datum);
-		
-		for(PacketQueueThread thread : clientMapping.values())
-			thread.send(global);
+
+		synchronized(clientMapping)
+		{
+			for(PacketQueueThread thread : clientMapping.values())
+				thread.send(global);
+		}
 	}
 
 	/**
@@ -211,9 +229,12 @@ public class ServerSocketThread extends Thread
 	 */
 	public void sendSpecified(String client, Opcode opcode, Serializable datum)
 	{
-		if(clientMapping.containsKey(client))
-			clientMapping.get(client).send(opcode, datum);
-		else
-			Trace.dprint("WARNING: Attempted to send a packet with opcode '%s' to nonexistent client '%s'.", opcode.toString(), client);
+		synchronized(clientMapping)
+		{
+			if(clientMapping.containsKey(client))
+				clientMapping.get(client).send(opcode, datum);
+			else
+				Trace.dprint("WARNING: Attempted to send a packet with opcode '%s' to nonexistent client '%s'.", opcode.toString(), client);
+		}
 	}
 }

@@ -316,7 +316,6 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 			catch (IOException e) 
 			{
 				Trace.dprint("unable to tell server to exit: %s", e.getMessage());
-			
 			}
 		}
 	}
