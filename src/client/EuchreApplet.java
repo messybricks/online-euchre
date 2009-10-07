@@ -28,8 +28,10 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	private Process server;
 	private boolean madeserver=false;
 	private ArrayList<User> users;
+	private ArrayList<String> ignoreList;
 	private JPanel userArea;
 	private JTextArea clicked;
+	private JCheckBox ignore;
 
 	/**
 	 * Initializes the client and applet, calls helper methods setUpClient and setUpApplet
@@ -71,24 +73,8 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 			{		
 				String myName = InetAddress.getLocalHost().getHostName();
 				myAddress= InetAddress.getLocalHost().getHostAddress();
-				boolean validport=false;
-				//keep asking for port until it is valid
-				while (!validport)
-				{
-					try
-					{
-						port =JOptionPane.showInputDialog("Your IP is " + myAddress +", your name is " + myName + "\n Choose Port:", "36212");
-						if(port == null)
-							System.exit(ABORT);
-						int portTest=new Integer(port).intValue();
-						if (portTest >= 1024 && portTest <= 65534)
-							validport=true;
-					}
-					catch(NumberFormatException e)
-					{
-						//TODO message saying the port is wrong
-					}
-				}
+				port =JOptionPane.showInputDialog("Your IP is " + myAddress +", your name is " + myName + "\n Choose Port:", "36212");
+				
 				//if the cancel button is pressed, exit the system
 				if(port == null)
 					System.exit(ABORT);
@@ -117,33 +103,15 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		}
 		else
 		{
+			//TODO deal with improper input
+			serverNums=JOptionPane.showInputDialog("Enter the Server IP:port","127.0.0.1:36212");
 			
-			boolean validport=false;
-			//keep asking for IP and port until input is valid
-			while(!validport)
-			{
-				try
-				{
-					serverNums=JOptionPane.showInputDialog("Enter the Server IP:port","127.0.0.1:36212");
-					//if the cancel button is pressed, exit the system
-					if(serverNums == null)
-						System.exit(ABORT);
-					serverIP=serverNums.substring(0, serverNums.indexOf(':')).trim();
-					port=serverNums.substring(serverNums.indexOf(':')+1).trim();
-					int portTest=new Integer(port).intValue();
-					if (portTest >= 1024 && portTest <= 65534)
-						validport=true;
-				}
-				catch(NumberFormatException e)
-				{
-					//TODO message saying port is wrong
-				}
-				catch(StringIndexOutOfBoundsException e)
-				{
-					//TODO message saying input format is wrong
-				}
-			}
+			//if the cancel button is pressed, exit the system
+			if(serverNums == null)
+				System.exit(ABORT);
 			
+			serverIP=serverNums.substring(0, serverNums.indexOf(':')).trim();
+			port=serverNums.substring(serverNums.indexOf(':')+1).trim();
 			Trace.dprint("the server ip is: %s and the port is %s", serverIP,port);
 		}
 		client = new EuchreNetClient(serverIP, new Integer(port).intValue(), this);
@@ -162,13 +130,9 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		}
 
 		//ask for username
-		username ="";
+		username =JOptionPane.showInputDialog("Enter username:");
 		while((username.compareTo("") == 0) || (!isAlphaNumeric(username)))
-		{
 			username =JOptionPane.showInputDialog("Enter username:");
-			if(username == null)
-				System.exit(ABORT);
-		}
 
 		//initialize user
 		initializeUser(username);
@@ -180,6 +144,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	private void setUpApplet(){
 
 		userNames = new ArrayList<JTextArea>();
+		ignoreList = new ArrayList<String>();
 		
 		//initialize fields for applet.
 		messageWindow = new JTextArea(10,10);
@@ -220,8 +185,6 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 
 		//add the fields to the panels
 		messageArea.add(messageScroll);
-		userArea.add(userWindow);
-		userArea.add(userNames.get(0));
 		inputArea.add(submit);
 		inputArea.add(inputText);
 
@@ -323,8 +286,19 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	 * @param message the message to be received
 	 */
 	public void receiveMessage(ChatObject message) {
-		messageWindow.append(message.getSource() + ": " + message.getMessage() + "\n");
-		messageWindow.setCaretPosition(messageWindow.getDocument().getLength());
+		String incomingName = message.getSource().getUsername();
+		boolean ignore = false;
+		for(String blockName:ignoreList)
+		{
+			if(incomingName.compareTo(blockName) == 0)
+				ignore = true;
+		}
+		
+		if(!ignore)
+		{
+			messageWindow.append(message.getSource() + ": " + message.getMessage() + "\n");
+			messageWindow.setCaretPosition(messageWindow.getDocument().getLength());
+		}
 	}
 
 	/**
@@ -391,25 +365,114 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	 */
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		if((e.getSource() != inputText) && (clicked != e.getComponent()))
+		if(e.getSource() != inputText)
 		{
 			try
 			{
-				JTextArea temp = (JTextArea) e.getComponent();
-				temp.setForeground(Color.LIGHT_GRAY);
-				temp.setBackground(Color.BLACK);
+				if(clicked == null)
+				{
+					JTextArea temp = (JTextArea) e.getComponent();
+					temp.setForeground(Color.LIGHT_GRAY);
+					temp.setBackground(Color.BLACK);
+					clicked = temp;
+					
+					
+					int index = userNames.indexOf(clicked);
+					userWindow.setText("Users currently in chat:");
+					userArea.removeAll();
+					userArea.add(userWindow);
+					for(int x = 0; x < index + 1; x++)
+					{
+						userArea.add(userNames.get(x));
+					}
+					
+					JPanel userInfo = new JPanel();
+					userInfo.setBackground(Color.WHITE);
+					//userInfo.add(Box.createRigidArea(new Dimension(5,100)));
+					ignore = new JCheckBox("Ignore?");
+					
+					boolean inList = false;
+					for(String name: ignoreList)
+					{
+						if(temp.getText(2, temp.getText().length()-2).compareTo(name) == 0)
+						{
+							inList = true;
+							ignore = new JCheckBox("Ignore?", true);
+						}	
+					}
+					if(!inList)
+						ignore = new JCheckBox("Ignore?", false);
+					
+					ignore.setBackground(Color.WHITE);
+					if(temp.getText(2, temp.getText().length()-2).compareTo(currentUser.getUsername()) == 0)
+					{
+						userInfo.add(new JTextArea("This is you!"));
+						//ignore.setEnabled(false);
+					}
+					else
+						userInfo.add(ignore);
+					userArea.add(userInfo);
+					
+					
+					for(int x = index + 1; x < userNames.size(); x++)
+					{
+						userArea.add(userNames.get(x));
+					}
+					userArea.add(Box.createRigidArea(new Dimension(5,500)));
+					userArea.doLayout();
+				}
+				else
+				{
+					boolean alreadyIgnored = false;
+					for(String name:ignoreList)
+					{
+						if(clicked.getText(2, clicked.getText().length()-2).compareTo(name) == 0)
+							alreadyIgnored = true;
+					}
+					if(ignore.isSelected())
+					{
+						if(!alreadyIgnored)
+							ignoreList.add(clicked.getText(2, clicked.getText().length()-2));
+					}
+					else if(alreadyIgnored)
+					{
+						int removeIndex = -1;
+						for(int x = 0; x < ignoreList.size(); x++)
+						{
+							if(clicked.getText(2, clicked.getText().length()-2).compareTo(ignoreList.get(x)) == 0)
+								removeIndex = x;
+						}
+						if(removeIndex > -1)
+							ignoreList.remove(removeIndex);
+					}
+					
+					
+					clicked.setForeground(Color.BLACK);
+					clicked.setBackground(Color.LIGHT_GRAY);
+					clicked = null;
+					
+
+					userWindow.setText("Users currently in chat:");
+					userArea.removeAll();
+					userArea.add(userWindow);
+					for(int x = 0; x < userNames.size(); x++)
+					{
+						userArea.add(userNames.get(x));
+					}
+					userArea.add(Box.createRigidArea(new Dimension(5,500)));
+					userArea.doLayout();
+					userArea.setSize(0, 0);
+				}
 			}
 			catch(Exception e1)
 			{
 				
 			}
 		}
-		if(e.getSource() != inputText) 
+	/*	if(e.getSource() != inputText)
 		{
 			try
 			{
-				clicked.setForeground(Color.BLACK);
-				clicked.setBackground(Color.LIGHT_GRAY);
 			}
 			catch(Exception e1)
 			{
@@ -417,7 +480,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 			}
 		}
 		if(e.getSource() != inputText)
-			clicked = (JTextArea) e.getComponent();
+			clicked = (JTextArea) e.getComponent();*/
 	}
 
 	/**
