@@ -47,7 +47,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	private void setUpClient(){
 		//set up the client
 		//<<<<<<< .working
-		client = new EuchreNetClient("127.0.0.1", 36212, this);
+		//client = new EuchreNetClient("127.0.0.1", 36212, this);
 		//=======
 		Object[] options = {"Host","Join" };
 		int n = JOptionPane.showOptionDialog(this,
@@ -75,9 +75,9 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 					System.exit(ABORT);
 				
 				//TODO deal with improper port values
-				String [] args= {port};
+				//String [] args= {port};
 				serverIP="127.0.0.1";
-				server = Runtime.getRuntime().exec("java server/EuchreServer",args);
+				server = Runtime.getRuntime().exec("java server/EuchreServer " + port);
 				
 			}
 			catch(IOException e)
