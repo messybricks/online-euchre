@@ -71,8 +71,24 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 			{		
 				String myName = InetAddress.getLocalHost().getHostName();
 				myAddress= InetAddress.getLocalHost().getHostAddress();
-				port =JOptionPane.showInputDialog("Your IP is " + myAddress +", your name is " + myName + "\n Choose Port:", "36212");
-				
+				boolean validport=false;
+				//keep asking for port until it is valid
+				while (!validport)
+				{
+					try
+					{
+						port =JOptionPane.showInputDialog("Your IP is " + myAddress +", your name is " + myName + "\n Choose Port:", "36212");
+						if(port == null)
+							System.exit(ABORT);
+						int portTest=new Integer(port).intValue();
+						if (portTest >= 1024 && portTest <= 65534)
+							validport=true;
+					}
+					catch(NumberFormatException e)
+					{
+						//TODO message saying the port is wrong
+					}
+				}
 				//if the cancel button is pressed, exit the system
 				if(port == null)
 					System.exit(ABORT);
@@ -101,15 +117,33 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		}
 		else
 		{
-			//TODO deal with improper input
-			serverNums=JOptionPane.showInputDialog("Enter the Server IP:port","127.0.0.1:36212");
 			
-			//if the cancel button is pressed, exit the system
-			if(serverNums == null)
-				System.exit(ABORT);
+			boolean validport=false;
+			//keep asking for IP and port until input is valid
+			while(!validport)
+			{
+				try
+				{
+					serverNums=JOptionPane.showInputDialog("Enter the Server IP:port","127.0.0.1:36212");
+					//if the cancel button is pressed, exit the system
+					if(serverNums == null)
+						System.exit(ABORT);
+					serverIP=serverNums.substring(0, serverNums.indexOf(':')).trim();
+					port=serverNums.substring(serverNums.indexOf(':')+1).trim();
+					int portTest=new Integer(port).intValue();
+					if (portTest >= 1024 && portTest <= 65534)
+						validport=true;
+				}
+				catch(NumberFormatException e)
+				{
+					//TODO message saying port is wrong
+				}
+				catch(StringIndexOutOfBoundsException e)
+				{
+					//TODO message saying input format is wrong
+				}
+			}
 			
-			serverIP=serverNums.substring(0, serverNums.indexOf(':')).trim();
-			port=serverNums.substring(serverNums.indexOf(':')+1).trim();
 			Trace.dprint("the server ip is: %s and the port is %s", serverIP,port);
 		}
 		client = new EuchreNetClient(serverIP, new Integer(port).intValue(), this);
@@ -128,9 +162,13 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		}
 
 		//ask for username
-		username =JOptionPane.showInputDialog("Enter username:");
+		username ="";
 		while((username.compareTo("") == 0) || (!isAlphaNumeric(username)))
+		{
 			username =JOptionPane.showInputDialog("Enter username:");
+			if(username == null)
+				System.exit(ABORT);
+		}
 
 		//initialize user
 		initializeUser(username);
