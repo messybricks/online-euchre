@@ -50,7 +50,16 @@ public class UserManager
      */
     public boolean remove(User usr)
     {
-    	users.remove(usr);
+    	int removeIndex = 0;
+    	for(int x = 0; x < users.size(); x++)
+    	{
+    		if(users.get(x).getUsername().compareTo(usr.getUsername()) == 0)
+    		{
+    			removeIndex = x;
+    		}
+    	}
+    	users.remove(removeIndex);
+    	//users.remove(usr);
        	thread.sendGlobal(Opcode.AddUser, users);
       //Packet pckt = new Packet(opcode, obj);
         return false;

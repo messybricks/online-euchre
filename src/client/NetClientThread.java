@@ -66,6 +66,7 @@ public class NetClientThread extends NetworkThread
 	 */
 	private void onQuit(Packet packet)
 	{
+		int x;
 		// TODO: Implement client Quit packet
 	}
 	
