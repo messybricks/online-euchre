@@ -29,6 +29,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	private boolean madeserver=false;
 	private ArrayList<User> users;
 	private JPanel userArea;
+	private JTextArea clicked;
 
 	/**
 	 * Initializes the client and applet, calls helper methods setUpClient and setUpApplet
@@ -238,6 +239,10 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 			temp.addMouseListener(this);
 			temp.setBackground(Color.LIGHT_GRAY);
 			temp.setFocusable(false);
+			if(x.getUsername().compareTo(currentUser.getUsername()) == 0)
+			{
+				temp.setToolTipText("This is me!");
+			}
 			userNames.add(temp);
 			userArea.add(userNames.get(userNames.lastIndexOf(temp)));
 			//userWindow.append("\n" + x.getUsername());
@@ -316,6 +321,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 			catch (IOException e) 
 			{
 				Trace.dprint("unable to tell server to exit: %s", e.getMessage());
+			
 			}
 		}
 	}
@@ -347,7 +353,32 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	 */
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		
+		if((e.getSource() != inputText) && (clicked != e.getComponent()))
+		{
+			try
+			{
+				JTextArea temp = (JTextArea) e.getComponent();
+				temp.setForeground(Color.LIGHT_GRAY);
+				temp.setBackground(Color.BLACK);
+			}
+			catch(Exception e1)
+			{
+				
+			}
+		}
+		if(e.getSource() != inputText) 
+		{
+			try
+			{
+				clicked.setForeground(Color.BLACK);
+				clicked.setBackground(Color.LIGHT_GRAY);
+			}
+			catch(Exception e1)
+			{
+				
+			}
+		}
+		clicked = (JTextArea) e.getComponent();
 	}
 
 	/**
@@ -368,42 +399,30 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		
 	}
 	@Override
-	public void mouseExited(MouseEvent e) {
+	public void mouseExited(MouseEvent e) 
+	{
 		// TODO Auto-generated method stub
 		
 	}
 	@Override
-	public void mousePressed(MouseEvent e) {
+	public void mousePressed(MouseEvent e) 
+	{
 		if((inputText.getText().equals("Enter your messages here")) && (e.getSource() == inputText))
 			inputText.setText("");
-		else if(e.getSource() != inputText);
-		{
-			try
-			{
-				JTextArea temp = (JTextArea) e.getComponent();
-				if(temp.getForeground() != Color.RED)
-					temp.setForeground(Color.RED);
-				else if(temp.getForeground() == Color.RED)
-					temp.setForeground(Color.GREEN);
-					
-			}
-			catch(Exception e1)
-			{
-				
-			}
-		}
 		
 	}
 	@Override
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
+	public void mouseReleased(MouseEvent e) 
+	{
+		
 		
 	}
 
 	private boolean isAlphaNumeric(final String s) 
 	{
 		  final char[] chars = s.toCharArray();
-		  for (int x = 0; x < chars.length; x++) {      
+		  for (int x = 0; x < chars.length; x++) 
+		  {      
 		    final char c = chars[x];
 		    if ((c >= 'a') && (c <= 'z')) continue; // lowercase
 		    if ((c >= 'A') && (c <= 'Z')) continue; // uppercase
@@ -411,7 +430,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		    return false;
 		  }  
 		  return true;
-		}
+	}
 
 
 	
