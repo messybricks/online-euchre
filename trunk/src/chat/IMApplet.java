@@ -10,7 +10,20 @@ import java.util.Vector;
 
 
 /**
- * IMApplet is a JApplet that implements a basic chat window interface. 
+ * 
+ * 
+ * 
+ * THIS CLASS IS NOT USED.  
+ * 
+ *  
+ * We integrated it with EuchreApplet. 
+ *  
+ *  
+ *  
+ *  
+ *  
+ *  
+ *  
  * 
  * @author Ryan Hurtubise and Mike Mesenbring
  */
@@ -176,7 +189,7 @@ public class IMApplet extends JApplet implements ActionListener, KeyListener{
 	 */
 	@Override
 	public void keyPressed(KeyEvent e) {}
-	
+
 	/**
 	 * not implemented
 	 */

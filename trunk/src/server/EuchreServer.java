@@ -4,6 +4,10 @@ import java.io.*;
 import java.net.*;
 import utility.*;
 
+/**
+ * Handles network communications between clients for the Online Euchre Game
+ * 
+ */
 public class EuchreServer
 {
 	// default port to listen for connections on if no specific port is given at command line
@@ -13,6 +17,7 @@ public class EuchreServer
 
 	/**
 	 * Server application entry point.
+	 * 
 	 * @param args argument 1 is a port number to listen on. it is optional; port 36212 will be used if it is omitted.
 	 */
 	public static void main(String[] args)
@@ -26,7 +31,7 @@ public class EuchreServer
 		ServerSocket serverSocket = null;
 
 		// the zeroth argument is the port
-			
+
 		if (args.length > 0)
 		{
 			try
@@ -100,7 +105,7 @@ public class EuchreServer
 		{
 			Trace.dprint("Sending global '%s' packet...", Opcode.Quit.toString());
 			thread.sendGlobal(Opcode.Quit);
-			
+
 			Thread.sleep(QUIT_SLEEP_MS);
 		}
 		catch (InterruptedException ex)

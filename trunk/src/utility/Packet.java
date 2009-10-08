@@ -11,11 +11,12 @@ public class Packet
 {
 	private Opcode opcode;
 	private Serializable data;
-	
+
 	public static final int HEADER_SIZE = 8;
 
 	/**
 	 * Creates a new instance of the Packet class.
+	 * 
 	 * @param opcode Opcode defining the action to perform
 	 */
 	public Packet(Opcode opcode)
@@ -25,6 +26,7 @@ public class Packet
 
 	/**
 	 * Creates a new instance of the Packet class.
+	 * 
 	 * @param opcode Opcode defining the action to perform
 	 * @para data Some serializable object describing how to perform the action
 	 */
@@ -33,27 +35,30 @@ public class Packet
 		this.opcode = opcode;
 		this.data = data;
 	}
-	
+
 	/**
 	 * Returns this packet's opcode.
+	 * 
 	 * @return this packet's opcode
 	 */
 	public Opcode getOpcode()
 	{
 		return opcode;
 	}
-	
+
 	/**
 	 * Returns this packet's datum.
+	 * 
 	 * @return this packet's datum
 	 */
 	public Serializable getData()
 	{
 		return data;
 	}
-	
+
 	/**
 	 * Recreates a packet from a byte array created using the Packet.flatten() method.
+	 * 
 	 * @param array A byte array created using the Packet.flatten() method
 	 * @throws InvalidPacketException if the given array does not represent a valid flattened Packet object
 	 * @throws IllegalArgumentException if array is null
@@ -65,16 +70,16 @@ public class Packet
 			throw new IllegalArgumentException("Cannot instantiate a packet from a null array.");
 		if(array.length < HEADER_SIZE)
 			throw new InvalidPacketException("Packet contains a corrupted header.");
-		
+
 		ByteArrayInputStream stream = new ByteArrayInputStream(array);
 		DataInputStream dataIn = new DataInputStream(stream);
-		
+
 		try
 		{
 			// decode the opcode from its ordinal
 			opcode = Opcode.fromOrdinal(dataIn.readInt());
 			int dataSize = dataIn.readInt();
-			
+
 			// if dataSize is zero, then we have no datum to read. otherwise, deserialize it
 			if(dataSize == 0)
 				data = null;
@@ -128,7 +133,7 @@ public class Packet
 				ObjectOutputStream serializer = new ObjectOutputStream(target);
 				serializer.writeObject(data);
 				serializer.close();
-				
+
 				// next, we create our output stream, write the opcode and packet size, and then flush the packet data to the output stream.
 				stream = new ByteArrayOutputStream();
 				bitConverter = new DataOutputStream(stream);
@@ -136,7 +141,7 @@ public class Packet
 				bitConverter.writeInt(target.size());
 				stream.write(target.toByteArray());
 			}
-			
+
 			return stream.toByteArray();
 		}
 		catch (IOException e)

@@ -1,26 +1,29 @@
 package game;
 
 /**
- * This is a class that simulates a deck of cards, and is primarily a Euchre deck.
+ * A CardCollection that simulates a deck of cards, and is primarily a Euchre deck.
  * 
  * @author Ryan
  *
  */
-public class Deck extends CardCollection {
+public class Deck extends CardCollection 
+{
 
 	/**
 	 * Creates a deck of playing cards, which size s.
 	 * 
 	 * @param s - Max size of the deck.
 	 */
-	public Deck(int s) {
+	public Deck(int s) 
+	{
 		super(s);
 	}
 
 	/**
 	 * Randomly shuffles up the deck of card.
 	 */
-	public void shuffle() {
+	public void shuffle() 
+	{
 		//lottery type shuffle algorithm.
 		int[] temp = new int[count];
 		int[] temp2 = new int[count];
@@ -58,7 +61,8 @@ public class Deck extends CardCollection {
 	 * 
 	 * @return The card to be drawn.
 	 */
-	public Card draw() {
+	public Card draw() 
+	{
 		//remove the last card and return.
 		return remove(count-1);
 	}
@@ -66,7 +70,8 @@ public class Deck extends CardCollection {
 	/**
 	 * Turns the current deck into a standard euchre deck.
 	 */
-	public void createStandardEuchreDeck() {
+	public void createStandardEuchreDeck() 
+	{
 		//reset to 0 deck.
 		count = 0;
 		//add all cards for 9, 10, J, Q, K, A.
@@ -79,5 +84,4 @@ public class Deck extends CardCollection {
 		//shuffle up the new deck.
 		shuffle();
 	}
-
 }

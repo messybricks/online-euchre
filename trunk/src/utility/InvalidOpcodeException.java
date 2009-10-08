@@ -6,9 +6,10 @@ package utility;
 public class InvalidOpcodeException extends Exception
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * Creates a new instance of the InvalidOpcodeException class.
+	 * 
 	 * @param ordinal Invalid ordinal
 	 */
 	public InvalidOpcodeException(int ordinal)

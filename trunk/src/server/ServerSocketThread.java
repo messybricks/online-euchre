@@ -31,6 +31,7 @@ public class ServerSocketThread extends Thread
 
 	/**
 	 * Creates a new instance of the ServerSocketThread class.
+	 * 
 	 * @param socket Server socket to listen on
 	 */
 	public ServerSocketThread(ServerSocket socket)
@@ -81,7 +82,7 @@ public class ServerSocketThread extends Thread
 						{
 							Trace.dprint("Client id '%s' has timed out.", entry.getKey());
 							invalidated.add(entry.getKey());
-							
+
 							if(entry.getValue().isAuthenticated())
 								userManager.remove(entry.getValue().getUser());
 						}
@@ -190,6 +191,7 @@ public class ServerSocketThread extends Thread
 
 	/**
 	 * Sends the given opcode to every client connected to this ServerSocketThread.
+	 * 
 	 * @param opcode Opcode of packet to generate
 	 */
 	public void sendGlobal(Opcode opcode)
@@ -199,6 +201,7 @@ public class ServerSocketThread extends Thread
 
 	/**
 	 * Sends the given opcode with an associated datum to every client connected to this ServerSocketThread.
+	 * 
 	 * @param opcode Opcode of packet to generate
 	 * @param datum An optional object to associate with the generated packet
 	 */
@@ -215,6 +218,7 @@ public class ServerSocketThread extends Thread
 
 	/**
 	 * Sends the given opcode with an associated datum to a specified client.
+	 * 
 	 * @param client Client to send the packet to
 	 * @param opcode Opcode of packet to generate
 	 */
@@ -226,6 +230,7 @@ public class ServerSocketThread extends Thread
 	/**
 	 * Sends the given opcode with an associated datum to a specified client. If the client given does not exist, a
 	 * warning is sent to dprint.
+	 * 
 	 * @param client Client to send the packet to
 	 * @param opcode Opcode of packet to generate
 	 * @param datum An optional object to associate with the generated packet
