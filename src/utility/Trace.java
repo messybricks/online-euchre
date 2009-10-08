@@ -9,6 +9,7 @@ public class Trace
 {
 	/**
 	 * Prints a debug string to the console if this is a debug build.
+	 * 
 	 * @param format Format string to print
 	 * @param args Optional arguments to the format string
 	 */
@@ -17,31 +18,33 @@ public class Trace
 		String s = String.format(format, args);
 		System.out.println(s);
 	}
-	
+
 	/**
 	 * Prints an array using dprint.
+	 * 
 	 * @param array Array to print
 	 */
 	public static void dprintArray(Object array)
 	{
 		StringBuilder string = new StringBuilder("[");
 		int length = Array.getLength(array);
-		
+
 		for(int i = 0; i < length - 1; ++i)
 		{
 			string.append(Array.get(array, i).toString());
 			string.append(", ");
 		}
-		
+
 		if(length > 0)
 			string.append(Array.get(array, length - 1));
-		
+
 		string.append(']');
 		dprint(string.toString());
 	}
 
 	/**
 	 * Prints a network debugging string to the console if this is a network debugging build.
+	 * 
 	 * @param format Format string to print
 	 * @param args Optional arguments to the format string
 	 */

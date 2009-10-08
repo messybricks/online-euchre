@@ -22,6 +22,7 @@ public abstract class NetworkThread extends Thread
 
 	/**
 	 * Creates a new instance of the PacketQueueThread using the given client connection.
+	 * 
 	 * @param client A socket bound to the client to communicate with.
 	 */
 	public NetworkThread(Socket client, String name)
@@ -130,6 +131,7 @@ public abstract class NetworkThread extends Thread
 
 	/**
 	 * Enqueues a packet to be sent to the server.
+	 * 
 	 * @param packet Packet to send
 	 */
 	public synchronized void send(Packet packet)
@@ -139,6 +141,7 @@ public abstract class NetworkThread extends Thread
 
 	/**
 	 * Enqueues a new packet to be sent to the server.
+	 * 
 	 * @param opcode Opcode to assign to the new packet
 	 */
 	public synchronized void send(Opcode opcode)
@@ -148,6 +151,7 @@ public abstract class NetworkThread extends Thread
 
 	/**
 	 * Enqueues a packet to be sent to the server.
+	 * 
 	 * @param opcode Opcode to assign to the new packet
 	 * @param datum A serializable object to attach to the packet
 	 */
@@ -158,6 +162,7 @@ public abstract class NetworkThread extends Thread
 
 	/**
 	 * Causes this NetworkThread to pause execution for a specified amount of time.
+	 * 
 	 * @param milliseconds Number of milliseconds to sleep for
 	 */
 	protected void sleep(int milliseconds)
@@ -174,6 +179,7 @@ public abstract class NetworkThread extends Thread
 
 	/**
 	 * Returns true if the server has sent a packet
+	 * 
 	 * @return True if the server has sent a packet
 	 */
 	public synchronized boolean hasInbound()

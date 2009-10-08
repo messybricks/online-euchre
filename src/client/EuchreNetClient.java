@@ -14,19 +14,25 @@ public class EuchreNetClient
 	private Socket socket = null;
 	private boolean valid = false;
 	private NetClientThread thread = null;
-	private EuchreApplet euchreApplet;
-	
+
+	//TODO: is this necessary?
+	private EuchreApplet euchreApplet;      
+
 	// waits this many milliseconds to ensure the server receives this client's Quit packet upon disposal
 	private static final int QUIT_SLEEP_MS = 200;
-	
+
 	/**
 	 * Creates a new instance of the EuchreNetClient by initializing a socket with the given address and port.
+	 * 
 	 * @param address Address to connect to
 	 * @param port Port to connect via
 	 */
 	public EuchreNetClient(String address, int port, EuchreApplet applet)
 	{
-		euchreApplet = applet;
+
+		//TODO: is this necessary?
+		euchreApplet = applet;      
+
 		try
 		{
 			socket = new Socket(address, port);
@@ -39,9 +45,10 @@ public class EuchreNetClient
 			valid = false;
 		}
 	}
-	
+
 	/**
 	 * Checks the state of this client and starts the socket thread if everything is in order.
+	 * 
 	 * @return True if the client has started successfully
 	 */
 	public boolean start()
@@ -55,7 +62,7 @@ public class EuchreNetClient
 		else
 			return false;
 	}
-	
+
 	/**
 	 * Disposes of this EuchreNetClient by closing the socket and releasing resources.
 	 */
@@ -65,7 +72,7 @@ public class EuchreNetClient
 		{
 			// send a quit packet to the server
 			thread.send(Opcode.Quit, usr);
-			
+
 			// sleep for a short time to give the network thread time to send the quit packet
 			try
 			{
@@ -75,7 +82,7 @@ public class EuchreNetClient
 			{
 				Trace.dprint("Main thread was interrupted while waiting to send Quit packet!");
 			}
-			
+
 			// stop the network thread
 			try
 			{
@@ -101,18 +108,20 @@ public class EuchreNetClient
 			}
 		}
 	}
-	
+
 	/**
 	 * Gets a flag indicating the state of this EuchreNetClient.
-	 * @return True if client is usable, false if not
+	 * 
+	 * @return true if client is usable, false if not
 	 */
 	public boolean isValid()
 	{
 		return valid;
 	}
-	
+
 	/**
 	 * Sends a chat message to every client connected to the same server as this NetClient.
+	 * 
 	 * @param from ID representing this client's user
 	 * @param message A string to be sent
 	 */
@@ -123,9 +132,10 @@ public class EuchreNetClient
 		else
 			thread.send(Opcode.SendMessage, new ChatObject(associate, null, message));
 	}
-	
+
 	/**
 	 * Assigns a User object to this client. This method will do nothing if this client is already authenticated.
+	 * 
 	 * @param me User object to associate with this client
 	 */
 	public void authenticate(User me)

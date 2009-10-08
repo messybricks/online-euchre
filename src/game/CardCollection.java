@@ -4,44 +4,47 @@ package game;
  * This class provides the standard methods and data needed to hold a collection of cards, such as a deck of cards.
  * 
  * @author Ryan
- *
  */
-public class CardCollection {
-	
+public class CardCollection 
+{
+
 	//cards in the collection.
 	private Card[] cards;
 	//number of cards currently in the collection.
 	protected int count;
-	
+
 	/**
 	 * Creates a new collection of cards with max size of size.
 	 * 
 	 * @param size - max size of the collection.
 	 */
-	public CardCollection(int size) {
+	public CardCollection(int size) 
+	{
 		cards = new Card[size];
 		count = 0;
 	}
-	
+
 	/**
 	 * Adds a new card to the end of the card collection.
 	 * 
 	 * @param c - card to be added.
 	 */
-	public void add(Card c) {
+	public void add(Card c) 
+	{
 		if (count == cards.length)
 			throw new ArrayIndexOutOfBoundsException("Error: The card collection is already full.");
 		//set new card to end and increment card counter.
 		cards[count++] = c;
 	}
-	
+
 	/**
 	 * Removes a card at given index from the collection, and squashes the array together.
 	 * 
 	 * @param index - index of card to be removed.
 	 * @return The card that is to be removed.
 	 */
-	public Card remove(int index) {
+	public Card remove(int index) 
+	{
 		if (count == 0)
 			throw new ArrayIndexOutOfBoundsException("Error: The card collection is already empty.");
 		//save the card to be removed.
@@ -57,14 +60,15 @@ public class CardCollection {
 		//return the removed card.
 		return temp;
 	}
-	
+
 	/**
 	 * Swap two cards in the card collection.
 	 * 
 	 * @param a - index of one of the cards to be swapped.
 	 * @param b - index of another of the cards to be swapped.
 	 */
-	public void swap(int a, int b) {
+	public void swap(int a, int b) 
+	{
 		//save card a.
 		Card temp = cards[a];
 		//swap b into a.
@@ -72,22 +76,24 @@ public class CardCollection {
 		//swap saved a into b.
 		cards[b] = temp;
 	}
-	
+
 	/**
 	 * Returns the number of cards in the collection.
 	 * 
 	 * @return The number of cards in the collection.
 	 */
-	public int getNumberOfCards() {
+	public int getNumberOfCards() 
+	{
 		return count;
 	}
-	
+
 	/**
 	 * Returns the string representation of the current card collection.
 	 * 
 	 * @return The string rep. of the current collection.
 	 */
-	public String toString() {
+	public String toString() 
+	{
 		String str = "Collection(";
 		//run through each card in the collection.
 		for (int i = 0; i < count; ++i) {
