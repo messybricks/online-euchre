@@ -10,7 +10,6 @@ import chat.*;
  */
 public class EuchreNetClient
 {
-	private User associate = null;
 	private Socket socket = null;
 	private boolean valid = false;
 	private NetClientThread thread = null;
@@ -127,10 +126,10 @@ public class EuchreNetClient
 	 */
 	public void sendGlobalChatMessage(String message)
 	{
-		if(associate == null)
+		if(thread.getUser() == null)
 			Trace.dprint("Cannot send a message before the client has authenticated.");
 		else
-			thread.send(Opcode.SendMessage, new ChatObject(associate, null, message));
+			thread.send(Opcode.SendMessage, new ChatObject(thread.getUser(), null, message));
 	}
 
 	/**
@@ -140,12 +139,9 @@ public class EuchreNetClient
 	 */
 	public void authenticate(User me)
 	{
-		if(associate == null)
-		{
-			associate = me;
+		if(thread.getUser() == null)
 			thread.send(Opcode.Auth, me);
-		}
 		else
-			Trace.dprint("Client '%s' tried to authenticate twice. Ignoring.", associate.getUsername());
+			Trace.dprint("Client '%s' tried to authenticate twice. Ignoring.", thread.getUser().getUsername());
 	}
 }

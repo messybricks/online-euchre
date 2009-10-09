@@ -158,8 +158,17 @@ public class PacketQueueThread extends NetworkThread
 			Trace.dprint("Received '%s' packet from verified user '%s'; ignoring.", packet.getOpcode().toString(), associate.getUsername());
 		else
 		{
-			associate = (User)packet.getData();
-			userMan.add(associate);
+			User user = (User)packet.getData();
+			
+			// if the name is already in use, ask the client to enter a new one. otherwise, auth them
+			if(userMan.contains(user.getUsername()))
+				send(Opcode.Rename, "This name is already in use.");
+			else
+			{
+				associate = user;
+				userMan.add(associate);
+				send(Opcode.Auth, user);
+			}
 		}
 	}
 
