@@ -124,8 +124,12 @@ public class NetClientThread extends NetworkThread
 	 */
 	private void onRename(Packet packet)
 	{
-		String message = (String)packet.getData();
+		String message = (String)packet.getData();		
+		String newName = null;
 		
-		// TODO: Handle this packet. I had to go to Linear Algebra at 11 this morning or I'da done this already :z
+		while(newName == null || newName.equals(""))
+			newName = JOptionPane.showInputDialog(message);
+		
+		send(Opcode.Auth, new User(newName));
 	}
 }
