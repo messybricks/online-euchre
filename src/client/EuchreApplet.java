@@ -270,11 +270,12 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		userWindow.setText("Users currently in chat:");
 		userArea.removeAll();
 		userArea.add(userWindow);
-		for(int x = 0; x < userNames.size(); x++)
-		{
-			//userArea.remove(userNames.get(x));
-			userNames.remove(x);
-		}
+		userNames = new ArrayList<JTextArea>();
+//		for(int x = 0; x < userNames.size(); x++)
+//		{
+//			//userArea.remove(userNames.get(x));
+//			userNames.remove(0);
+//		}
 		for(User x : users)
 		{
 			JTextArea temp = new JTextArea(1,1);
@@ -292,6 +293,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 			//userWindow.append("\n" + x.getUsername());
 		}
 		userArea.add(Box.createRigidArea(new Dimension(5,500)));
+		//userArea.setSize(0, 0);
 		userArea.doLayout();
 	}
 
