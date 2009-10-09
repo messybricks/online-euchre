@@ -128,16 +128,21 @@ public class ServerSocketThread extends Thread
 				{
 					for(String key : invalidated)
 					{
-						clientMapping.get(key).stopThread();
-						try
+						if(clientMapping.containsKey(key))
 						{
-							clientMapping.get(key).join(THREAD_KILL_TIMEOUT);
+							clientMapping.get(key).stopThread();
+							try
+							{
+								clientMapping.get(key).join(THREAD_KILL_TIMEOUT);
+							}
+							catch (InterruptedException ex)
+							{
+								Trace.dprint("ServerSocketThread was interrupted while joining client thread! Message: %s", ex.getMessage());
+							}
+							clientMapping.remove(key);
 						}
-						catch (InterruptedException ex)
-						{
-							Trace.dprint("ServerSocketThread was interrupted while joining client thread! Message: %s", ex.getMessage());
-						}
-						clientMapping.remove(key);
+						else
+							Trace.dprint("Client '%s' was marked as invalidated, but did not exist in clientMapping!", key);
 					}
 				}
 
