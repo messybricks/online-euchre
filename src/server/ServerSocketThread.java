@@ -96,6 +96,9 @@ public class ServerSocketThread extends Thread
 				// authenticate clients
 				synchronized(clientMapping)
 				{
+					LinkedList<String> toRemove = new LinkedList<String>();
+					LinkedList<PacketQueueThread> toAdd = new LinkedList<PacketQueueThread>();
+					
 					for(Entry<String, PacketQueueThread> entry : clientMapping.entrySet())
 					{
 						if(!entry.getValue().isAuthenticated())
@@ -103,14 +106,21 @@ public class ServerSocketThread extends Thread
 							if(entry.getValue().getUser() != null)
 							{
 								PacketQueueThread tempThread = entry.getValue();
-								clientMapping.remove(entry.getKey());
 								tempThread.verify();
-								clientMapping.put(tempThread.getUser().getUsername(), tempThread);
+								
+								toRemove.add(entry.getKey());
+								toAdd.add(tempThread);
 								
 								Trace.dprint("'%s' -> '%s'", entry.getKey(), tempThread.getUser().getUsername());
 							}
 						}
 					}
+					
+					for(String removal : toRemove)
+						clientMapping.remove(removal);
+					
+					for(PacketQueueThread addition : toAdd)
+						clientMapping.put(addition.getUser().getUsername(), addition);
 				}
 
 				// remove invalidated connections
