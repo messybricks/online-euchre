@@ -46,7 +46,7 @@ public class NetClientThread extends NetworkThread
 			onSendMessage(packet);
 		else if(packet.getOpcode() == Opcode.Auth)
 			onAuth(packet);
-		else if(packet.getOpcode() == Opcode.AddUser)
+		else if(packet.getOpcode() == Opcode.UpdateUsers)
 			onAddUser(packet);
 		else
 			Trace.dprint("Received packet with unimplemented opcode '%s' - ignoring.", packet.getOpcode().toString());
