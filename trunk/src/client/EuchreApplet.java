@@ -295,6 +295,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		userArea.add(Box.createRigidArea(new Dimension(5,500)));
 		//userArea.setSize(0, 0);
 		userArea.doLayout();
+		
 	}
 
 	/**
