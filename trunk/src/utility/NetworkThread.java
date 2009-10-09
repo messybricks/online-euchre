@@ -55,56 +55,63 @@ public abstract class NetworkThread extends Thread
 		{
 			try
 			{
-				synchronized(this)
+				try
 				{
-					try
+					// if the reader has bytes available to be read, we can convert them to a packet and add to inbound
+					if(reader.available() >= Packet.HEADER_SIZE)
 					{
-						// if the reader has bytes available to be read, we can convert them to a packet and add to inbound
-						if(reader.available() >= Packet.HEADER_SIZE)
+						int byteIn = -1;
+						ByteArrayOutputStream dataStream = new ByteArrayOutputStream();
+
+						while(reader.available() > 0)
 						{
-							int byteIn = -1;
-							ByteArrayOutputStream dataStream = new ByteArrayOutputStream();
+							byteIn = reader.read();
+							dataStream.write(byteIn);
+						}
 
-							while(reader.available() > 0)
-							{
-								byteIn = reader.read();
-								dataStream.write(byteIn);
-							}
-
-							Packet inPacket = new Packet(dataStream.toByteArray());
-							Trace.nprint("NetworkThread << %s [%d]", inPacket.getOpcode().toString(), dataStream.size() - Packet.HEADER_SIZE);
+						Packet inPacket = new Packet(dataStream.toByteArray());
+						Trace.nprint("NetworkThread << %s [%d]", inPacket.getOpcode().toString(), dataStream.size() - Packet.HEADER_SIZE);
+						
+						synchronized(inbound)
+						{
 							inbound.add(inPacket);
 						}
 					}
-					catch (IOException ex)
-					{
-						Trace.dprint("Unable to read data from socket input stream. Message: %s", ex.getMessage());
-					}
-					catch (InvalidPacketException ex)
-					{
-						Trace.dprint("Received a corrupt packet from input stream on NetworkThread. Message: %s", ex.getMessage());
-					}
+				}
+				catch (IOException ex)
+				{
+					Trace.dprint("Unable to read data from socket input stream. Message: %s", ex.getMessage());
+				}
+				catch (InvalidPacketException ex)
+				{
+					Trace.dprint("Received a corrupt packet from input stream on NetworkThread. Message: %s", ex.getMessage());
+				}
 
-					// process packets on the queue
+				// process packets on the queue
+				synchronized(inbound)
+				{
 					if(!inbound.isEmpty())
 						processPacket(inbound.remove());
+				}
 
-					try
+				try
+				{
+					// if outbound is not empty, we can flatten a packet and send it on its merry way
+					synchronized(outbound)
 					{
-						// if outbound is not empty, we can flatten a packet and send it on its merry way
 						if(!outbound.isEmpty())
 						{
 							Packet outPacket = outbound.remove();
 							byte[] flattened = outPacket.flatten();
-
+	
 							Trace.nprint("NetworkThread >> %s [%d]", outPacket.getOpcode().toString(), flattened.length - Packet.HEADER_SIZE);
 							writer.write(flattened);
 						}
 					}
-					catch (IOException ex)
-					{
-						Trace.dprint("Unable to write packet to output stream in NetworkThread. Message: %s", ex.getMessage());
-					}
+				}
+				catch (IOException ex)
+				{
+					Trace.dprint("Unable to write packet to output stream in NetworkThread. Message: %s", ex.getMessage());
 				}
 			}
 			catch (Exception uhoh)
@@ -138,9 +145,12 @@ public abstract class NetworkThread extends Thread
 	 * 
 	 * @param packet Packet to send
 	 */
-	public synchronized void send(Packet packet)
+	public void send(Packet packet)
 	{
-		outbound.add(packet);
+		synchronized(outbound)
+		{
+			outbound.add(packet);
+		}
 	}
 
 	/**
@@ -148,9 +158,12 @@ public abstract class NetworkThread extends Thread
 	 * 
 	 * @param opcode Opcode to assign to the new packet
 	 */
-	public synchronized void send(Opcode opcode)
+	public void send(Opcode opcode)
 	{
-		outbound.add(new Packet(opcode));
+		synchronized(outbound)
+		{
+			outbound.add(new Packet(opcode));
+		}
 	}
 
 	/**
@@ -159,9 +172,12 @@ public abstract class NetworkThread extends Thread
 	 * @param opcode Opcode to assign to the new packet
 	 * @param datum A serializable object to attach to the packet
 	 */
-	public synchronized void send(Opcode opcode, Serializable datum)
+	public void send(Opcode opcode, Serializable datum)
 	{
-		outbound.add(new Packet(opcode, datum));
+		synchronized(outbound)
+		{
+			outbound.add(new Packet(opcode, datum));
+		}
 	}
 
 	/**
@@ -186,9 +202,12 @@ public abstract class NetworkThread extends Thread
 	 * 
 	 * @return True if the server has sent a packet
 	 */
-	public synchronized boolean hasInbound()
+	public boolean hasInbound()
 	{
-		return !inbound.isEmpty();
+		synchronized(inbound)
+		{
+			return !inbound.isEmpty();
+		}
 	}
 
 	/**
