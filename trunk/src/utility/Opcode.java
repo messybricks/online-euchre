@@ -16,7 +16,7 @@ public enum Opcode
 	Quit,
 
 	// chat commands
-	SendMessage, 
+	SendMessage,
 	UpdateUsers;
 
 	/**
