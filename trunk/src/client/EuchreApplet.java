@@ -21,7 +21,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	private static final long serialVersionUID = 1L;
 
 	private EuchreNetClient client = null;
-	private User currentUser;
+	//private User client.getUser();
 
 	private JTextArea messageWindow;
 	private JTextArea userWindow;
@@ -199,8 +199,8 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		messageWindow.setText("Welcome to Online Euchre. \nType messages below.\n");
 		userWindow.setText("Users currently in chat:\n");
 		userNames.add(new JTextArea(1,10));
-		userNames.get(0).setText(currentUser.getUsername());
-		//userWindow.append(currentUser.getUsername());
+		//userNames.get(0).setText(client.getUser().getUsername());
+		//userWindow.append(client.getUser().getUsername());
 		userWindow.setBackground(Color.LIGHT_GRAY);
 		//set up borders
 		messageWindow.setBorder(BorderFactory.createEtchedBorder());
@@ -256,8 +256,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	 */
 	private void initializeUser(String username)
 	{
-		currentUser = new User(username);
-		client.authenticate(currentUser);
+		client.authenticate(new User(username));
 	}
 
 	/**
@@ -285,9 +284,12 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 			temp.addMouseListener(this);
 			temp.setBackground(Color.LIGHT_GRAY);
 			temp.setFocusable(false);
-			if(x.getUsername().compareTo(currentUser.getUsername()) == 0)
+			if(client.getUser() != null)
 			{
-				temp.setToolTipText("This is me!");
+				if(x.getUsername().compareTo(client.getUser().getUsername()) == 0)
+				{
+					temp.setToolTipText("This is me!");
+				}
 			}
 			userNames.add(temp);
 			userArea.add(userNames.get(userNames.lastIndexOf(temp)));
@@ -307,7 +309,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		String text = inputText.getText().trim();		
 		//if the message is not empty
 		if (!text.equals("")) {
-			//sendMessage(inputText.getText(), currentUser);
+			//sendMessage(inputText.getText(), client.getUser());
 			client.sendGlobalChatMessage(inputText.getText());
 			//clear the text.
 			inputText.setText("");
@@ -384,7 +386,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		super.destroy();
 		
 		if(client != null)
-			client.dispose(currentUser);
+			client.dispose(client.getUser());
 		
 		if(madeserver){
 			try 
@@ -474,7 +476,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 						ignore = new JCheckBox("Ignore?", false);
 
 					ignore.setBackground(Color.WHITE);
-					if(temp.getText(2, temp.getText().length()-2).compareTo(currentUser.getUsername()) == 0)
+					if(temp.getText(2, temp.getText().length()-2).compareTo(client.getUser().getUsername()) == 0)
 					{
 						JTextArea tempText = new JTextArea("This is you!");
 						tempText.setEditable(false);
