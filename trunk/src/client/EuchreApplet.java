@@ -576,7 +576,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	 * @param s the given string to be tested
 	 * @return true if the given string is alphanumeric
 	 */
-	private boolean isAlphaNumeric(final String s) 
+	public static boolean isAlphaNumeric(final String s) 
 	{
 		final char[] chars = s.toCharArray();
 		for (int x = 0; x < chars.length; x++) 
