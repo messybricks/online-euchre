@@ -3,6 +3,8 @@ package client;
 import java.net.*;
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
 import utility.*;
 import chat.*;
 
@@ -11,7 +13,7 @@ import chat.*;
  */
 public class NetClientThread extends NetworkThread
 {
-	// do not modify code here! anything you may want to change is found below, in packet processing
+	private User associate;
 	private EuchreApplet euchreApplet;
 
 	/**
@@ -24,6 +26,15 @@ public class NetClientThread extends NetworkThread
 	{
 		super(client, "NetClient");
 		euchreApplet = applet;
+	}
+	
+	/**
+	 * Returns the User object associated with this thread, if any. Returns null if there is none.
+	 * @return the User object associated with this thread, if any. Returns null if there is none.
+	 */
+	public User getUser()
+	{
+		return associate;
 	}
 
 	// processing packets starts here. you can change code below this line as you see fit.
@@ -47,13 +58,15 @@ public class NetClientThread extends NetworkThread
 		else if(packet.getOpcode() == Opcode.Auth)
 			onAuth(packet);
 		else if(packet.getOpcode() == Opcode.UpdateUsers)
-			onAddUser(packet);
+			onUpdateUsers(packet);
+		else if(packet.getOpcode() == Opcode.Rename)
+			onRename(packet);
 		else
 			Trace.dprint("Received packet with unimplemented opcode '%s' - ignoring.", packet.getOpcode().toString());
 	}
 
 	/**
-	 * Processes a Ping packet.
+	 * Processes a Ping packet; sends a Pong to the server.
 	 * 
 	 * @param packet Packet to process
 	 */
@@ -63,18 +76,17 @@ public class NetClientThread extends NetworkThread
 	}
 
 	/**
-	 * Processes a Quit packet.
+	 * Acknowledges that the server has shut down for some reason and exits the client.
 	 * 
 	 * @param packet Packet to process
 	 */
 	private void onQuit(Packet packet)
 	{
-		int x;
 		// TODO: Implement client Quit packet
 	}
 
 	/**
-	 * Processes a SendMessage packet.
+	 * Accepts and displays a chat message from the server.
 	 * 
 	 * @param packet Packet to process
 	 */
@@ -85,26 +97,35 @@ public class NetClientThread extends NetworkThread
 	}
 
 	/**
-	 * Not implemented.
-	 * TODO: Take this method out?
+	 * Authenticates this client with a specified user object, after checking server-side to make sure it is valid.
 	 * 
 	 * @param packet Packet to process
 	 */
 	private void onAuth(Packet packet)
 	{
-		//User userJoining = (User)packet.getData();
-		//euchreApplet.addUserToWindow(userJoining);
+		associate = (User)packet.getData();
 	}
 
 	/**
-	 * Processes an onAddUser packet
+	 * Processes an UpdateUsers packet (this comment is really lame :s)
 	 * 
 	 * @param packet Packet to process
 	 */
-	private void onAddUser(Packet packet)
+	private void onUpdateUsers(Packet packet)
 	{
 		ArrayList<User> users = (ArrayList<User>) packet.getData();
-		//User userJoining = (User)packet.getData();
 		euchreApplet.addUserToWindow(users);
+	}
+
+	/**
+	 * Requests that the user enter another name, because the name desired was rejected by the server for some reason.
+	 * 
+	 * @param packet Packet to process
+	 */
+	private void onRename(Packet packet)
+	{
+		String message = (String)packet.getData();
+		
+		// TODO: Handle this packet. I had to go to Linear Algebra at 11 this morning or I'da done this already :z
 	}
 }

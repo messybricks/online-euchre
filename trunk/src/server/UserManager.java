@@ -62,4 +62,18 @@ public class UserManager
 		users.remove(removeIndex);
 		thread.sendGlobal(Opcode.UpdateUsers, users);
 	}
+	
+	/**
+	 * Checks to see if a User object managed by this instance has the name given by the user parameter.
+	 * @param user Name to check for
+	 * @return True if this UserManager handles a user with the given name; false otherwise.
+	 */
+	public boolean contains(String user)
+	{
+		for(User userlol : users)
+			if(userlol.getUsername().equals(user))
+				return true;
+		
+		return false;
+	}
 }
