@@ -116,7 +116,8 @@ public abstract class NetworkThread extends Thread
 			}
 			catch (Exception uhoh)
 			{
-				Trace.dprint("### ERROR in NetworkThread; unhandled exception of type %s during processing loop execution. Message: %s", uhoh.getClass().getName(), uhoh.getMessage());
+				System.err.println(String.format("### ERROR in NetworkThread; unhandled exception of type %s during processing loop execution. Message: %s\nStack trace:\n", uhoh.getClass().getName(), uhoh.getMessage()));
+				uhoh.printStackTrace(System.err);
 			}
 			finally
 			{

@@ -144,4 +144,14 @@ public class EuchreNetClient
 		else
 			Trace.dprint("Client '%s' tried to authenticate twice. Ignoring.", thread.getUser().getUsername());
 	}
+	
+	/**
+	 * Passthrough function getting the User object associated with this client's thread.
+	 * 
+	 * @return an associated User object
+	 */
+	public User getUser()
+	{
+		return thread.getUser();
+	}
 }
