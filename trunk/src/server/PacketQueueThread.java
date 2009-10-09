@@ -180,7 +180,8 @@ public class PacketQueueThread extends NetworkThread
 	private void onQuit(Packet packet)
 	{
 		User temp = (User)packet.getData();
-		userMan.remove(temp);
+		if(temp != null)
+			userMan.remove(temp);
 		quit = true;
 	}
 
