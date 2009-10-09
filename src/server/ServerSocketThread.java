@@ -103,9 +103,11 @@ public class ServerSocketThread extends Thread
 							if(entry.getValue().getUser() != null)
 							{
 								PacketQueueThread tempThread = entry.getValue();
-								invalidated.add(entry.getKey());
+								clientMapping.remove(entry.getKey());
 								tempThread.verify();
 								clientMapping.put(tempThread.getUser().getUsername(), tempThread);
+								
+								Trace.dprint("'%s' -> '%s'", entry.getKey(), tempThread.getUser().getUsername());
 							}
 						}
 					}

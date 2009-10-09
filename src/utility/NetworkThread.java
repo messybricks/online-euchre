@@ -107,6 +107,10 @@ public abstract class NetworkThread extends Thread
 					}
 				}
 			}
+			catch (Exception uhoh)
+			{
+				Trace.dprint("### ERROR in NetworkThread; unhandled exception of type %s during processing loop execution. Message: %s", uhoh.getClass().getName(), uhoh.getMessage());
+			}
 			finally
 			{
 				// if exitThread is true, the parent thread has requested a soft termination of this thread
