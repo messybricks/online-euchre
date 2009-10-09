@@ -104,7 +104,7 @@ public class EuchreServer
 		try
 		{
 			Trace.dprint("Sending global '%s' packet...", Opcode.Quit.toString());
-			thread.sendGlobal(Opcode.Quit);
+			thread.sendGlobal(Opcode.Quit, "Server is shutting down.");
 
 			Thread.sleep(QUIT_SLEEP_MS);
 		}

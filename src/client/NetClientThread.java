@@ -82,7 +82,7 @@ public class NetClientThread extends NetworkThread
 	 */
 	private void onQuit(Packet packet)
 	{
-		// TODO: Implement client Quit packet
+		euchreApplet.onServerExit((String)packet.getData());
 	}
 
 	/**

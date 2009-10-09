@@ -42,6 +42,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	 */
 	public void init() 
 	{
+		super.init();
 
 		//set up the client
 		setUpClient();
@@ -380,7 +381,11 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	 */
 	public void destroy()
 	{
-		client.dispose(currentUser);
+		super.destroy();
+		
+		if(client != null)
+			client.dispose(currentUser);
+		
 		if(madeserver){
 			try 
 			{
@@ -629,6 +634,17 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	public void mouseExited(MouseEvent e) 
 	{
 
+	}
+	
+	/**
+	 * This method gets called to close the applet gracefully when the server crashes or shuts down.
+	 * 
+	 * @param message A brief explanation of why the applet is closing
+	 */
+	public void onServerExit(String message)
+	{
+		JOptionPane.showMessageDialog(this, message, "Server Has Closed", 0);
+		System.exit(0);
 	}
 
 }
