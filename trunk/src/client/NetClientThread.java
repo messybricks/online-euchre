@@ -115,6 +115,7 @@ public class NetClientThread extends NetworkThread
 	{
 		ArrayList<User> users = (ArrayList<User>) packet.getData();
 		euchreApplet.addUserToWindow(users);
+		euchreApplet.repaint();
 	}
 
 	/**
