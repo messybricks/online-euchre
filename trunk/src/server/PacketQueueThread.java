@@ -99,7 +99,7 @@ public class PacketQueueThread extends NetworkThread
 	 */
 	public boolean isAuthenticated()
 	{
-		return associate != null;
+		return verified;
 	}
 
 	/**
