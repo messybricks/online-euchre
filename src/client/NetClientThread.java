@@ -128,7 +128,7 @@ public class NetClientThread extends NetworkThread
 		String message = (String)packet.getData();		
 		String newName = null;
 		
-		while(newName == null || newName.equals(""))
+		while(newName == null || newName.equals("")  || !EuchreApplet.isAlphaNumeric(newName))
 			newName = JOptionPane.showInputDialog(message);
 		
 		send(Opcode.Auth, new User(newName));
