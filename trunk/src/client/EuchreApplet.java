@@ -57,7 +57,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	 */
 	private void setUpClient()
 	{
-		//prompt user to choose between hosting and joining a game
+	/*	//prompt user to choose between hosting and joining a game
 		Object[] options = {"Host","Join" };
 		int n = JOptionPane.showOptionDialog(this,
 				"Would you like to host or join a game?",
@@ -68,7 +68,8 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 				options,
 				options[1]);
 		if(n==0)
-			madeserver=true;
+			madeserver=true;*/
+		madeserver = false;
 		String myAddress,serverNums;
 		String serverIP="",port="", username="";
 		if(madeserver)
