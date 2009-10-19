@@ -60,6 +60,33 @@ public class CardCollection
 		//return the removed card.
 		return temp;
 	}
+	
+	/**
+	 * Move a card in the card collection.
+	 * 
+	 * @param oldIndex - index of old position of card.
+	 * @param newIndex - index of new position of card.
+	 */
+	public void move(int oldIndex, int newIndex)
+	{
+		Card temp = cards[oldIndex];
+		
+		//shift cards based on how the old and new position are in relation to each other.
+		if (oldIndex < newIndex)
+		{
+			//move cards down the hand to fill the new gap.
+			for (int i = oldIndex + 1; i <= newIndex; ++i)
+				cards[i-1] = cards[i];
+			cards[newIndex] = temp;
+		}
+		else
+		{
+			//move cards up the hand to fill the new gap.
+			for (int i = oldIndex; i > newIndex; --i)
+				cards[i] = cards[i-1];
+			cards[newIndex] = temp;
+		}
+	}
 
 	/**
 	 * Swap two cards in the card collection.
