@@ -3,7 +3,7 @@ package game;
 /**
  * Class to simulate a player's hand in a card game.
  * 
- * @author Ryan
+ * @author rchurtub
  *
  */
 public class Hand extends CardCollection 
