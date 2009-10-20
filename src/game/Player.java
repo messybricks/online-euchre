@@ -26,6 +26,11 @@ public class Player {
 		hand = new Hand(5);
 	}
 	
+	public Player(String s)
+	{
+		this(new User(s));
+	}
+	
 	/**
 	 * Adds a new card to the end of the Players hand.
 	 * 
