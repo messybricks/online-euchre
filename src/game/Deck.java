@@ -10,6 +10,15 @@ public class Deck extends CardCollection
 {
 
 	/**
+	 * Creates a standard Euchre Deck.
+	 */
+	public Deck()
+	{
+		super(24);
+		createStandardEuchreDeck();
+	}
+	
+	/**
 	 * Creates a deck of playing cards, which size s.
 	 * 
 	 * @param s - Max size of the deck.
@@ -70,7 +79,7 @@ public class Deck extends CardCollection
 	/**
 	 * Turns the current deck into a standard euchre deck.
 	 */
-	public void createStandardEuchreDeck() 
+	private void createStandardEuchreDeck() 
 	{
 		//reset to 0 deck.
 		count = 0;
