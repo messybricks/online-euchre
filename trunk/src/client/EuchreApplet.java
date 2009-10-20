@@ -1,14 +1,17 @@
 package client;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import utility.Trace;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Vector;
 import java.io.*;
 import java.net.InetAddress;
+import java.net.URL;
 
 import chat.ChatObject;
 import chat.User;
@@ -33,9 +36,13 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	private ArrayList<User> users;
 	private ArrayList<String> ignoreList;
 	private JPanel userArea;
+	private JPanel chatArea;
+	private JPanel gameArea;
 	private JTextArea clicked;
 	private JCheckBox ignore;
+	private Canvas gameCanvas;
 	private boolean inputTextDeleted;
+	boolean drawn = false;
 
 	/**
 	 * Initializes the client and applet, calls helper methods setUpClient and setUpApplet
@@ -191,9 +198,9 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		ignoreList = new ArrayList<String>();
 
 		//initialize fields for applet.
-		messageWindow = new JTextArea(10,10);
+		messageWindow = new JTextArea(5,0);
 		userWindow = new JTextArea(0,1);         
-		inputText = new JTextField(10);
+		inputText = new JTextField(38);
 		submit = new JButton("Submit");
 
 		//set up the text areas				
@@ -210,10 +217,11 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		messageWindow.setEditable(false);
 		userWindow.setEditable(false);
 		messageWindow.setLineWrap(true);
+		messageWindow.setSize(500, 300);
 
 
 		//TODO: initialize size of the applet <REMOVE LATER>
-		setSize(500, 500);
+		setSize(700, 550);
 
 		//set the layout manager to BorderLayout
 		setLayout(new BorderLayout());
@@ -222,6 +230,43 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		JPanel centerArea = new JPanel (new GridLayout(1,2));
 		JPanel messageArea = new JPanel(new GridLayout(1,1));
 		userArea = new JPanel ();
+		chatArea = new JPanel ();
+		gameArea = new JPanel ();
+		
+
+		
+		gameCanvas = new Canvas()
+		{
+			
+			public void paint(Graphics g)
+			{
+				if(true)
+				{
+					BufferedImage img = null;
+					try 
+					{
+						URL url = new URL(getCodeBase(), "background.jpg");
+						img = ImageIO.read(url);
+			    	} 
+					catch (IOException e) 
+					{
+					}
+					
+					drawn = true;
+					g.drawImage(img, 0, 0, null);
+				}
+			}
+			
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+			
+		};
+		gameArea.setSize(200, 200);
+		gameCanvas.setSize(554, 432);
+		//gameCanvas.setBackground(new Color())
+		gameArea.add(gameCanvas);
 		userArea.setLayout(new BoxLayout(userArea,BoxLayout.Y_AXIS));
 		JPanel inputArea = new JPanel ();
 		JScrollPane messageScroll = new JScrollPane(messageWindow);
@@ -229,14 +274,22 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 
 		//add the fields to the panels
 		messageArea.add(messageScroll);
-		inputArea.add(submit);
-		inputArea.add(inputText);
+		inputText.setSize(400,10);
+		inputArea.setSize(500, 20);
+		chatArea.setLayout(new BorderLayout());
+		inputArea.add(submit, BorderLayout.EAST);
+		inputArea.add(inputText, BorderLayout.WEST);
+		chatArea.add(inputArea, BorderLayout.SOUTH);
+		chatArea.add(messageArea, BorderLayout.NORTH);
 
 		//add JPanels to IMApplet
-		centerArea.add(messageArea);
-		centerArea.add(userArea);
+		//centerArea.add(messageArea);
+		centerArea.setLayout(new BorderLayout());
+		centerArea.add(gameArea, BorderLayout.WEST);
+		centerArea.add(userArea, BorderLayout.EAST);
+		gameArea.setBackground(Color.black);
 		add(centerArea, BorderLayout.CENTER);
-		add(inputArea, BorderLayout.SOUTH);
+		add(chatArea, BorderLayout.SOUTH);
 
 		//Attach a listener to the button.
 		submit.addActionListener(this);
@@ -247,6 +300,12 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		inputText.setText("Enter your messages here");
 		inputTextDeleted = false;
 		//inputText.select(0, inputText.getText().length());
+		userWindow.setText("Users currently in chat:");
+		userArea.add(userWindow);
+		this.doLayout();
+		
+
+
 
 	}
 
