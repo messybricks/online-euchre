@@ -40,7 +40,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	private JPanel gameArea;
 	private JTextArea clicked;
 	private JCheckBox ignore;
-	private Canvas gameCanvas;
+	private GameCanvas gameCanvas;
 	private boolean inputTextDeleted;
 	boolean drawn = false;
 
@@ -234,37 +234,15 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		gameArea = new JPanel ();
 		
 
-		
-		gameCanvas = new Canvas()
-		{
-			
-			public void paint(Graphics g)
-			{
-				if(true)
-				{
-					BufferedImage img = null;
-					try 
-					{
-						URL url = new URL(getCodeBase(), "background.jpg");
-						img = ImageIO.read(url);
-			    	} 
-					catch (IOException e) 
-					{
-					}
-					
-					drawn = true;
-					g.drawImage(img, 0, 0, null);
-				}
-			}
-			
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-			
-		};
+		gameCanvas = new GameCanvas();
+		gameCanvas.setOwner(this);
 		gameArea.setSize(200, 200);
 		gameCanvas.setSize(554, 432);
+		gameCanvas.addCard('d', 2, 10, 10);
+		gameCanvas.addCard('d', 3, 90, 10);
+		gameCanvas.addCard('d', 4, 170, 10);
+		gameCanvas.addCard('d', 5, 250, 10);
+		gameCanvas.addCard('d', 6, 330, 10);
 		//gameCanvas.setBackground(new Color())
 		gameArea.add(gameCanvas);
 		userArea.setLayout(new BoxLayout(userArea,BoxLayout.Y_AXIS));
