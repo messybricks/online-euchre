@@ -20,10 +20,12 @@ import javax.imageio.ImageIO;
 
 public class GameCanvas extends Canvas implements MouseMotionListener, MouseListener
 {
+	final int PLAYER_CARD_Y = 320;
 	EuchreApplet owner;
 	int ex = 10;
 	int why = 10;
 	URL url, url2;
+	char suit = 'n';
 
 	BufferedImage img = null;
 	BufferedImage card = null;
@@ -37,15 +39,17 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 	int yCon = 0;
 	int origX, origY;
 	HashMap<Integer, Integer> validLocations = new HashMap<Integer, Integer>();
+	BufferedImage suitImage;
 
 	
 	public void setOwner(EuchreApplet apl)
 	{		
-		validLocations.put(85, 310);
-		validLocations.put(164, 310);
-		validLocations.put(244, 310);
-		validLocations.put(322, 310);
-		validLocations.put(401, 310);
+		validLocations.put(85, PLAYER_CARD_Y);
+		validLocations.put(164, PLAYER_CARD_Y);
+		validLocations.put(244, PLAYER_CARD_Y);
+		validLocations.put(322, PLAYER_CARD_Y);
+		validLocations.put(401, PLAYER_CARD_Y);
+		validLocations.put(245, 215);
 		
 		
 		Cards = new ArrayList<card>();
@@ -74,12 +78,27 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 		Cards.add(new card(theSuit, val, xPos, yPos, owner));
 	}
 	
+	public void setSuit(char theSuit)
+	{
+		suit = theSuit;
+	}
+	
+	public void removeSuit()
+	{
+		suit = 'n';
+	}
+	
 	public void paint(Graphics g)
 	{
+		
 		if(!cardSelected)
 		{	
 			//Draw background
 			g.drawImage(img, 0, 0, null);
+			
+			drawOtherPlayers(g);
+			
+			drawSuit(g);	
 			
 			for(card c: Cards)
 				g.drawImage(c.getImage(), c.getX(), c.getY(), null);
@@ -87,6 +106,10 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 		else
 		{
 			g.drawImage(img, 0, 0, null);
+
+			drawOtherPlayers(g);
+			
+			drawSuit(g);			
 			
 			for(card c: Cards)
 			{
@@ -94,8 +117,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 					g.drawImage(c.getImage(), c.getX(), c.getY(), null);
 			}
 			g.drawImage(selectedCard.getImage(), selectedCard.getX(), selectedCard.getY(), null);
-		}
-		
+		}		
 	}
 
 	public void update(Graphics g) 
@@ -112,6 +134,64 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 	     g.drawImage(image, 0, 0, this);
 		
 
+	}
+	
+	public void drawSuit(Graphics g)
+	{
+		if(suit != 'n')
+		{
+			try 
+			{
+				URL suitURL = new URL(owner.getCodeBase(), suit +".gif");
+				suitImage = ImageIO.read(suitURL);
+			} 
+			catch (MalformedURLException e) 
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) 
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			g.drawImage(suitImage, 253, 140, null);
+		}
+	}
+	
+	public void drawOtherPlayers(Graphics g)
+	{
+		try
+		{
+			URL tempURL = new URL(owner.getCodeBase(), "cards/b2fh.gif");
+			URL tempURL2 = new URL(owner.getCodeBase(), "cards/b2fv.gif");
+			g.drawImage(ImageIO.read(tempURL), -40, 110, null);
+			g.drawImage(ImageIO.read(tempURL), -40, 140, null);
+			g.drawImage(ImageIO.read(tempURL), -40, 170, null);
+			g.drawImage(ImageIO.read(tempURL), -40, 200, null);
+			g.drawImage(ImageIO.read(tempURL), -40, 230, null);
+
+			g.drawImage(ImageIO.read(tempURL), 500, 110, null);
+			g.drawImage(ImageIO.read(tempURL), 500, 140, null);
+			g.drawImage(ImageIO.read(tempURL), 500, 170, null);
+			g.drawImage(ImageIO.read(tempURL), 500, 200, null);
+			g.drawImage(ImageIO.read(tempURL), 500, 230, null);
+
+			g.drawImage(ImageIO.read(tempURL2), 85, -60, null);
+			g.drawImage(ImageIO.read(tempURL2), 164, -60, null);
+			g.drawImage(ImageIO.read(tempURL2), 244, -60, null);
+			g.drawImage(ImageIO.read(tempURL2), 322, -60, null);
+			g.drawImage(ImageIO.read(tempURL2), 401, -60, null);
+		}
+		catch (MalformedURLException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	

@@ -26,6 +26,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	private EuchreNetClient client = null;
 	//private User client.getUser();
 
+	final int PLAYER_CARD_Y = 320;
 	private JTextArea messageWindow;
 	private JTextArea userWindow;
 	private ArrayList<JTextArea> userNames;
@@ -238,11 +239,12 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		gameCanvas.setOwner(this);
 		gameArea.setSize(200, 200);
 		gameCanvas.setSize(554, 432);
-		gameCanvas.addCard('d', 2, 85, 310);
-		gameCanvas.addCard('s', 3, 164, 310);
-		gameCanvas.addCard('h', 4, 244, 310);
-		gameCanvas.addCard('c', 5, 322, 310);
-		gameCanvas.addCard('d', 6, 401, 310);
+		gameCanvas.addCard('d', 2, 85, PLAYER_CARD_Y);
+		gameCanvas.addCard('s', 3, 164, PLAYER_CARD_Y);
+		gameCanvas.addCard('h', 4, 244, PLAYER_CARD_Y);
+		gameCanvas.addCard('c', 5, 322, PLAYER_CARD_Y);
+		gameCanvas.addCard('d', 6, 401, PLAYER_CARD_Y);
+		gameCanvas.setSuit('h');
 		//gameCanvas.setBackground(new Color())
 		gameArea.add(gameCanvas);
 		userArea.setLayout(new BoxLayout(userArea,BoxLayout.Y_AXIS));
