@@ -1,7 +1,7 @@
 package game;
 
 /**
- * Still a work in progress.
+ * Class to handle dealing with the passing of cards to each player.
  * 
  * @author rchurtub
  *
@@ -56,6 +56,16 @@ public class CardDistributor {
 	}
 	
 	/**
+	 * Draws one card from the top of the deck to be bidding on for trump.
+	 * 
+	 * @return A card to be bidding on for trump.
+	 */
+	public Card flipTrump()
+	{
+		return deck.draw();
+	}
+	
+	/**
 	 * Swaps around the dealer and respective players.
 	 */
 	public void nextRound()
@@ -66,6 +76,20 @@ public class CardDistributor {
 		for (int i = 3; i > 0; --i)
 			player[i] = player[i-1];
 		player[0] = temp;
+	}
+	
+	/**
+	 * Gets an array containing the order of the players with respect to the dealer.
+	 *   index 0 = dealer
+	 *   index 1 = left of dealer
+	 *   index 2 = across dealer
+	 *   index 3 = right of dealer
+	 *   
+	 * @return An array of player position with respect to the dealer.
+	 */
+	public Player[] getPlayerOrder()
+	{
+		return player;
 	}
 
 }
