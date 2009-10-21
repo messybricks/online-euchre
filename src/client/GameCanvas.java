@@ -3,7 +3,9 @@ package client;
 import java.awt.Canvas;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -12,6 +14,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.imageio.ImageIO;
 
@@ -32,11 +35,19 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 	card selectedCard = null;
 	int xCon = 0;
 	int yCon = 0;
+	int origX, origY;
+	HashMap<Integer, Integer> validLocations = new HashMap<Integer, Integer>();
 
 	
 	public void setOwner(EuchreApplet apl)
-	{
-	
+	{		
+		validLocations.put(85, 310);
+		validLocations.put(164, 310);
+		validLocations.put(244, 310);
+		validLocations.put(322, 310);
+		validLocations.put(401, 310);
+		
+		
 		Cards = new ArrayList<card>();
 		owner = apl;
 		addMouseMotionListener(this);
@@ -65,14 +76,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 	
 	public void paint(Graphics g)
 	{
-		update(g);
-
-		
-	}
-
-	public void update(Graphics g) 
-	{
-		if(true)
+		if(!cardSelected)
 		{	
 			//Draw background
 			g.drawImage(img, 0, 0, null);
@@ -80,6 +84,34 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 			for(card c: Cards)
 				g.drawImage(c.getImage(), c.getX(), c.getY(), null);
 		}
+		else
+		{
+			g.drawImage(img, 0, 0, null);
+			
+			for(card c: Cards)
+			{
+				if(c != selectedCard)
+					g.drawImage(c.getImage(), c.getX(), c.getY(), null);
+			}
+			g.drawImage(selectedCard.getImage(), selectedCard.getX(), selectedCard.getY(), null);
+		}
+		
+	}
+
+	public void update(Graphics g) 
+	{
+		 BufferedImage image = (BufferedImage) createImage(getWidth(), getHeight());
+		 Graphics2D imgGraphics = image.createGraphics();
+		 
+	     imgGraphics.setRenderingHint(
+	             RenderingHints.KEY_ANTIALIASING,
+	             RenderingHints.VALUE_ANTIALIAS_ON);
+	     
+	     paint(imgGraphics);
+	     
+	     g.drawImage(image, 0, 0, this);
+		
+
 	}
 
 	
@@ -137,6 +169,8 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 					yCon = e.getY() - c.getY();
 					cardSelected = true;
 					selectedCard = c;
+					origX = c.getX();
+					origY = c.getY();
 				}
 			}
 		}
@@ -146,8 +180,46 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 	@Override
 	public void mouseReleased(MouseEvent e) 
 	{
-		cardSelected = false;
+		int xLoc = e.getX() - xCon;
+		int yLoc = e.getY() - yCon;
+		boolean broke = false;
+		boolean contin = true;
+
+		for(int x = -18; x < 18; x++)
+		{
+			for(int y = -18; y < 18; y++)
+			{
+				Integer value = validLocations.get(xLoc + x);
+				if((value != null) && (value + y == yLoc))
+				{		
+					selectedCard.setX(xLoc + x);
+					selectedCard.setY(value);
+					y = 20;
+					x = 20;
+					broke = true;
+				}
+			}
+		}
+		if(broke)
+		{
+			for(card c:Cards)
+			{
+				if((c.getX() == selectedCard.getX()) && (c.getY() == selectedCard.getY()) && contin && c != selectedCard)
+				{
+					contin = false;
+					c.setX(origX);
+					c.setY(origY);
+				}
+			}
+		}
+		if(!broke)
+		{
+			selectedCard.setX(origX);
+			selectedCard.setY(origY);
+		}
+		repaint();
 		
+		cardSelected = false;
 	}
 
 }
