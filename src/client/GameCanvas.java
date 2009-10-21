@@ -180,44 +180,50 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 	@Override
 	public void mouseReleased(MouseEvent e) 
 	{
-		int xLoc = e.getX() - xCon;
-		int yLoc = e.getY() - yCon;
-		boolean broke = false;
-		boolean contin = true;
-
-		for(int x = -18; x < 18; x++)
+		if(cardSelected)
 		{
-			for(int y = -18; y < 18; y++)
+			int xLoc = e.getX() - xCon;
+			int yLoc = e.getY() - yCon;
+			boolean broke = false;
+			boolean contin = true;
+	
+			for(int x = -18; x < 18; x++)
 			{
-				Integer value = validLocations.get(xLoc + x);
-				if((value != null) && (value + y == yLoc))
-				{		
-					selectedCard.setX(xLoc + x);
-					selectedCard.setY(value);
-					y = 20;
-					x = 20;
-					broke = true;
-				}
-			}
-		}
-		if(broke)
-		{
-			for(card c:Cards)
-			{
-				if((c.getX() == selectedCard.getX()) && (c.getY() == selectedCard.getY()) && contin && c != selectedCard)
+				for(int y = -18; y < 18; y++)
 				{
-					contin = false;
-					c.setX(origX);
-					c.setY(origY);
+					Integer value = validLocations.get(xLoc + x);
+					if((value != null) && (value + y == yLoc))
+					{		
+						selectedCard.setX(xLoc + x);
+						selectedCard.setY(value);
+						y = 20;
+						x = 20;
+						broke = true;
+					}
 				}
 			}
+			if(broke)
+			{
+				for(card c:Cards)
+				{
+					if((c.getX() == selectedCard.getX()) && (c.getY() == selectedCard.getY()) && contin && c != selectedCard)
+					{
+						contin = false;
+						c.setX(origX);
+						c.setY(origY);
+					}
+				}
+			}
+			if(!broke)
+			{
+				if(selectedCard != null)
+				{
+					selectedCard.setX(origX);
+					selectedCard.setY(origY);
+				}
+			}
+			repaint();
 		}
-		if(!broke)
-		{
-			selectedCard.setX(origX);
-			selectedCard.setY(origY);
-		}
-		repaint();
 		
 		cardSelected = false;
 	}
