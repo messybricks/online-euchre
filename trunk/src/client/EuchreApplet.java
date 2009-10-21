@@ -239,9 +239,9 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		gameArea.setSize(200, 200);
 		gameCanvas.setSize(554, 432);
 		gameCanvas.addCard('d', 2, 85, 310);
-		gameCanvas.addCard('d', 3, 164, 310);
-		gameCanvas.addCard('d', 4, 244, 310);
-		gameCanvas.addCard('d', 5, 322, 310);
+		gameCanvas.addCard('s', 3, 164, 310);
+		gameCanvas.addCard('h', 4, 244, 310);
+		gameCanvas.addCard('c', 5, 322, 310);
 		gameCanvas.addCard('d', 6, 401, 310);
 		//gameCanvas.setBackground(new Color())
 		gameArea.add(gameCanvas);
