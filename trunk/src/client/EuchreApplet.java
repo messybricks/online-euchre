@@ -238,11 +238,11 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		gameCanvas.setOwner(this);
 		gameArea.setSize(200, 200);
 		gameCanvas.setSize(554, 432);
-		gameCanvas.addCard('d', 2, 10, 10);
-		gameCanvas.addCard('d', 3, 90, 10);
-		gameCanvas.addCard('d', 4, 170, 10);
-		gameCanvas.addCard('d', 5, 250, 10);
-		gameCanvas.addCard('d', 6, 330, 10);
+		gameCanvas.addCard('d', 2, 85, 310);
+		gameCanvas.addCard('d', 3, 164, 310);
+		gameCanvas.addCard('d', 4, 244, 310);
+		gameCanvas.addCard('d', 5, 322, 310);
+		gameCanvas.addCard('d', 6, 401, 310);
 		//gameCanvas.setBackground(new Color())
 		gameArea.add(gameCanvas);
 		userArea.setLayout(new BoxLayout(userArea,BoxLayout.Y_AXIS));
@@ -250,6 +250,8 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		JScrollPane messageScroll = new JScrollPane(messageWindow);
 		inputArea.setLayout(new BoxLayout (inputArea,BoxLayout.LINE_AXIS));
 
+		userWindow.setText("Users currently in chat:");
+		//userArea.add(userWindow);
 		//add the fields to the panels
 		messageArea.add(messageScroll);
 		inputText.setSize(400,10);
@@ -278,8 +280,6 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		inputText.setText("Enter your messages here");
 		inputTextDeleted = false;
 		//inputText.select(0, inputText.getText().length());
-		userWindow.setText("Users currently in chat:");
-		userArea.add(userWindow);
 		this.doLayout();
 		
 
@@ -305,8 +305,8 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	public void addUserToWindow(ArrayList<User> newUsers)
 	{
 		users = newUsers;
-		userWindow.setText("Users currently in chat:");
 		userArea.removeAll();
+		userWindow.setText("Users currently in chat:");
 		userArea.add(userWindow);
 		userNames = new ArrayList<JTextArea>();
 //		for(int x = 0; x < userNames.size(); x++)
@@ -335,7 +335,9 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		}
 		userArea.add(Box.createRigidArea(new Dimension(5,500)));
 		//userArea.setSize(0, 0);
+		userArea.add(Box.createRigidArea(new Dimension(5,500)));
 		userArea.doLayout();
+		doLayout();
 		
 	}
 
