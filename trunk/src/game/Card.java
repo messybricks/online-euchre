@@ -14,15 +14,40 @@ public class Card
 	private int v;
 
 	/**
-	 * Constructor for creating a new card.
+	 * Constructor for creating a new card. Creates null card if invalid parameters.
 	 * 
 	 * @param suit - suit of the card.
-	 * @param value - int value of the card. 
+	 * @param value - int value of the card, must fall between 1 and 14 to be vaild. 
 	 */
 	public Card(char suit, int value) 
 	{
-		c = suit;
-		v = value;
+		suit = Character.toLowerCase(suit);
+		
+		//is the value correct.
+		if (value < 1 || value > 14)
+			v = 0;
+		else
+			v = value;
+		
+		//is the suit correct.
+		if (suit == 'h' || suit == 'd' || suit == 's' || suit == 'c')
+			c = suit;
+		else
+		{
+			c = 'd';
+			v = 0;
+		}
+	}
+	
+	/**
+	 * Constructor for creating a new card. Creates null card if invalid parameters.
+	 * 
+	 * @param value - int value of the card.
+	 * @param suit - suit of the card. 
+	 */
+	public Card(int value, char suit)
+	{
+		this(suit,value);
 	}
 
 	/**
@@ -56,12 +81,13 @@ public class Card
 	}
 
 	/**
-	 * Checks if a given card is a null/place holder card.
+	 * Checks if a given card is a null/place holder card, not null inself.
 	 * 
 	 * @param c - Card to be tested.
 	 * @return True if c.getValue() = 0, false otherwise.
+	 * @throws Exception 
 	 */
-	public static boolean ifNull(Card c) 
+	public static boolean ifNull(Card c)
 	{
 		return c.getValue() == 0;
 	}
@@ -93,6 +119,10 @@ public class Card
 		case 's': str += "Spades"; break;
 		case 'c': str += "Clubs"; break;
 		}
+		
+		//is the card null;
+		if (v == 0)
+			str = "Null card";
 
 		return str;
 	}	

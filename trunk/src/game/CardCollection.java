@@ -20,6 +20,8 @@ public class CardCollection
 	 */
 	public CardCollection(int size) 
 	{
+		if (size < 1)
+			size = 0;
 		cards = new Card[size];
 		count = 0;
 	}
@@ -31,6 +33,8 @@ public class CardCollection
 	 */
 	public void add(Card c) 
 	{
+		if (c == null)
+			throw new NullPointerException("Error: Card was null");
 		if (count == cards.length)
 			throw new ArrayIndexOutOfBoundsException("Error: The card collection is already full.");
 		//set new card to end and increment card counter.
@@ -45,6 +49,8 @@ public class CardCollection
 	 */
 	public Card remove(int index) 
 	{
+		if (!indexRange(index))
+			throw new IllegalArgumentException("Index out of range: index = " + index);
 		if (count == 0)
 			throw new ArrayIndexOutOfBoundsException("Error: The card collection is already empty.");
 		//save the card to be removed.
@@ -69,6 +75,8 @@ public class CardCollection
 	 */
 	public void move(int oldIndex, int newIndex)
 	{
+		if (!indexRange(oldIndex) || !indexRange(newIndex))
+			throw new IllegalArgumentException("Index out of range: old = " + oldIndex + " new = " + newIndex);
 		Card temp = cards[oldIndex];
 		
 		//shift cards based on how the old and new position are in relation to each other.
@@ -96,6 +104,8 @@ public class CardCollection
 	 */
 	public void swap(int a, int b) 
 	{
+		if (!indexRange(a) || !indexRange(b))
+			throw new IllegalArgumentException("Index out of range: a = " + a + " b = " + b);
 		//save card a.
 		Card temp = cards[a];
 		//swap b into a.
@@ -112,6 +122,16 @@ public class CardCollection
 	public int getNumberOfCards() 
 	{
 		return count;
+	}
+	
+	/**
+	 * Returns the number of cards that can be in the collection.
+	 * 
+	 * @return The max size of the collection.
+	 */
+	public int getSize() 
+	{
+		return cards.length;
 	}
 
 	/**
@@ -130,5 +150,16 @@ public class CardCollection
 		}
 		str += ")";
 		return str;
+	}
+	
+	/**
+	 * Returns if a giving index is within range of the collection.
+	 * 
+	 * @param a - index to be checked.
+	 * @return if the index is in the correct range.
+	 */
+	private boolean indexRange(int a)
+	{
+		return !(a < 0 || a > cards.length-1);
 	}
 }
