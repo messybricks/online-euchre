@@ -153,8 +153,8 @@ public class EuchreEngine
 		
 		//TODO: implement this if/else structure:
 		//if there are cards left, play another trick
-			Player dummy = new Player("dummy");
-			throwCard(dummy);
+			//Player dummy = new Player("dummy");
+			//throwCard(dummy);
 		//otherwise, end the round
 			endOfRound();
 	}
@@ -170,6 +170,7 @@ public class EuchreEngine
 		
 		//TODO: if a team has won the game, 
 			// display "You won!", options for playing a new game, etc.
+			System.exit(1);
 		//TODO: else, deal a new hand:
 			//deal();
 	}
@@ -183,7 +184,5 @@ public class EuchreEngine
 	{
 		return state;
 	}
-	
-	
-	
+		
 }
