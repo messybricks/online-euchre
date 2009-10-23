@@ -11,28 +11,40 @@ public class PlayerTest extends TestCase
 
 	public void testPlayerUser() 
 	{
-		player = new Player(new User("test"));
+		Player p = new Player(new User("test"));
 		
-		fail("Not yet implemented");
+		assertTrue(p.toString().indexOf("test") == 0);
 	}
 
 	public void testPlayerString() 
 	{
-		fail("Not yet implemented");
+		Player p = new Player("test");
+		assertTrue(p.toString().indexOf("test") == 0);
 	}
 
 	public void testPickupCard() 
 	{
-		fail("Not yet implemented");
+		Card d = new Card(1,'c');
+		Card c = player.pickupCard(d);
+		assertTrue(d==c);
 	}
 
 	public void testPlayCard() 
 	{
-		fail("Not yet implemented");
+		player.pickupCard(new Card(1,'c'));
+		player.pickupCard(new Card('d',13));
+		assertTrue(player.playCard(0).toString().equals("Ace of Clubs"));
+		assertTrue(player.playCard(0).toString().equals("King of Diamonds"));
+		//fail("Not yet implemented");
 	}
 
 	public void testMoveCard() 
 	{
+		player.pickupCard(new Card(1,'c'));
+		player.pickupCard(new Card('d',13));
+		player.moveCard(1, 0);
+		
+		
 		fail("Not yet implemented");
 	}
 
@@ -53,6 +65,7 @@ public class PlayerTest extends TestCase
 	
 	public void setUp()
 	{
+		player = new Player("test");
 	}
 
 }
