@@ -1,5 +1,7 @@
 package game;
 
+import utility.Trace;
+
 /**
  * a state machine that runs the euchre game
  * 
@@ -27,23 +29,18 @@ public class EuchreEngine
 	public static final int SECOND_PLAYER_THROWS_CARD = 13;
 	public static final int THIRD_PLAYER_THROWS_CARD = 14;
 	public static final int FOURTH_PLAYER_THROWS_CARD = 15;
+	public static final int END_OF_TRICK = 16;
+	public static final int END_OF_ROUND = 17;
 	
 	private boolean goingAlone = false;
-	
-	/**
-	 * default constructor
-	 */
-	public EuchreEngine()
-	{
-		
-	}
-	
+
 	/**
 	 * starts the euchre engine state machine
 	 */
 	public void start()
 	{
 		state = START;
+		Trace.dprint("new state: " + state);
 		
 		//TODO: implement start state
 		
@@ -56,6 +53,7 @@ public class EuchreEngine
 	private void deal()
 	{
 		state = DEAL;
+		Trace.dprint("new state: " + state);
 		
 		//TODO: implement deal state
 		
@@ -77,6 +75,8 @@ public class EuchreEngine
 		else
 			deal();
 		
+		Trace.dprint("new state: " + state);
+		
 		//TODO: ask user to accept/name trump
 		//TODO: if the user passes, call bid() on the next player
 		
@@ -92,6 +92,7 @@ public class EuchreEngine
 	private void dealerDiscard()
 	{
 		state = DEALER_DISCARD;
+		Trace.dprint("new state: " + state);
 		
 		//TODO: ask dealer to choose a card to discard
 		
@@ -104,6 +105,7 @@ public class EuchreEngine
 	private void goingAlone()
 	{
 		state = GOING_ALONE;
+		Trace.dprint("new state: " + state);
 		
 		//TODO: ask the player who named trump if he/she is going alone
 		goingAlone = false;
@@ -129,6 +131,8 @@ public class EuchreEngine
 			endOfTrick(p);
 		}
 		
+		Trace.dprint("new state: " + state);
+		
 		
 		//TODO: replace p with "next" player
 		throwCard(p);
@@ -142,6 +146,9 @@ public class EuchreEngine
 	 */
 	private void endOfTrick(Player winner)
 	{
+		state = END_OF_TRICK;
+		Trace.dprint("new state: " + state);
+		
 		//TODO: score points appropriately
 		
 		//TODO: implement this if/else structure:
@@ -158,10 +165,13 @@ public class EuchreEngine
 	 */
 	private void endOfRound()
 	{ 
+		state = END_OF_ROUND;
+		Trace.dprint("new state: " + state);
+		
 		//TODO: if a team has won the game, 
 			// display "You won!", options for playing a new game, etc.
 		//TODO: else, deal a new hand:
-			deal();
+			//deal();
 	}
 	
 	
