@@ -120,11 +120,50 @@ public class EuchreEngine
 	 */
 	private void throwCard(Player p)
 	{
+		// if someone still needs to throw a card
 		if(state < THIRD_PLAYER_THROWS_CARD || (state < FOURTH_PLAYER_THROWS_CARD && !goingAlone))
 			state++;
+		else // if the last player has thrown a card
+		{
+			//TODO: replace p with the player that won the trick
+			endOfTrick(p);
+		}
 		
 		
+		//TODO: replace p with "next" player
+		throwCard(p);
 	}
+	
+	/**
+	 * score points appropriately at the end of a trick.  If there are cards left, play another trick.
+	 * Otherwise, end the round.
+	 * 
+	 * @param winner the player that won the trick
+	 */
+	private void endOfTrick(Player winner)
+	{
+		//TODO: score points appropriately
+		
+		//TODO: implement this if/else structure:
+		//if there are cards left, play another trick
+			Player dummy = new Player("dummy");
+			throwCard(dummy);
+		//otherwise, end the round
+			endOfRound();
+	}
+	
+	/**
+	 * go here at the end of a trick when there are no cards left.  If the game is not over, deal a 
+	 * new hand.  Otherwise, exit. 
+	 */
+	private void endOfRound()
+	{ 
+		//TODO: if a team has won the game, 
+			// display "You won!", options for playing a new game, etc.
+		//TODO: else, deal a new hand:
+			deal();
+	}
+	
 	
 	
 	
