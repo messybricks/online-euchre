@@ -125,7 +125,16 @@ public class CardTest extends TestCase {
 	
 	public void testDeck()
 	{
+		d1.add(c1);
+		d1.add(c2);
+		d1.add(c3);
 		
+		//test the draw method
+		assertTrue(d1.draw().toString().equals(c3.toString()));
+		assertTrue(d1.draw().toString().equals(c2.toString()));
+		
+		//make sure you cannot add extra card.
+		deckException1();
 	}
 	
 	private void collectionException1()
@@ -202,6 +211,19 @@ public class CardTest extends TestCase {
 			assertTrue(false);
 		}
 		catch (IllegalArgumentException err)
+		{
+			assertTrue(true);
+		}
+	}
+	
+	private void deckException1()
+	{
+		try
+		{
+			d2.add(c1);
+			assertTrue(false);
+		}
+		catch (ArrayIndexOutOfBoundsException err)
 		{
 			assertTrue(true);
 		}
