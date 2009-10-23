@@ -174,7 +174,15 @@ public class EuchreEngine
 			//deal();
 	}
 	
-	
+	/**
+	 * returns the state of this state machine
+	 * 
+	 * @return the state of this state machine
+	 */
+	public int getState()
+	{
+		return state;
+	}
 	
 	
 	
