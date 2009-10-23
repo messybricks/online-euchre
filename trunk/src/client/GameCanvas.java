@@ -33,6 +33,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 	Image offImage;
 	Graphics offGraphics;
 	ArrayList<card> Cards;
+	ArrayList<text> words = new ArrayList<text>();
 	boolean cardSelected = false;
 	card selectedCard = null;
 	int xCon = 0;
@@ -78,6 +79,12 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 		Cards.add(new card(theSuit, val, xPos, yPos, owner));
 	}
 	
+	public void drawText(String txt, int x, int y, EuchreApplet owner)
+	{
+		words.add(new text(txt, x, y, owner));
+		repaint();
+	}
+	
 	public void setSuit(char theSuit)
 	{
 		suit = theSuit;
@@ -90,6 +97,16 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 	
 	public void paint(Graphics g)
 	{
+		for(text t: words)
+		{
+			ArrayList<Image> images = t.getImages();
+			int lastX = 0;
+			for(Image i: images)
+			{
+				g.drawImage(i, t.getX() + 0, t.getY(), null);
+				lastX = 18;
+			}
+		}
 		
 		if(!cardSelected)
 		{	
@@ -372,6 +389,61 @@ class card
 	{
 		return x;
 	}
+	public int getY()
+	{
+		return y;
+	}
+}
+
+class text
+{
+	String txt;
+	int x, y;
+	ArrayList<Image> letters = new ArrayList<Image>();
+	
+	public text(String word, int ex, int why, EuchreApplet owner)
+	{
+		for(int x = 0; x < word.length(); x++)
+		{
+			if(x != ' ')
+			{
+				char temp = word.charAt(x);
+				URL url2;
+				Image img;
+				try {
+					url2 = new URL(owner.getCodeBase(), "letters/" + temp + ".gif");
+					img = ImageIO.read(url2);
+					letters.add(img);
+				} catch (MalformedURLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		txt = word;
+		x = ex;
+		y = why;
+	}
+	
+	public ArrayList<Image> getImages()
+	{
+		return letters;
+	}
+	
+	public String getWord()
+	{
+		return txt;
+	}
+	
+	public int getX()
+	{
+		return x;
+	}
+	
 	public int getY()
 	{
 		return y;
