@@ -33,7 +33,14 @@ public class EuchreEngine
 	public static final int END_OF_ROUND = 17;
 	
 	private boolean goingAlone = false;
-
+	private CardDistributor cardDistributor;
+	
+	public EuchreEngine(Player dealer, Player left, Player across, Player right)
+	{
+		cardDistributor = new CardDistributor(dealer, left, across, right);
+	}
+	
+	
 	/**
 	 * starts the euchre engine state machine
 	 */
@@ -43,6 +50,9 @@ public class EuchreEngine
 		Trace.dprint("new state: " + state);
 		
 		//TODO: implement start state
+		//TODO: get four players, put them into player array
+		
+		
 		
 		deal();		
 	}
