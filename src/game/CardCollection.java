@@ -1,17 +1,22 @@
 package game;
 
+import java.io.Serializable;
+
 /**
  * This class provides the standard methods and data needed to hold a collection of cards, such as a deck of cards.
  * 
  * @author Ryan
  */
-public class CardCollection 
+public class CardCollection implements Serializable
 {
 
 	//cards in the collection.
 	private Card[] cards;
 	//number of cards currently in the collection.
 	protected int count;
+	
+	// serialization version
+	private static final long serialVersionUID = 1;
 
 	/**
 	 * Creates a new collection of cards with max size of size.

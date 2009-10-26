@@ -1,5 +1,9 @@
 package game;
 
+import java.io.Serializable;
+
+import utility.Trace;
+import utility.TransactionThread;
 import chat.User;
 
 /**
@@ -10,10 +14,9 @@ import chat.User;
  */
 public class Player {
 
-	private Hand hand;
 	private User user;
-	private int roundsWon = 0;
-	private int gamesWon = 0;
+	private SubPlayer subPlayer;
+	private TransactionThread thread;
 	
 	/**
 	 * Creates a new player.
@@ -23,57 +26,61 @@ public class Player {
 	public Player(User user)
 	{
 		this.user = user;
-		hand = new Hand(5);
+		this.subPlayer = new SubPlayer();
 	}
 	
 	public Player(String s)
 	{
-		this(new User(s));
+		throw new sun.reflect.generics.reflectiveObjects.NotImplementedException();
 	}
 	
 	/**
-	 * Adds a new card to the end of the Players hand.
+	 * Adds a new card to the end of the Players subPlayer.getHand().
 	 * 
 	 * @param c - card to be added.
 	 */
 	public Card pickupCard(Card c)
 	{
-		hand.add(c);
+		subPlayer.getHand().add(c);
+		transferData();
 		return c;
 	}
 	
 	/**
-	 * Plays a card at given index from the Players hand.
+	 * Plays a card at given index from the Players subPlayer.getHand().
 	 * 
 	 * @param index - index of card to be played.
 	 * @return The card that is played.
 	 */
 	public Card playCard(int c)
 	{
-		Card card = hand.play(c);
+		Card card = subPlayer.getHand().play(c);
+		transferData();
 		return card;
 	}
 	
 	/**
-	 * Move a card in the Players hand.
+	 * Move a card in the Players subPlayer.getHand().
 	 * 
 	 * @param oldIndex - index of old position of card.
 	 * @param newIndex - index of new position of card.
 	 */
 	public void moveCard(int oldIndex, int newIndex)
 	{
-		hand.move(oldIndex, newIndex);
+		subPlayer.getHand().move(oldIndex, newIndex);
+		transferData();
 	}
 	
 	/**
-	 * Swap two cards in the Players hand.
+	 * Swap two cards in the Players subPlayer.getHand().
 	 * 
 	 * @param card1 - index of one of the cards to be swapped.
 	 * @param card2 - index of another of the cards to be swapped.
 	 */
 	public void swapCards(int card1, int card2)
 	{
-		hand.swap(card1, card2);
+		subPlayer.getHand().swap(card1, card2);
+		transferData();
 	}
 	
 	/**
@@ -95,8 +102,75 @@ public class Player {
 	{
 		String str = "";
 		
-		str += getUsername() + ": " + hand;
+		str += getUsername() + ": " + subPlayer.getHand();
 		
 		return str;
+	}
+
+	/**
+	 * A private data transmission method for synchronizing data between the client and server.
+	 */
+	private void transferData()
+	{
+		if(thread == null)
+			Trace.dprint("### Warning: transaction thread in player ID %s was null. Cannot synchronize player.", user.getUsername());
+		else
+		{
+			// TODO: add data transfer mechanism here
+		}
+	}
+	
+	/**
+	 * Represents a serializable subset of intransient information passed back and forth between remote instances of the Player class.
+	 * 
+	 * @author bert
+	 *
+	 */
+	private class SubPlayer implements Serializable
+	{
+		private Hand hand;
+		private int roundsWon = 0;
+		private int gamesWon = 0;
+		
+		/**
+		 * Gets the Hand associated with this SubPlayer.
+		 * 
+		 * @return the Hand associated with this SubPlayer.
+		 */
+		public Hand getHand()
+		{
+			return hand;
+		}
+		
+		/**
+		 * Gets the number of rounds that this SubPlayer has won.
+		 * 
+		 * @return the number of rounds that this SubPlayer has won.
+		 */
+		public int getRoundsWon()
+		{
+			return roundsWon;
+		}
+		
+		/**
+		 * Gets the number of games that this SubPlayer has won.
+		 * 
+		 * @return the number of games that this SubPlayer has won.
+		 */
+		public int getGamesWon()
+		{
+			return gamesWon;
+		}
+		
+		// serialization version
+		private static final long serialVersionUID = 1;
+		
+		/**
+		 * Creates a new instance of the SubPlayer class.
+		 */
+		public SubPlayer()
+		{
+			hand = new Hand(5);
+		}
 	}
 }
