@@ -34,6 +34,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 	Graphics offGraphics;
 	ArrayList<card> Cards;
 	ArrayList<text> words = new ArrayList<text>();
+	ArrayList<text> wordsVertical = new ArrayList<text>();
 	boolean cardSelected = false;
 	card selectedCard = null;
 	int xCon = 0;
@@ -78,10 +79,16 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 	{
 		Cards.add(new card(theSuit, val, xPos, yPos, owner));
 	}
-	
+
 	public void drawText(String txt, int x, int y, EuchreApplet owner)
 	{
 		words.add(new text(txt, x, y, owner));
+		repaint();
+	}
+
+	public void drawTextVertical(String txt, int x, int y, EuchreApplet owner)
+	{
+		wordsVertical.add(new text(txt, x, y, owner));
 		repaint();
 	}
 	
@@ -97,21 +104,37 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 	
 	public void paint(Graphics g)
 	{
+		//Draw background
+		g.drawImage(img, 0, 0, null);
+		
 		for(text t: words)
 		{
 			ArrayList<Image> images = t.getImages();
 			int lastX = 0;
+			int x = 0;
 			for(Image i: images)
 			{
-				g.drawImage(i, t.getX() + 0, t.getY(), null);
+				g.drawImage(i, t.getX() + x * 18, t.getY(), null);
 				lastX = 18;
+				++x;
+			}
+		}
+		
+		for(text t: wordsVertical)
+		{
+			ArrayList<Image> images = t.getImages();
+			int lastY = 0;
+			int y = 0;
+			for(Image i: images)
+			{
+				g.drawImage(i, t.getX(), t.getY() + y * 18, null);
+				lastY = 18;
+				++y;
 			}
 		}
 		
 		if(!cardSelected)
 		{	
-			//Draw background
-			g.drawImage(img, 0, 0, null);
 			
 			drawOtherPlayers(g);
 			
@@ -122,8 +145,6 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 		}
 		else
 		{
-			g.drawImage(img, 0, 0, null);
-
 			drawOtherPlayers(g);
 			
 			drawSuit(g);			
@@ -135,6 +156,8 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 			}
 			g.drawImage(selectedCard.getImage(), selectedCard.getX(), selectedCard.getY(), null);
 		}		
+		
+
 	}
 
 	public void update(Graphics g) 
