@@ -8,6 +8,9 @@ package game;
  */
 public class Deck extends CardCollection 
 {
+	
+	// serialization version
+	private static final long serialVersionUID = 1;
 
 	/**
 	 * Creates a standard Euchre Deck.

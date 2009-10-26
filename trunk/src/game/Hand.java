@@ -8,6 +8,9 @@ package game;
  */
 public class Hand extends CardCollection 
 {
+	
+	// serialization version
+	private static final long serialVersionUID = 1;
 
 	/**
 	 * Creates a hand for a player of size s.

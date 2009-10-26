@@ -7,7 +7,7 @@ import java.util.*;
 /**
  * This thread implements a generic queue-based client/server communications system.
  */
-public abstract class NetworkThread extends Thread
+public abstract class NetworkThread extends Thread implements TransactionThread
 {
 	private Socket socket = null;
 	private Queue<Packet> inbound = null;
