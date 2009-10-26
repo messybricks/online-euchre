@@ -246,7 +246,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		gameCanvas.addCard('c', 5, 322, PLAYER_CARD_Y);
 		gameCanvas.addCard('d', 6, 401, PLAYER_CARD_Y);
 		gameCanvas.drawTextVertical("Bert", 60, 110, this);
-		gameCanvas.drawTextVertical("Mike", 480, 110, this);
+		gameCanvas.drawTextVertical("JasonKing", 480, 302 - (18 * "JasonKing".length()), this);
 		gameCanvas.setSuit('d');
 		//gameCanvas.setBackground(new Color())
 		gameArea.add(gameCanvas);
