@@ -131,6 +131,8 @@ public class NetClientThread extends NetworkThread
 		while(newName == null || newName.equals("")  || !EuchreApplet.isAlphaNumeric(newName))
 			newName = JOptionPane.showInputDialog(message);
 		
-		send(Opcode.Auth, new User(newName));
+		User tempUser = new User(newName);
+		send(Opcode.Auth, tempUser);
+		associate = tempUser;
 	}
 }

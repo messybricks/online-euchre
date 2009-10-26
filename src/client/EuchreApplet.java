@@ -43,6 +43,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	private JCheckBox ignore;
 	private GameCanvas gameCanvas;
 	private boolean inputTextDeleted;
+	private String userName;
 	boolean drawn = false;
 
 	/**
@@ -244,7 +245,9 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		gameCanvas.addCard('h', 4, 244, PLAYER_CARD_Y);
 		gameCanvas.addCard('c', 5, 322, PLAYER_CARD_Y);
 		gameCanvas.addCard('d', 6, 401, PLAYER_CARD_Y);
-		gameCanvas.setSuit('h');
+		gameCanvas.drawTextVertical("Bert", 60, 110, this);
+		gameCanvas.drawTextVertical("Mike", 480, 110, this);
+		gameCanvas.setSuit('d');
 		//gameCanvas.setBackground(new Color())
 		gameArea.add(gameCanvas);
 		userArea.setLayout(new BoxLayout(userArea,BoxLayout.Y_AXIS));
@@ -296,6 +299,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	 */
 	private void initializeUser(String username)
 	{
+		userName = username;
 		client.authenticate(new User(username));
 	}
 
@@ -324,10 +328,16 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 			temp.addMouseListener(this);
 			temp.setBackground(Color.LIGHT_GRAY);
 			temp.setFocusable(false);
+			if(x.getUsername().compareTo(userName) == 0)
+			{
+				gameCanvas.drawText(x.getUsername(), 85, 300, this);
+			}
 			if(client.getUser() != null)
 			{
+				gameCanvas.drawText(client.getUser().getUsername(), 85, 300, this);
 				if(x.getUsername().compareTo(client.getUser().getUsername()) == 0)
 				{
+					//gameCanvas.drawText(x.getUsername(), 85, 40, this);
 					temp.setToolTipText("This is me!");
 				}
 			}
