@@ -2,6 +2,8 @@ package game;
 
 import java.io.Serializable;
 
+import utility.Opcode;
+import utility.Packet;
 import utility.Trace;
 import utility.TransactionThread;
 import chat.User;
@@ -18,21 +20,45 @@ public class Player {
 	private SubPlayer subPlayer;
 	private TransactionThread thread;
 	
+	private static int nextGuid = 1;
+	
 	/**
 	 * Creates a new player.
 	 * 
 	 * @param user - User associated with the player object.
 	 */
-	public Player(User user)
+	public Player(User user, TransactionThread linkage)
 	{
 		this.user = user;
-		this.subPlayer = new SubPlayer();
+		this.subPlayer = new SubPlayer(nextGuid++);
+		thread = linkage;
+		
+		linkage.send(Opcode.CreatePlayer, new PlayerInitializationVector(user, subPlayer));
 	}
 	
-	public Player(String s)
+	/**
+	 * Creates a new player.
+	 * 
+	 * @param user - User associated with the player object.
+	 * @throws IllegalArgumentException if the remote packet is not a CreatePlayer packet.
+	 */
+	public Player(Packet remote, TransactionThread linkage)
+	{
+		if(remote.getOpcode() == Opcode.CreatePlayer)
+		{
+			PlayerInitializationVector iv = (PlayerInitializationVector)remote.getData();
+			this.user = iv.getUser();
+			this.subPlayer = iv.getSubPlayer();
+			thread = linkage;
+		}
+		else
+			throw new IllegalArgumentException(String.format("Cannot create a remote player instance using a Packet with opcode '%s'.", remote.getOpcode().toString()));
+	}
+	
+	/*public Player(String s)
 	{
 		throw new sun.reflect.generics.reflectiveObjects.NotImplementedException();
-	}
+	}*/
 	
 	/**
 	 * Adds a new card to the end of the Players subPlayer.getHand().
@@ -115,9 +141,7 @@ public class Player {
 		if(thread == null)
 			Trace.dprint("### Warning: transaction thread in player ID %s was null. Cannot synchronize player.", user.getUsername());
 		else
-		{
-			// TODO: add data transfer mechanism here
-		}
+			thread.send(Opcode.UpdatePlayer, subPlayer);
 	}
 	
 	/**
@@ -131,6 +155,27 @@ public class Player {
 		private Hand hand;
 		private int roundsWon = 0;
 		private int gamesWon = 0;
+
+		private final int uid;
+		
+		/**
+		 * Creates a new instance of the SubPlayer class with the specified globally unique identifier
+		 * 
+		 * @param guid A unique identifier for this SubPlayer, to match when update requests are sent
+		 */
+		public SubPlayer(int guid)
+		{
+			uid = guid;
+			hand = new Hand(5);
+		}
+		
+		/**
+		 * Returns this SubPlayer's globally unique identifier.
+		 */
+		public int getGuid()
+		{
+			return uid;
+		}
 		
 		/**
 		 * Gets the Hand associated with this SubPlayer.
@@ -164,13 +209,43 @@ public class Player {
 		
 		// serialization version
 		private static final long serialVersionUID = 1;
+	}
+	
+	/**
+	 * Encapsulates the information required to create a remote instance of an existing Player object.
+	 * 
+	 * @author bert
+	 */
+	private class PlayerInitializationVector implements Serializable
+	{
+		private User user;
+		private SubPlayer subPlayer;
 		
 		/**
-		 * Creates a new instance of the SubPlayer class.
+		 * Creates a new instance of the PlayerInitializationVector class
+		 * @param myUser User associated with this IV
+		 * @param mySubPlayer SubPlayer associated with this IV
 		 */
-		public SubPlayer()
+		public PlayerInitializationVector(User myUser, SubPlayer mySubPlayer)
 		{
-			hand = new Hand(5);
+			user = myUser;
+			subPlayer = mySubPlayer;
+		}
+		
+		/**
+		 * Returns the User associated with this IV
+		 */
+		public User getUser()
+		{
+			return user;
+		}
+		
+		/**
+		 * Returns the SubPlayer structure for this IV.
+		 */
+		public SubPlayer getSubPlayer()
+		{
+			return subPlayer;
 		}
 	}
 }

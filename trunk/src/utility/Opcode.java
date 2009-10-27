@@ -17,7 +17,11 @@ public enum Opcode
 
 	// chat commands
 	SendMessage,
-	UpdateUsers;
+	UpdateUsers,
+	
+	// player class automation
+	CreatePlayer,
+	UpdatePlayer;
 
 	/**
 	 * Generates an instance of Opcode with the given ordinal value.
