@@ -68,8 +68,8 @@ public class EuchreEngine
 		//TODO: implement deal state
 		
 		//TODO: replace this with player left of the dealer
-		Player p = new Player("dummy");
-		bid(p);
+		//Player p = new Player("dummy");
+		//bid(p);
 	}
 	
 	/**
@@ -121,8 +121,8 @@ public class EuchreEngine
 		goingAlone = false;
 		
 		//TODO: replace this with the leading player
-		Player p = new Player("dummy");
-		throwCard(p);		
+		//Player p = new Player("dummy");
+		//throwCard(p);		
 	}
 	
 	/**
