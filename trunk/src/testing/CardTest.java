@@ -8,7 +8,7 @@ public class CardTest extends TestCase {
 	private Card c1,c2,c3,c4,c5,c6,c7,c8;
 	private CardCollection col1, col2, col3, col4, col5;
 	private Hand h1, h2;
-	private Deck d1, d2, d3;
+	private Deck d1, d2, d3,d4,d5;
 
 	public void setUp() throws Exception
 	{
@@ -262,5 +262,7 @@ public class CardTest extends TestCase {
 		d1 = new Deck(10);
 		d2 = new Deck();
 		d3 = new Deck(-5);
+		d4 = new Deck();
+		d5 = new Deck();
 	}
 }
