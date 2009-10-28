@@ -12,7 +12,7 @@ public class PlayerTest extends TestCase
 
 	public void testPlayerUser() 
 	{
-		Player p = new Player(new User("test"));
+		Player p = new Player(new User("test"), new FakeThread());
 		
 		assertTrue(p.toString().indexOf("test") == 0);
 	}
@@ -48,7 +48,7 @@ public class PlayerTest extends TestCase
 	
 	public void setUp()
 	{
-		player = new Player(new User("test"));
+		player = new Player(new User("test"),new FakeThread());
 	}
 
 }
