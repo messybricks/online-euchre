@@ -135,6 +135,10 @@ public class CardTest extends TestCase {
 		
 		//make sure you cannot add extra card.
 		deckException1();
+		
+		//make sure deck is shuffled properly
+		deckshuffle();
+		
 	}
 	
 	private void collectionException1()
@@ -229,6 +233,16 @@ public class CardTest extends TestCase {
 		}
 	}
 	
+	private void deckshuffle(){
+		//check if deck is shuffled, d4 and d5 should be different
+		//can fail, but should only fail one in 24 factorial times
+		boolean same =true;
+		for(int i=0;i<24;i++)
+			if(!d4.draw().toString().equals(d5.draw().toString()))
+				same=false;
+		assertTrue(same==false);
+	}
+	
 	private void setUpCardTesting()
 	{
 		//correct input.
@@ -255,7 +269,7 @@ public class CardTest extends TestCase {
 		col5 = new CardCollection(-4);
 	}
 	
-	private void setUpDeckandHandTesting()
+	private void setUpDeckandHandTesting() 
 	{
 		h1 = new Hand(5);
 		h2 = new Hand(0);
@@ -264,5 +278,6 @@ public class CardTest extends TestCase {
 		d3 = new Deck(-5);
 		d4 = new Deck();
 		d5 = new Deck();
+		
 	}
 }
