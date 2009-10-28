@@ -14,11 +14,13 @@ import chat.User;
  * @author rchurtub
  *
  */
-public class Player {
+public class Player implements Serializable {
 
 	private User user;
 	private SubPlayer subPlayer;
-	private TransactionThread thread;
+	
+	private transient TransactionThread thread;
+	private transient PlayerChangedCallback updatePlayer;
 	
 	private static int nextGuid = 1;
 	
@@ -132,6 +134,14 @@ public class Player {
 		
 		return str;
 	}
+	
+	/**
+	 * Gets this Player's globally unique identifier.
+	 */
+	public int getGuid()
+	{
+		return subPlayer.getGuid();
+	}
 
 	/**
 	 * A private data transmission method for synchronizing data between the client and server.
@@ -142,6 +152,38 @@ public class Player {
 			Trace.dprint("### Warning: transaction thread in player ID %s was null. Cannot synchronize player.", user.getUsername());
 		else
 			thread.send(Opcode.UpdatePlayer, subPlayer);
+	}
+	
+	/**
+	 * Updates the internal data associated with this Player using an UpdatePlayer packet.
+	 * 
+	 * @param packet UpdatePlayer packet containing new data for this Player
+	 * @throws IllegalArgumentException if packet is not an UpdatePlayer packet
+	 */
+	public void updateData(Packet packet)
+	{
+		if(packet.getOpcode() == Opcode.UpdatePlayer)
+		{
+			SubPlayer updatedData = (SubPlayer)packet.getData();
+			if(updatedData.getGuid() == subPlayer.getGuid())
+			{
+				subPlayer = updatedData;
+				if(updatePlayer != null)
+					updatePlayer.PlayerUpdated(this);
+			}
+		}
+		else
+			throw new IllegalArgumentException(String.format("Cannot update a remote player instance using a Packet with opcode '%s'.", packet.getOpcode().toString()));
+	}
+	
+	/**
+	 * Sets a new function to be called when this player is updated. A previous call to this function is nullified by another.
+	 * 
+	 * @param callback function to call
+	 */
+	public void setPlayerChangedCallback(PlayerChangedCallback callback)
+	{
+		updatePlayer = callback;
 	}
 	
 	/**
@@ -220,6 +262,8 @@ public class Player {
 	{
 		private User user;
 		private SubPlayer subPlayer;
+		
+		private static final long serialVersionUID = 1;
 		
 		/**
 		 * Creates a new instance of the PlayerInitializationVector class
