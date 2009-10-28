@@ -34,6 +34,8 @@ public class EuchreEngine
 	
 	private boolean goingAlone = false;
 	private CardDistributor cardDistributor;
+	private int currentPlayer;
+	private Card trump;
 	
 	public EuchreEngine(Player dealer, Player left, Player across, Player right)
 	{
@@ -62,14 +64,20 @@ public class EuchreEngine
 	 */
 	private void deal()
 	{
+		//rotate the dealer if this is not the first time
+		if(state != START)
+			cardDistributor.nextRound();
+		
 		state = DEAL;
 		Trace.dprint("new state: " + state);
 		
-		//TODO: implement deal state
+		//deal this hand
+		cardDistributor.dealRound();
+		trump = cardDistributor.flipTrump();
 		
-		//TODO: replace this with player left of the dealer
-		//Player p = new Player("dummy");
-		//bid(p);
+		//player to the left of the dealer bids
+		currentPlayer = CardDistributor.LEFT;
+		bid(cardDistributor.getPlayerOrder()[currentPlayer]);
 	}
 	
 	/**
@@ -87,13 +95,32 @@ public class EuchreEngine
 		
 		Trace.dprint("new state: " + state);
 		
-		//TODO: ask user to accept/name trump
-		//TODO: if the user passes, call bid() on the next player
+		if(state == FIFTH_BID)
+		{
+			//TODO: flip down trump card
+		}
 		
-		if(state <= FOURTH_BID)
-			dealerDiscard();
-		else
-			goingAlone();
+		//TODO: ask player to accept/name trump
+	}
+	
+	public void receiveBid(Character trump)
+	{
+		//if (player accepted/named trump)
+		if (trump != 'p')
+		{
+			if(state <= FOURTH_BID)
+			{
+				state = DEALER_DISCARD;
+				Trace.dprint("new state: " + state);
+			}
+			else
+				goingAlone();
+		}
+		else  // if the player passed, go on to the next player
+		{
+			currentPlayer = (currentPlayer++) % 4;
+			bid(cardDistributor.getPlayerOrder()[currentPlayer]);
+		}
 	}
 	
 	/**
@@ -101,10 +128,9 @@ public class EuchreEngine
 	 */
 	private void dealerDiscard()
 	{
-		state = DEALER_DISCARD;
-		Trace.dprint("new state: " + state);
 		
-		//TODO: ask dealer to choose a card to discard
+		//ask dealer to choose a card to discard
+		cardDistributor.dealerDiscard(trump);
 		
 		goingAlone();
 	}
@@ -117,12 +143,10 @@ public class EuchreEngine
 		state = GOING_ALONE;
 		Trace.dprint("new state: " + state);
 		
-		//TODO: ask the player who named trump if he/she is going alone
+		//TODO: ask currentPlayer if he/she is going alone
 		goingAlone = false;
 		
-		//TODO: replace this with the leading player
-		//Player p = new Player("dummy");
-		//throwCard(p);		
+		throwCard(cardDistributor.getPlayerOrder()[cardDistributor.LEFT]);		
 	}
 	
 	/**
