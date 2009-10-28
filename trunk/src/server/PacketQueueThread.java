@@ -3,6 +3,7 @@ package server;
 import java.net.*;
 import utility.*;
 import chat.*;
+import game.*;
 
 /**
  * This thread manages two queues; one for sending data over the network and one for receiving it.
@@ -15,24 +16,33 @@ public class PacketQueueThread extends NetworkThread
 	private boolean quit = false;
 	private boolean verified = false;
 	private User associate = null;
+	private Player myPlayer = null;
 
 	private static int uid = 0;
 
 	private ChatManager chatMan;
 	private UserManager userMan;
-
-	// do not modify code here! anything you may want to change is found below, in packet processing
+	private ServerSocketThread globalThread;
 
 	/**
 	 * Creates a new instance of the PacketQueueThread class wrapping the given socket.
 	 * 
 	 * @param client Socket connected to client
 	 */
-	public PacketQueueThread(Socket client, ChatManager chatManager, UserManager userManager)
+	public PacketQueueThread(Socket client, ChatManager chatManager, UserManager userManager, ServerSocketThread global)
 	{
 		super(client, "PacketQueue_" + ++uid);
 		chatMan = chatManager;
 		userMan = userManager;
+		globalThread = global;
+	}
+	
+	/**
+	 * Gets the Player associated with this thread.
+	 */
+	public Player getPlayer()
+	{
+		return myPlayer;
 	}
 
 	/**
@@ -132,6 +142,8 @@ public class PacketQueueThread extends NetworkThread
 			onQuit(packet);
 		else if(packet.getOpcode() == Opcode.SendMessage)
 			onSendMessage(packet);
+		else if(packet.getOpcode() == Opcode.UpdatePlayer)
+			onUpdatePlayer(packet);
 		else
 			Trace.dprint("Received packet with unimplemented opcode '%s' - ignoring.", packet.getOpcode().toString());
 	}
@@ -168,6 +180,8 @@ public class PacketQueueThread extends NetworkThread
 				associate = user;
 				userMan.add(associate);
 				send(Opcode.Auth, user);
+				
+				myPlayer = new Player(user, globalThread);
 			}
 		}
 	}
@@ -195,5 +209,15 @@ public class PacketQueueThread extends NetworkThread
 		ChatObject object = (ChatObject)packet.getData();
 		chatMan.send(object);
 		Trace.dprint("User '%s' says: %s", object.getSource().getUsername(), object.getMessage());
+	}
+	
+	/**
+	 * Updates this thread's associated Player object.
+	 * @param packet Packet containing data describing changes to the Player
+	 */
+	private void onUpdatePlayer(Packet packet)
+	{
+		myPlayer.updateData(packet);
+		globalThread.sendGlobal(Opcode.UpdatePlayer, packet.getData());
 	}
 }

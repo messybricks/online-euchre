@@ -2,9 +2,11 @@ package client;
 
 import java.net.*;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
+import game.*;
 import utility.*;
 import chat.*;
 
@@ -61,6 +63,12 @@ public class NetClientThread extends NetworkThread
 			onUpdateUsers(packet);
 		else if(packet.getOpcode() == Opcode.Rename)
 			onRename(packet);
+		else if(packet.getOpcode() == Opcode.CreatePlayer)
+			onCreatePlayer(packet);
+		else if(packet.getOpcode() == Opcode.UpdatePlayer)
+			onUpdatePlayer(packet);
+		else if(packet.getOpcode() == Opcode.RemovePlayer)
+			onRemovePlayer(packet);
 		else
 			Trace.dprint("Received packet with unimplemented opcode '%s' - ignoring.", packet.getOpcode().toString());
 	}
@@ -128,11 +136,51 @@ public class NetClientThread extends NetworkThread
 		String message = (String)packet.getData();		
 		String newName = null;
 		
-		while(newName == null || newName.equals("")  || !EuchreApplet.isAlphaNumeric(newName))
+		while(newName == null || newName.equals("")  || !EuchreApplet.isAlphaNumeric(newName) || newName.length() > 12)
 			newName = JOptionPane.showInputDialog(message);
 		
 		User tempUser = new User(newName);
 		send(Opcode.Auth, tempUser);
 		associate = tempUser;
+	}
+
+	/**
+	 * Processes a CreatePlayer packet; creates a new player
+	 * 
+	 * @param packet Packet to process
+	 */
+	private void onCreatePlayer(Packet packet)
+	{
+		euchreApplet.addPlayer(new Player(packet, this));
+	}
+
+	/**
+	 * Processes a RemovePlayer packet; removes a player
+	 * 
+	 * @param packet Packet to process
+	 */
+	private void onRemovePlayer(Packet packet)
+	{
+		List<Player> list = euchreApplet.getPlayerList();
+		for(int i = 0; i < list.size(); ++i)
+		{
+			if(list.get(i).getGuid() == (Integer)packet.getData())
+			{
+				list.remove(i);
+				break;
+			}
+		}
+	}
+
+	/**
+	 * Processes an UpdatePlayer packet; updates an existing player
+	 * 
+	 * @param packet Packet to process
+	 */
+	private void onUpdatePlayer(Packet packet)
+	{
+		List<Player> list = euchreApplet.getPlayerList();
+		for(Player player : list)
+			player.updateData(packet);
 	}
 }

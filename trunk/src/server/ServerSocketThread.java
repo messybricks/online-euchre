@@ -10,7 +10,7 @@ import utility.*;
 /**
  * Represents a thread in which a socket will block while waiting for incoming connections.
  */
-public class ServerSocketThread extends Thread
+public class ServerSocketThread extends Thread implements TransactionThread
 {
 	private ServerSocket socket = null;
 	private Map<String, PacketQueueThread> clientMapping = null;
@@ -153,7 +153,7 @@ public class ServerSocketThread extends Thread
 					String hostName = accepted.getInetAddress().getHostName();
 					Trace.dprint("Accepting connection from '%s'...", hostName);
 
-					PacketQueueThread clientThread = new PacketQueueThread(accepted, chatManager, userManager);
+					PacketQueueThread clientThread = new PacketQueueThread(accepted, chatManager, userManager, this);
 					synchronized(clientMapping)
 					{
 						clientMapping.put(hostName, clientThread);
@@ -262,4 +262,24 @@ public class ServerSocketThread extends Thread
 				Trace.dprint("WARNING: Attempted to send a packet with opcode '%s' to nonexistent client '%s'.", opcode.toString(), client);
 		}
 	}
+
+	// the following three methods are global send functions used by TransactionThread
+	@Override
+	public void send(Opcode opcode, Serializable datum)
+	{
+		sendGlobal(opcode, datum);
+	}
+
+	@Override
+	public void send(Opcode opcode)
+	{
+		sendGlobal(opcode);
+	}
+
+	@Override
+	public void send(Packet packet)
+	{
+		sendGlobal(packet.getOpcode(), packet.getData());
+	}
+
 }

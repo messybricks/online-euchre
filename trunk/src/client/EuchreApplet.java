@@ -1,5 +1,7 @@
 package client;
 
+import game.Player;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
@@ -45,6 +47,9 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	private boolean inputTextDeleted;
 	private String userName;
 	boolean drawn = false;
+	
+	// this list contains the players currently playing
+	private ArrayList<Player> playerList;
 
 	/**
 	 * Initializes the client and applet, calls helper methods setUpClient and setUpApplet
@@ -59,6 +64,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		//set up the applet
 		setUpApplet();
 
+		playerList = new ArrayList<Player>(4);
 	}
 
 	/**
@@ -179,9 +185,9 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 
 		//ask for username
 		username ="";
-		while((username.compareTo("") == 0) || (!isAlphaNumeric(username)))
+		while((username.compareTo("") == 0) || (!isAlphaNumeric(username)) || username.length() > 12)
 		{
-			username =JOptionPane.showInputDialog("Enter username:");
+			username =JOptionPane.showInputDialog("Enter username (alphanumeric, 1-12 characters):");
 			if(username == null)
 				System.exit(ABORT);
 		}
@@ -700,6 +706,36 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	{
 		JOptionPane.showMessageDialog(this, message, "Server Has Closed", 0);
 		System.exit(0);
+	}
+	
+	/**
+	 * Adds a player to this UI's player list.
+	 * 
+	 * @param player Player to add
+	 */
+	public void addPlayer(Player player)
+	{
+		playerList.add(player);
+	}
+	
+	/**
+	 * Removes a player from this UI's player list.
+	 * 
+	 * @param player Player to remove
+	 */
+	public void removePlayer(Player player)
+	{
+		playerList.remove(player);
+	}
+	
+	/**
+	 * Gets a list of players known to this client.
+	 * 
+	 * @return a list of players known to this client.
+	 */
+	public java.util.List<Player> getPlayerList()
+	{
+		return playerList;
 	}
 
 }
