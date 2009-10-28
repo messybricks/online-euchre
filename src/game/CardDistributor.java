@@ -13,6 +13,11 @@ public class CardDistributor {
 	//Reference to each player in the game, with respect to the current dealer.
 	private Player player[];
 	
+	public static final int DEALER = 0;
+	public static final int LEFT = 1;
+	public static final int ACROSS = 2;
+	public static final int RIGHT = 3;
+	
 	public CardDistributor(Player dealer, Player left, Player across, Player right)
 	{
 		//create the euchre deck.
@@ -66,6 +71,16 @@ public class CardDistributor {
 	}
 	
 	/**
+	 * needs to be implemented
+	 * 
+	 * @param trump 
+	 */
+	public void dealerDiscard(Card trump)
+	{
+		
+	}
+	
+	/**
 	 * Swaps around the dealer and respective players.
 	 */
 	public void nextRound()
@@ -80,10 +95,10 @@ public class CardDistributor {
 	
 	/**
 	 * Gets an array containing the order of the players with respect to the dealer.
-	 *   index 0 = dealer
-	 *   index 1 = left of dealer
-	 *   index 2 = across dealer
-	 *   index 3 = right of dealer
+	 *   index DEALER = dealer
+	 *   index LEFT = left of dealer
+	 *   index ACROSS = across dealer
+	 *   index RIGHT = right of dealer
 	 *   
 	 * @return An array of player position with respect to the dealer.
 	 */
