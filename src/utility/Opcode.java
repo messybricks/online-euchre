@@ -21,6 +21,7 @@ public enum Opcode
 	
 	// player class automation
 	CreatePlayer,
+	RemovePlayer,
 	UpdatePlayer;
 
 	/**
