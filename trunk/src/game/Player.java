@@ -57,10 +57,11 @@ public class Player implements Serializable {
 			throw new IllegalArgumentException(String.format("Cannot create a remote player instance using a Packet with opcode '%s'.", remote.getOpcode().toString()));
 	}
 	
+	/*
 	public Player(String s)
 	{
 		throw new sun.reflect.generics.reflectiveObjects.NotImplementedException();
-	}
+	}*/
 	
 	/**
 	 * Adds a new card to the end of the Players subPlayer.getHand().
