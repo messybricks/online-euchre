@@ -1,5 +1,7 @@
 package game;
 
+import chat.User;
+import testing.FakeThread;
 import utility.Trace;
 
 /**
@@ -161,7 +163,7 @@ public class EuchreEngine
 		else //if the last player has thrown a card
 		{
 			//TODO: replace this player with the player that won the trick
-			Player winner = new Player("winner");
+			Player winner = new Player(new User("winner"), new FakeThread());
 			endOfTrick(winner);
 		}
 		Trace.dprint("new state: " + state);
