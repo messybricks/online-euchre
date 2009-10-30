@@ -51,10 +51,7 @@ public class EuchreEngine
 		state = START;
 		Trace.dprint("new state: " + state);
 		
-		//TODO: implement start state
-		//TODO: get four players, put them into player array
-		
-		
+		//TODO: implement start state		
 		
 		deal();		
 	}
@@ -110,8 +107,7 @@ public class EuchreEngine
 		{
 			if(state <= FOURTH_BID)
 			{
-				state = DEALER_DISCARD;
-				Trace.dprint("new state: " + state);
+				dealerDiscard();				
 			}
 			else
 				goingAlone();
@@ -128,48 +124,55 @@ public class EuchreEngine
 	 */
 	private void dealerDiscard()
 	{
+		state = DEALER_DISCARD;
+		Trace.dprint("new state: " + state);
 		
-		//ask dealer to choose a card to discard
+		//TODO: ask dealer to choose a card to discard
 		cardDistributor.dealerDiscard(trump);
 		
-		goingAlone();
 	}
 	
 	/**
-	 * if the player who named trump is going alone
+	 * this method is called after the bidding is done
+	 * and after the player who is the dealer discards
+	 * a card (if applicable).  In this state, the
+	 * player who accepted/named trump will be given
+	 * the chance to "go alone".
 	 */
-	private void goingAlone()
+	public void goingAlone()
 	{
 		state = GOING_ALONE;
 		Trace.dprint("new state: " + state);
 		
 		//TODO: ask currentPlayer if he/she is going alone
+		//TODO: save answer as a boolean:
 		goingAlone = false;
-		
-		throwCard(cardDistributor.getPlayerOrder()[cardDistributor.LEFT]);		
 	}
 	
 	/**
-	 * the player whose turn it is chooses a card to throw
-	 * 
-	 * @param p the player whose turn it is
+	 * this method is called every time a player needs to
+	 * choose and throw a card for a trick.
 	 */
-	private void throwCard(Player p)
+	public void throwCard()
 	{
-		// if someone still needs to throw a card
+		//if someone still needs to throw a card
 		if(state < THIRD_PLAYER_THROWS_CARD || (state < FOURTH_PLAYER_THROWS_CARD && !goingAlone))
 			state++;
-		else // if the last player has thrown a card
+		else //if the last player has thrown a card
 		{
-			//TODO: replace p with the player that won the trick
-			endOfTrick(p);
+			//TODO: replace this player with the player that won the trick
+			Player winner = new Player("winner");
+			endOfTrick(winner);
 		}
-		
 		Trace.dprint("new state: " + state);
 		
+		//decide whose turn it is to throw a card
+		if(state == FIRST_PLAYER_THROWS_CARD)
+			currentPlayer = CardDistributor.LEFT;
+		else
+			currentPlayer = (currentPlayer + 1) % 4;
 		
-		//TODO: replace p with "next" player
-		throwCard(p);
+		//TODO: ask currentPlayer to choose and throw a card
 	}
 	
 	/**
@@ -185,11 +188,14 @@ public class EuchreEngine
 		
 		//TODO: score points appropriately
 		
-		//TODO: implement this if/else structure:
-		//if there are cards left, play another trick
-			//Player dummy = new Player("dummy");
-			//throwCard(dummy);
-		//otherwise, end the round
+		//TODO: check to see if there are cards left, then play another trick or end the round
+		boolean cardsLeft = false;
+		if(cardsLeft)
+		{
+			state = FIRST_PLAYER_THROWS_CARD;
+			throwCard();
+		}
+		else
 			endOfRound();
 	}
 	
@@ -204,7 +210,7 @@ public class EuchreEngine
 		
 		//TODO: if a team has won the game, 
 			// display "You won!", options for playing a new game, etc.
-			System.exit(1);
+			//System.exit(1);
 		//TODO: else, deal a new hand:
 			//deal();
 	}
