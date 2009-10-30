@@ -1,13 +1,16 @@
 package game;
 
+import java.io.Serializable;
+
 /**
  * This class acts as a card in a deck or hand.
  * 
  * @author Ryan
  */
-public class Card 
+public class Card implements Serializable
 {
-
+	private static final long serialVersionUID = 1L;
+	
 	//suit of the card.
 	private char c;
 	//int value/number of the card.
@@ -125,5 +128,15 @@ public class Card
 			str = "Null card";
 
 		return str;
-	}	
+	}
+	
+	public boolean equals(Card c)
+	{
+		if(c.getSuit() == this.getSuit() && c.getValue() == this.getValue())
+		{
+			return true;
+		}
+		else
+			return false;
+	}
 }

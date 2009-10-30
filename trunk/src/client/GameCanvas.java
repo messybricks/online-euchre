@@ -1,5 +1,8 @@
 package client;
 
+import game.Card;
+import game.Player;
+
 import java.awt.Canvas;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -17,6 +20,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.imageio.ImageIO;
+
+import utility.Trace;
 
 public class GameCanvas extends Canvas implements MouseMotionListener, MouseListener
 {
@@ -42,6 +47,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 	int origX, origY;
 	HashMap<Integer, Integer> validLocations = new HashMap<Integer, Integer>();
 	BufferedImage suitImage;
+	Player player;
 
 	
 	public void setOwner(EuchreApplet apl)
@@ -78,6 +84,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 	public void addCard(char theSuit, int val, int xPos, int yPos)
 	{
 		Cards.add(new card(theSuit, val, xPos, yPos, owner));
+		repaint();
 	}
 
 	public void drawText(String txt, int x, int y, EuchreApplet owner)
@@ -331,6 +338,11 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 						contin = false;
 						c.setX(origX);
 						c.setY(origY);
+						
+						int i1 = player.getIndex(new Card(c.getSuit(), c.getVal()));
+						int i2 = player.getIndex(new Card(selectedCard.getSuit(), selectedCard.getVal()));
+						Trace.dprint("Swapping " + i1 + " and " + i2);
+						player.swapCards(i1 , i2);
 					}
 				}
 			}
@@ -346,6 +358,11 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 		}
 		
 		cardSelected = false;
+	}
+
+	public void setPlayer(Player p) 
+	{
+		player = p;
 	}
 
 }
@@ -373,6 +390,17 @@ class card
 		}
 	}
 	
+	public int getVal() 
+	{
+		return value;
+	}
+
+	public char getSuit() 
+	{
+		// TODO Auto-generated method stub
+		return suit;
+	}
+
 	public void setY(int y2) 
 	{
 		y = y2;

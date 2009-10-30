@@ -1,5 +1,6 @@
 package client;
 
+import game.Card;
 import game.Player;
 
 import javax.imageio.ImageIO;
@@ -246,11 +247,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		gameCanvas.setOwner(this);
 		gameArea.setSize(200, 200);
 		gameCanvas.setSize(554, 432);
-		gameCanvas.addCard('d', 2, 85, PLAYER_CARD_Y);
-		gameCanvas.addCard('s', 3, 164, PLAYER_CARD_Y);
-		gameCanvas.addCard('h', 4, 244, PLAYER_CARD_Y);
-		gameCanvas.addCard('c', 5, 322, PLAYER_CARD_Y);
-		gameCanvas.addCard('d', 6, 401, PLAYER_CARD_Y);
+
 		gameCanvas.drawText("Mike", 85, 40, this);
 		gameCanvas.drawTextVertical("Bert", 60, 110, this);
 		gameCanvas.drawTextVertical("Player", 480, 302 - (18 * "Player".length()), this);
@@ -296,7 +293,6 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		
 
 
-
 	}
 
 	/**
@@ -308,6 +304,8 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	{
 		userName = username;
 		client.authenticate(new User(username));
+		
+		
 	}
 
 	/**
@@ -736,6 +734,39 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	public java.util.List<Player> getPlayerList()
 	{
 		return playerList;
+	}
+
+	public void setUp() 
+	{
+		
+		Trace.dprint("Entering GUI setup");
+		for(Player p:playerList)
+		{
+			Trace.dprint(p.getUsername());
+			if(p.getUsername().equals(client.getUser().getUsername()))
+			{
+				p.pickupCard(new Card('d', 2));
+				p.pickupCard(new Card('s', 3));
+				p.pickupCard(new Card('h', 4));
+				p.pickupCard(new Card('c', 5));
+				p.pickupCard(new Card('d', 6));
+				
+				Trace.dprint("Index: " + p.getIndex(new Card('h', 4)));
+
+				gameCanvas.setPlayer(p);
+				
+				gameCanvas.addCard('d', 2, 85, PLAYER_CARD_Y);
+				gameCanvas.addCard('s', 3, 164, PLAYER_CARD_Y);
+				gameCanvas.addCard('h', 4, 244, PLAYER_CARD_Y);
+				gameCanvas.addCard('c', 5, 322, PLAYER_CARD_Y);
+				gameCanvas.addCard('d', 6, 401, PLAYER_CARD_Y);
+				
+				repaint();
+				this.doLayout();
+				break;
+			}
+		}
+		
 	}
 
 }

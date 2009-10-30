@@ -2,6 +2,8 @@ package game;
 
 import java.io.Serializable;
 
+import utility.Trace;
+
 /**
  * This class provides the standard methods and data needed to hold a collection of cards, such as a deck of cards.
  * 
@@ -29,6 +31,20 @@ public class CardCollection implements Serializable
 			size = 0;
 		cards = new Card[size];
 		count = 0;
+	}
+	
+	public int getIndex(Card c) 
+	{
+		Trace.dprint("Cards: ");
+		Trace.dprintArray(cards);
+		for(int x = 0; x < cards.length; x++)
+		{
+			if(c.equals(cards[x]))
+			{
+				return x;
+			}
+		}
+		return -1;
 	}
 
 	/**
