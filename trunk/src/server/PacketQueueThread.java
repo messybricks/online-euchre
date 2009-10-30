@@ -36,7 +36,7 @@ public class PacketQueueThread extends NetworkThread
 		userMan = userManager;
 		globalThread = global;
 	}
-	
+
 	/**
 	 * Gets the Player associated with this thread.
 	 */
@@ -144,6 +144,14 @@ public class PacketQueueThread extends NetworkThread
 			onSendMessage(packet);
 		else if(packet.getOpcode() == Opcode.UpdatePlayer)
 			onUpdatePlayer(packet);
+		else if(packet.getOpcode() == Opcode.requestBid)
+			onRequestBid(packet);
+		else if(packet.getOpcode() == Opcode.dealerDiscard)
+			onDealerDiscard(packet);
+		else if(packet.getOpcode() == Opcode.goingAlone)
+			onGoingAlone(packet);
+		else if(packet.getOpcode() == Opcode.throwCard)
+			onThrowCard(packet);
 		else
 			Trace.dprint("Received packet with unimplemented opcode '%s' - ignoring.", packet.getOpcode().toString());
 	}
@@ -171,7 +179,7 @@ public class PacketQueueThread extends NetworkThread
 		else
 		{
 			User user = (User)packet.getData();
-			
+
 			// if the name is already in use, ask the client to enter a new one. otherwise, auth them
 			if(userMan.contains(user.getUsername()))
 				send(Opcode.Rename, "This name is already in use.");
@@ -210,7 +218,7 @@ public class PacketQueueThread extends NetworkThread
 		chatMan.send(object);
 		Trace.dprint("User '%s' says: %s", object.getSource().getUsername(), object.getMessage());
 	}
-	
+
 	/**
 	 * Updates this thread's associated Player object.
 	 * @param packet Packet containing data describing changes to the Player
@@ -219,5 +227,45 @@ public class PacketQueueThread extends NetworkThread
 	{
 		myPlayer.updateData(packet);
 		globalThread.sendGlobal(Opcode.UpdatePlayer, packet.getData());
+	}
+	
+	/**
+	 * Processes a requestBid packet.
+	 * 
+	 * @param packet Packet to process
+	 */
+	private void onRequestBid(Packet packet)
+	{
+		//TODO: implement this
+	}
+	
+	/**
+	 * Processes a dealerDiscard packet.
+	 * 
+	 * @param packet Packet to process
+	 */
+	private void onDealerDiscard(Packet packet)
+	{
+		//TODO: implement this		
+	}
+		
+	/**
+	 * Processes a goingAlone packet.
+	 * 
+	 * @param packet Packet to process
+	 */
+	private void onGoingAlone(Packet packet)
+	{
+		//TODO: implement this
+	}
+	
+	/**
+	 * Processes a throwCard packet.
+	 * 
+	 * @param packet Packet to process
+	 */
+	private void onThrowCard(Packet packet)
+	{
+		//TODO: implement this
 	}
 }
