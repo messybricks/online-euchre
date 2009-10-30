@@ -70,15 +70,13 @@ public class CardDistributor {
 		return deck.draw();
 	}
 	
-	/**
-	 * needs to be implemented
-	 * 
-	 * @param trump 
-	 */
+	
+	/* COMMENTED OUT BY MIKE... not needed?
 	public void dealerDiscard(Card trump)
 	{
 		
 	}
+	*/
 	
 	/**
 	 * Swaps around the dealer and respective players.
