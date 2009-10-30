@@ -2,6 +2,7 @@ package game;
 
 import chat.User;
 import testing.FakeThread;
+import utility.Opcode;
 import utility.Trace;
 
 /**
@@ -36,7 +37,7 @@ public class EuchreEngine
 	
 	private boolean goingAlone = false;
 	private CardDistributor cardDistributor;
-	private int currentPlayer;
+	private int currentPlayerIndex;
 	private Card trump;
 	
 	public EuchreEngine(Player dealer, Player left, Player across, Player right)
@@ -75,8 +76,8 @@ public class EuchreEngine
 		trump = cardDistributor.flipTrump();
 		
 		//player to the left of the dealer bids
-		currentPlayer = CardDistributor.LEFT;
-		bid(cardDistributor.getPlayerOrder()[currentPlayer]);
+		currentPlayerIndex = CardDistributor.LEFT;
+		bid(currentPlayer());
 	}
 	
 	/**
@@ -99,9 +100,20 @@ public class EuchreEngine
 			//TODO: flip down trump card
 		}
 		
-		//TODO: ask player to accept/name trump
+		//send opcode to player to request a bid
+		currentPlayer().sendOpcode(Opcode.requestBid);
 	}
 	
+	/**
+	 * receive input from the player:
+	 * 's' = spades is named as trump
+	 * 'd' = diamonds is named as trump
+	 * 'h' = hearts is named as trump
+	 * 'c' = clubs is named as trump
+	 * 'p' = pass (nothing named as trump yet)
+	 * 
+	 * @param trump the character of the suit named as trump (or 'p' for pass)
+	 */
 	public void receiveBid(Character trump)
 	{
 		//if (player accepted/named trump)
@@ -116,8 +128,8 @@ public class EuchreEngine
 		}
 		else  // if the player passed, go on to the next player
 		{
-			currentPlayer = (currentPlayer++) % 4;
-			bid(cardDistributor.getPlayerOrder()[currentPlayer]);
+			currentPlayerIndex = (currentPlayerIndex++) % 4;
+			bid(currentPlayer());
 		}
 	}
 	
@@ -129,9 +141,8 @@ public class EuchreEngine
 		state = DEALER_DISCARD;
 		Trace.dprint("new state: " + state);
 		
-		//TODO: ask dealer to choose a card to discard
-		cardDistributor.dealerDiscard(trump);
-		
+		//send an opcode to the dealer to tell them to discard
+		cardDistributor.getPlayerOrder()[0].sendOpcode(Opcode.dealerDiscard);
 	}
 	
 	/**
@@ -146,7 +157,8 @@ public class EuchreEngine
 		state = GOING_ALONE;
 		Trace.dprint("new state: " + state);
 		
-		//TODO: ask currentPlayer if he/she is going alone
+		//ask currentPlayer if he/she is going alone
+		currentPlayer().sendOpcode(Opcode.goingAlone);
 		//TODO: save answer as a boolean:
 		goingAlone = false;
 	}
@@ -170,11 +182,11 @@ public class EuchreEngine
 		
 		//decide whose turn it is to throw a card
 		if(state == FIRST_PLAYER_THROWS_CARD)
-			currentPlayer = CardDistributor.LEFT;
+			currentPlayerIndex = CardDistributor.LEFT;
 		else
-			currentPlayer = (currentPlayer + 1) % 4;
+			currentPlayerIndex = (currentPlayerIndex + 1) % 4;
 		
-		//TODO: ask currentPlayer to choose and throw a card
+		//TODO: ask currentPlayerIndex to choose and throw a card
 	}
 	
 	/**
@@ -225,6 +237,16 @@ public class EuchreEngine
 	public int getState()
 	{
 		return state;
+	}
+	
+	/**
+	 * helper method that returns the current player, using the currentPlayerIndex.
+	 * 
+	 * @return the current player
+	 */
+	private Player currentPlayer()
+	{
+		return cardDistributor.getPlayerOrder()[currentPlayerIndex];
 	}
 		
 }
