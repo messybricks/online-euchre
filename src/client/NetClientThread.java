@@ -69,6 +69,14 @@ public class NetClientThread extends NetworkThread
 			onUpdatePlayer(packet);
 		else if(packet.getOpcode() == Opcode.RemovePlayer)
 			onRemovePlayer(packet);
+		else if(packet.getOpcode() == Opcode.requestBid)
+			onRequestBid(packet);
+		else if(packet.getOpcode() == Opcode.dealerDiscard)
+			onDealerDiscard(packet);
+		else if(packet.getOpcode() == Opcode.goingAlone)
+			onGoingAlone(packet);
+		else if(packet.getOpcode() == Opcode.throwCard)
+			onThrowCard(packet);
 		else
 			Trace.dprint("Received packet with unimplemented opcode '%s' - ignoring.", packet.getOpcode().toString());
 	}
@@ -182,5 +190,46 @@ public class NetClientThread extends NetworkThread
 		List<Player> list = euchreApplet.getPlayerList();
 		for(Player player : list)
 			player.updateData(packet);
+	}
+	
+	
+	/**
+	 * Processes a requestBid packet.
+	 * 
+	 * @param packet Packet to process
+	 */
+	private void onRequestBid(Packet packet)
+	{
+		//TODO: implement this
+	}
+	
+	/**
+	 * Processes a dealerDiscard packet.
+	 * 
+	 * @param packet Packet to process
+	 */
+	private void onDealerDiscard(Packet packet)
+	{
+		//TODO: implement this		
+	}
+		
+	/**
+	 * Processes a goingAlone packet.
+	 * 
+	 * @param packet Packet to process
+	 */
+	private void onGoingAlone(Packet packet)
+	{
+		//TODO: implement this
+	}
+	
+	/**
+	 * Processes a throwCard packet.
+	 * 
+	 * @param packet Packet to process
+	 */
+	private void onThrowCard(Packet packet)
+	{
+		//TODO: implement this
 	}
 }
