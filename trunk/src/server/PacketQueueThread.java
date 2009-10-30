@@ -179,9 +179,9 @@ public class PacketQueueThread extends NetworkThread
 			{
 				associate = user;
 				userMan.add(associate);
-				send(Opcode.Auth, user);
 				
 				myPlayer = new Player(user, globalThread);
+				send(Opcode.Auth, user);
 			}
 		}
 	}
