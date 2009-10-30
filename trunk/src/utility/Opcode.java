@@ -22,7 +22,14 @@ public enum Opcode
 	// player class automation
 	CreatePlayer,
 	RemovePlayer,
-	UpdatePlayer;
+	UpdatePlayer,
+	
+	//prompts from the EuchreEngine
+	requestBid,
+	dealerDiscard,
+	goingAlone,
+	throwCard;
+	
 
 	/**
 	 * Generates an instance of Opcode with the given ordinal value.
