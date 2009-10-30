@@ -120,6 +120,7 @@ public class NetClientThread extends NetworkThread
 	private void onAuth(Packet packet)
 	{
 		associate = (User)packet.getData();
+		euchreApplet.setUp();
 	}
 
 	/**

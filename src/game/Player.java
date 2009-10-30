@@ -16,6 +16,8 @@ import chat.User;
  */
 public class Player implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	private User user;
 	private SubPlayer subPlayer;
 	
@@ -122,6 +124,11 @@ public class Player implements Serializable {
 		return user.getUsername();
 	}
 	
+	public int getIndex(Card c)
+	{
+		return subPlayer.getHand().getIndex(c);
+	}
+	
 	/**
 	 * Returns the string representation of the current Player.
 	 * 
@@ -211,6 +218,8 @@ public class Player implements Serializable {
 
 		private final int uid;
 		
+		private static final long serialVersionUID = 2L;
+		
 		/**
 		 * Creates a new instance of the SubPlayer class with the specified globally unique identifier
 		 * 
@@ -259,9 +268,6 @@ public class Player implements Serializable {
 		{
 			return gamesWon;
 		}
-		
-		// serialization version
-		private static final long serialVersionUID = 1;
 	}
 	
 	/**
