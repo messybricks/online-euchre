@@ -63,89 +63,16 @@ public class ServerSocketThread extends Thread implements TransactionThread
 		{
 			try
 			{
-				// play ping-pong
-				long time = System.currentTimeMillis();
 				Set<String> invalidated = new HashSet<String>();
-
-				synchronized(clientMapping)
-				{
-					for(Entry<String, PacketQueueThread> entry : clientMapping.entrySet())
-					{
-						// ping clients every so often
-						if(time - entry.getValue().getLastPing() > PING_FREQUENCY)
-						{
-							entry.getValue().ping();
-						}
-
-						// check to see if they have disconnected due to network problems
-						if(entry.getValue().getLastPong() < entry.getValue().getLastPing() && time - entry.getValue().getLastPing() > PING_TIMEOUT)
-						{
-							Trace.dprint("Client id '%s' has timed out.", entry.getKey());
-							invalidated.add(entry.getKey());
-
-							if(entry.getValue().isAuthenticated())
-								userManager.remove(entry.getValue().getUser());
-						}
-
-						// check to see if they have disconnected of their own volition
-						if(entry.getValue().hasQuit())
-							invalidated.add(entry.getKey());
-					}
-				}
-
-				// authenticate clients
-				synchronized(clientMapping)
-				{
-					LinkedList<String> toRemove = new LinkedList<String>();
-					LinkedList<PacketQueueThread> toAdd = new LinkedList<PacketQueueThread>();
-					
-					for(Entry<String, PacketQueueThread> entry : clientMapping.entrySet())
-					{
-						if(!entry.getValue().isAuthenticated())
-						{
-							if(entry.getValue().getUser() != null)
-							{
-								PacketQueueThread tempThread = entry.getValue();
-								tempThread.verify();
-								
-								toRemove.add(entry.getKey());
-								toAdd.add(tempThread);
-								
-								Trace.dprint("'%s' -> '%s'", entry.getKey(), tempThread.getUser().getUsername());
-							}
-						}
-					}
-					
-					for(String removal : toRemove)
-						clientMapping.remove(removal);
-					
-					for(PacketQueueThread addition : toAdd)
-						clientMapping.put(addition.getUser().getUsername(), addition);
-				}
-
-				// remove invalidated connections
-				synchronized(clientMapping)
-				{
-					for(String key : invalidated)
-					{
-						if(clientMapping.containsKey(key))
-						{
-							clientMapping.get(key).stopThread();
-							try
-							{
-								clientMapping.get(key).join(THREAD_KILL_TIMEOUT);
-							}
-							catch (InterruptedException ex)
-							{
-								Trace.dprint("ServerSocketThread was interrupted while joining client thread! Message: %s", ex.getMessage());
-							}
-							clientMapping.remove(key);
-						}
-						else
-							Trace.dprint("Client '%s' was marked as invalidated, but did not exist in clientMapping!", key);
-					}
-				}
-
+				
+				// test if our current connections are still there.
+				playPingPong(invalidated);
+				// gives our clients names.
+				authenticateClients();
+				// removes any connections that were invalidated before.
+				removeInvalidatedConnections(invalidated);
+				
+				// adds any new players or watchers to the game.
 				// if socket.accept() does not return null, we have an incoming connection and must spawn a thread to manage it
 				Socket accepted = socket.accept();
 				if(accepted != null)
@@ -160,6 +87,7 @@ public class ServerSocketThread extends Thread implements TransactionThread
 					}
 					clientThread.start();
 				}
+				
 			}
 			catch (SocketTimeoutException ex)
 			{
@@ -207,33 +135,6 @@ public class ServerSocketThread extends Thread implements TransactionThread
 	}
 
 	/**
-	 * Sends the given opcode to every client connected to this ServerSocketThread.
-	 * 
-	 * @param opcode Opcode of packet to generate
-	 */
-	public void sendGlobal(Opcode opcode)
-	{
-		sendGlobal(opcode, null);
-	}
-
-	/**
-	 * Sends the given opcode with an associated datum to every client connected to this ServerSocketThread.
-	 * 
-	 * @param opcode Opcode of packet to generate
-	 * @param datum An optional object to associate with the generated packet
-	 */
-	public void sendGlobal(Opcode opcode, Serializable datum)
-	{
-		Packet global = new Packet(opcode, datum);
-
-		synchronized(clientMapping)
-		{
-			for(PacketQueueThread thread : clientMapping.values())
-				thread.send(global);
-		}
-	}
-
-	/**
 	 * Sends the given opcode with an associated datum to a specified client.
 	 * 
 	 * @param client Client to send the packet to
@@ -263,23 +164,138 @@ public class ServerSocketThread extends Thread implements TransactionThread
 		}
 	}
 
-	// the following three methods are global send functions used by TransactionThread
-	@Override
+	/**
+	 * Sends the given opcode with an associated datum to every client connected to this ServerSocketThread.
+	 * 
+	 * @param opcode Opcode of packet to generate
+	 * @param datum An optional object to associate with the generated packet
+	 */
 	public void send(Opcode opcode, Serializable datum)
 	{
-		sendGlobal(opcode, datum);
+		Packet global = new Packet(opcode, datum);
+
+		synchronized(clientMapping)
+		{
+			for(PacketQueueThread thread : clientMapping.values())
+				thread.send(global);
+		}
 	}
 
-	@Override
+	/**
+	 * Sends the given opcode to every client connected to this ServerSocketThread.
+	 * 
+	 * @param opcode Opcode of packet to generate
+	 */
 	public void send(Opcode opcode)
 	{
-		sendGlobal(opcode);
+		send(opcode,null);
 	}
 
-	@Override
+	/**
+	 * Sends the given packet to every client connected to this ServerSocketThread.
+	 * 
+	 * @param packet Packet to send to clients.
+	 */
 	public void send(Packet packet)
 	{
-		sendGlobal(packet.getOpcode(), packet.getData());
+		send(packet.getOpcode(), packet.getData());
+	}
+	
+	private void playPingPong(Set<String> invalidated)
+	{
+		long time = System.currentTimeMillis();
+		synchronized(clientMapping)
+		{
+			for(Entry<String, PacketQueueThread> entry : clientMapping.entrySet())
+			{
+				// ping clients every so often
+				if(time - entry.getValue().getLastPing() > PING_FREQUENCY)
+				{
+					entry.getValue().ping();
+				}
+
+				// check to see if they have disconnected due to network problems
+				if(entry.getValue().getLastPong() < entry.getValue().getLastPing() && time - entry.getValue().getLastPing() > PING_TIMEOUT)
+				{
+					Trace.dprint("Client id '%s' has timed out.", entry.getKey());
+					invalidated.add(entry.getKey());
+
+					if(entry.getValue().isAuthenticated())
+						userManager.remove(entry.getValue().getUser());
+				}
+
+				// check to see if they have disconnected of their own volition
+				if(entry.getValue().hasQuit())
+					invalidated.add(entry.getKey());
+			}
+		}
+	}
+	
+	private void authenticateClients()
+	{
+		// authenticate clients
+		synchronized(clientMapping)
+		{
+			// this list contains mappings that are removed when we re-assign names
+			LinkedList<String> toRemove = new LinkedList<String>();
+			// and this list contains the mappings that will be replacing them
+			LinkedList<PacketQueueThread> toAdd = new LinkedList<PacketQueueThread>();
+			
+			for(Entry<String, PacketQueueThread> entry : clientMapping.entrySet())
+			{
+				// if a thread has a user, but is not verified (authenticated) yet, we attempt to authenticate them
+				if(!entry.getValue().isAuthenticated())
+				{
+					if(entry.getValue().getUser() != null)
+					{
+						PacketQueueThread tempThread = entry.getValue();
+						tempThread.verify(); // once verify is called, the user cannot be changed
+						
+						// replace the mapping associated with the user's hostname with a mapping whose key is the player's user name
+						toRemove.add(entry.getKey());
+						toAdd.add(tempThread);
+						
+						Trace.dprint("'%s' -> '%s'", entry.getKey(), tempThread.getUser().getUsername());
+					}
+				}
+			}
+			
+			// remove re-assigned mappings
+			for(String removal : toRemove)
+				clientMapping.remove(removal);
+			
+			// add new mappings
+			for(PacketQueueThread addition : toAdd)
+				clientMapping.put(addition.getUser().getUsername(), addition);
+		}
+	}
+	
+	private void removeInvalidatedConnections(Set<String> invalidated)
+	{
+		// remove invalidated connections
+		synchronized(clientMapping)
+		{
+			for(String key : invalidated)
+			{
+				// for each key in the list of mappings to remove, if the key is valid, we stop its thread and remove it
+				if(clientMapping.containsKey(key))
+				{
+					clientMapping.get(key).stopThread();
+					try
+					{
+						// wait for that thread to finish whatever its doing
+						clientMapping.get(key).join(THREAD_KILL_TIMEOUT);
+					}
+					catch (InterruptedException ex)
+					{
+						Trace.dprint("ServerSocketThread was interrupted while joining client thread! Message: %s", ex.getMessage());
+					}
+					clientMapping.remove(key);
+				}
+				else
+					Trace.dprint("Client '%s' was marked as invalidated, but did not exist in clientMapping!", key);
+			}
+		}
 	}
 
 }

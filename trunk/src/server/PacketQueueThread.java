@@ -226,7 +226,7 @@ public class PacketQueueThread extends NetworkThread
 	private void onUpdatePlayer(Packet packet)
 	{
 		myPlayer.updateData(packet);
-		globalThread.sendGlobal(Opcode.UpdatePlayer, packet.getData());
+		globalThread.send(Opcode.UpdatePlayer, packet.getData());
 	}
 	
 	/**
