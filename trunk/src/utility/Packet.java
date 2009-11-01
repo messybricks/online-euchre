@@ -150,4 +150,33 @@ public class Packet
 			return new byte[0];
 		}
 	}
+	
+	/**
+	 * Attempts to read a byte array representing a packet header and returns the data size in that header.
+	 * 
+	 * @param header Byte array representing a packet header
+	 * @return Size of the datum associated with that packet
+	 * @throws IllegalArgumentException if header is null or not at least HEADER_SIZE bytes
+	 */
+	public static int getDataSizeFromHeader(byte[] header) throws IllegalArgumentException
+	{
+		if(header == null)
+			throw new IllegalArgumentException("Header must not be null to read data size.");
+		if(header.length < HEADER_SIZE)
+			throw new IllegalArgumentException(String.format("Header must be at least HEADER_SIZE (%d) bytes to extract data size.", HEADER_SIZE));
+		
+		ByteArrayInputStream is = new ByteArrayInputStream(header);
+		DataInputStream reader = new DataInputStream(is);
+		
+		try
+		{
+			reader.skipBytes(4);
+			return reader.readInt();
+		}
+		catch(IOException ex)
+		{
+			Trace.dprint("### ERROR: Unable to read packet size from packet header. Header length was %d. Returning zero.", header.length);
+			return 0;
+		}
+	}
 }

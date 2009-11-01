@@ -60,13 +60,31 @@ public abstract class NetworkThread extends Thread implements TransactionThread
 					// if the reader has bytes available to be read, we can convert them to a packet and add to inbound
 					if(reader.available() >= Packet.HEADER_SIZE)
 					{
-						int byteIn = -1;
+						//int byteIn = -1;
 						ByteArrayOutputStream dataStream = new ByteArrayOutputStream();
 
-						while(reader.available() > 0)
+						/*while(reader.available() > 0)
 						{
 							byteIn = reader.read();
 							dataStream.write(byteIn);
+						}*/
+						
+						for(byte i = 0; i < Packet.HEADER_SIZE; ++i)
+							dataStream.write(reader.read());
+
+						int bytesRead = 0;
+						int dataSize = Packet.getDataSizeFromHeader(dataStream.toByteArray());
+						for(; bytesRead < dataSize && reader.available() > 0; ++bytesRead)
+							dataStream.write(reader.read());
+						
+						if(bytesRead < dataSize)
+						{
+							Trace.dprint("### WARNING: Received a partial packet! Received %d bytes from a packet of size %d. Will wait 40ms for additional data...", dataSize + Packet.HEADER_SIZE, bytesRead + Packet.HEADER_SIZE);
+							sleep(40);
+							for(; bytesRead < dataSize && reader.available() > 0; ++bytesRead)
+								dataStream.write(reader.read());
+							if(bytesRead < dataSize)
+								Trace.dprint("### ERROR: Unable to read packet from network stream. Received %d bytes of %d.", bytesRead + Packet.HEADER_SIZE, dataSize + Packet.HEADER_SIZE);
 						}
 
 						Packet inPacket = new Packet(dataStream.toByteArray());
