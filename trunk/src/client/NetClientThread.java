@@ -71,6 +71,8 @@ public class NetClientThread extends NetworkThread
 			onRemovePlayer(packet);
 		else if(packet.getOpcode() == Opcode.requestBid)
 			onRequestBid(packet);
+		else if(packet.getOpcode() == Opcode.requestAlternateBid)
+			onRequestAlternateBid(packet);
 		else if(packet.getOpcode() == Opcode.dealerDiscard)
 			onDealerDiscard(packet);
 		else if(packet.getOpcode() == Opcode.goingAlone)
@@ -197,11 +199,39 @@ public class NetClientThread extends NetworkThread
 	/**
 	 * Processes a requestBid packet.
 	 * 
-	 * @param packet Packet to process
+	 * @param packet a String containing the suit of the flipped card
 	 */
 	private void onRequestBid(Packet packet)
 	{
-		//TODO: implement this
+		String suit = (String)packet.getData();
+		JOptionPane.showOptionDialog(euchreApplet, "Do you want " + suit + " to be trump?", "Bidding", JOptionPane.YES_NO_OPTION, 
+									 JOptionPane.QUESTION_MESSAGE, null, null, JOptionPane.NO_OPTION);
+			
+		
+	}
+	
+	/**
+	 * Processes a requestAlternateBid packet
+	 * 
+	 * @param packet a String containing the suit of the flipped card
+	 */
+	private void onRequestAlternateBid(Packet packet)
+	{
+		String suit = (String)packet.getData();
+		
+		String[] suits = new String[3];
+		int i = 0;
+		if(suit.toLowerCase().charAt(0) != 'd')
+			suits[i++] = "diamonds";
+		if(suit.toLowerCase().charAt(0) != 'h')
+			suits[i++] = "hearts";
+		if(suit.toLowerCase().charAt(0) != 'c')
+			suits[i++] = "clubs";
+		if(suit.toLowerCase().charAt(0) != 's')
+			suits[i++] = "spades";
+				
+		JOptionPane.showOptionDialog(euchreApplet, "Would you like to name trump?", "Bidding", JOptionPane.YES_NO_OPTION, 
+				 JOptionPane.QUESTION_MESSAGE, null,suits, JOptionPane.NO_OPTION);
 	}
 	
 	/**
