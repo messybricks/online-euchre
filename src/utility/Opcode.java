@@ -26,6 +26,7 @@ public enum Opcode
 	
 	//prompts from the EuchreEngine
 	requestBid,
+	requestAlternateBid,
 	dealerDiscard,
 	goingAlone,
 	throwCard;
