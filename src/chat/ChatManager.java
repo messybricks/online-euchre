@@ -33,7 +33,7 @@ public class ChatManager
 		User dest = obj.getDest();
 		if(obj.getDest() == null)
 		{
-			thread.sendGlobal(Opcode.SendMessage, obj);
+			thread.send(Opcode.SendMessage, obj);
 		}
 		else
 		{

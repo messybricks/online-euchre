@@ -39,7 +39,7 @@ public class UserManager
 	public void add(User usr)
 	{
 		users.add(usr);
-		thread.sendGlobal(Opcode.UpdateUsers, users);
+		thread.send(Opcode.UpdateUsers, users);
 	}
 
 	/**
@@ -60,7 +60,7 @@ public class UserManager
 		}
 
 		users.remove(removeIndex);
-		thread.sendGlobal(Opcode.UpdateUsers, users);
+		thread.send(Opcode.UpdateUsers, users);
 	}
 	
 	/**
