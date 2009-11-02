@@ -53,7 +53,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 	boolean onOver = false;
 	boolean offOver = false;
 	card playPos;
-
+	int openX, openY;
 	
 	public void setOwner(EuchreApplet apl)
 	{		
@@ -376,6 +376,8 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 			Trace.dprint("NO!");
 			try {
 				displayMessage(this.owner, "","","",0);
+				playPos.setX(openX);
+				playPos.setY(openY);
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -441,6 +443,8 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 					{		
 						selectedCard.setX(xLoc + x);
 						selectedCard.setY(value);
+						if((xLoc + x) == openX)
+							openX = origX;
 						y = 20;
 						x = 20;
 						broke = true;
@@ -448,6 +452,8 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 						if(value == 215)
 						{
 							playPos = selectedCard;
+							openX = origX;
+							openY = origY;
 							try 
 							{
 								displayMessage(this.owner, "Play this", "card","",1);
