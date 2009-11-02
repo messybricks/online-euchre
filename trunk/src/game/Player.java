@@ -173,6 +173,17 @@ public class Player implements Serializable {
 	}
 	
 	/**
+	 * send this player an opcode with associated data
+	 * 
+	 * @param opcode the opcode to be sent to this player
+	 * @param datum data to associate with this opcode
+	 */
+	public void sendData(Opcode opcode, Serializable datum)
+	{
+		thread.send(opcode, datum);
+	}
+	
+	/**
 	 * Updates the internal data associated with this Player using an UpdatePlayer packet.
 	 * 
 	 * @param packet UpdatePlayer packet containing new data for this Player
