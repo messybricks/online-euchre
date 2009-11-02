@@ -31,7 +31,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 	int why = 10;
 	URL url, url2;
 	char suit = 'n';
-	text msg;
+	text msg, msg2, msg3;
 
 	BufferedImage img = null;
 	BufferedImage card = null;
@@ -41,6 +41,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 	ArrayList<card> Cards;
 	ArrayList<text> words = new ArrayList<text>();
 	ArrayList<text> wordsVertical = new ArrayList<text>();
+	ArrayList<Image> button = new ArrayList<Image>();
 	boolean cardSelected = false;
 	card selectedCard = null;
 	int xCon = 0;
@@ -49,6 +50,9 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 	HashMap<Integer, Integer> validLocations = new HashMap<Integer, Integer>();
 	BufferedImage suitImage;
 	Player player;
+	boolean onOver = false;
+	boolean offOver = false;
+	card playPos;
 
 	
 	public void setOwner(EuchreApplet apl)
@@ -115,6 +119,21 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 		//Draw background
 		g.drawImage(img, 0, 0, null);
 		
+		if(button != null)
+		{
+			if(button.size() == 4)
+			{
+				if(!onOver)
+					g.drawImage(button.get(3), 320, 295, null);
+				else
+					g.drawImage(button.get(2), 320, 295, null);
+				if(!offOver)
+					g.drawImage(button.get(1), 364, 295, null);
+				else
+					g.drawImage(button.get(0), 364, 295, null);
+			}
+		}
+		
 		if(msg != null)
 		{
 			ArrayList<Image> images = msg.getImages();
@@ -124,6 +143,37 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 			for(Image i: images)
 			{
 				g.drawImage(i, msg.getX() + w, msg.getY(), null);
+				lastX = 18;
+				w = w + i.getWidth(getParent());
+				++x;
+			}			
+		}
+		
+		if(msg2 != null)
+		{
+			ArrayList<Image> images = msg2.getImages();
+			int lastX = 0;
+			int x = 0;
+			int w = 0;
+			for(Image i: images)
+			{
+				g.drawImage(i, msg2.getX() + w, msg2.getY(), null);
+				lastX = 18;
+				w = w + i.getWidth(getParent());
+				++x;
+			}			
+		}
+
+		
+		if(msg3 != null)
+		{
+			ArrayList<Image> images = msg3.getImages();
+			int lastX = 0;
+			int x = 0;
+			int w = 0;
+			for(Image i: images)
+			{
+				g.drawImage(i, msg3.getX() + w, msg3.getY(), null);
 				lastX = 18;
 				w = w + i.getWidth(getParent());
 				++x;
@@ -252,6 +302,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 			g.drawImage(ImageIO.read(tempURL2), 244, -60, null);
 			g.drawImage(ImageIO.read(tempURL2), 322, -60, null);
 			g.drawImage(ImageIO.read(tempURL2), 401, -60, null);
+			
 		}
 		catch (MalformedURLException e) 
 		{
@@ -283,7 +334,25 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		// TODO Auto-generated method stub
+
+//		g.drawImage(button.get(1), 364, 295, null);
+//		g.drawImage(button.get(3), 320, 295, null);
+		
+		if((e.getX() > 320) && (e.getX() < 360) && ((e.getY() > 295) && (e.getY() < 313)))
+		{
+			onOver = true;
+		}
+		else
+			onOver = false;		
+		
+		if((e.getX() > 364) && (e.getX() < 394) && ((e.getY() > 295) && (e.getY() < 313)))
+		{
+			offOver = true;
+		}
+		else
+			offOver = false;
+
+		repaint();
 		
 	}
 
@@ -349,6 +418,38 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 						y = 20;
 						x = 20;
 						broke = true;
+						
+						Trace.dprint("" + (xLoc + x) + ", " + value);
+						if(value == 215)
+						{
+							playPos = selectedCard;
+							try 
+							{
+								displayMessage(this.owner, "Play this", "card","",1);
+							} 
+							catch (IOException e1) 
+							{
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+						} 
+						else
+						{
+							Trace.dprint(selectedCard.toString());
+							Trace.dprint(playPos.toString());
+							if((playPos != null) && (selectedCard == playPos))
+							{
+								playPos = null;
+								try 
+								{
+									displayMessage(this.owner, "","","",0);
+								} catch (IOException e1) 
+								{
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+							}
+						}
 					}
 				}
 			}
@@ -386,6 +487,38 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 	public void setPlayer(Player p) 
 	{
 		player = p;
+	}
+
+	public int displayMessage(EuchreApplet euchreApplet, String txt, String txt2, String txt3, int opt) throws IOException 
+	{
+
+		msg = new text(txt, 320, 220, owner);
+		msg2 = new text(txt2, 320, 240, owner);
+		msg3 = new text(txt3, 320, 260, owner);
+		
+		button = new ArrayList<Image>();
+		
+		if(opt == 0)
+		{
+			msg = null;
+			msg2 = null;
+			msg3 = null;
+		}
+		if(opt == 1)
+		{
+			
+			URL tempURL = new URL(owner.getCodeBase(), "no.gif");
+			URL tempURL2 = new URL(owner.getCodeBase(), "noo.gif");
+			URL tempURL3 = new URL(owner.getCodeBase(), "yes.gif");
+			URL tempURL4 = new URL(owner.getCodeBase(), "yeso.gif");
+			button.add(ImageIO.read(tempURL));
+			button.add(ImageIO.read(tempURL2));
+			button.add(ImageIO.read(tempURL3));
+			button.add(ImageIO.read(tempURL4));
+
+		}
+		
+		return opt;
 	}
 
 }
