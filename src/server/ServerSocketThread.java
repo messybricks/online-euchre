@@ -231,6 +231,9 @@ public class ServerSocketThread extends Thread implements TransactionThread
 		}
 	}
 	
+	public ServerSocket getServerSocket(){
+		return socket;
+	}
 	private void authenticateClients()
 	{
 		// authenticate clients
