@@ -101,7 +101,7 @@ public class EuchreEngine
 		}
 		
 		//send opcode to player to request a bid
-		currentPlayer().sendOpcode(Opcode.requestBid);
+		currentPlayer().sendData(Opcode.requestBid, "" + trump.getSuit());
 	}
 	
 	/**
@@ -114,10 +114,10 @@ public class EuchreEngine
 	 * 
 	 * @param trump the character of the suit named as trump (or 'p' for pass)
 	 */
-	public void receiveBid(Character trump)
+	public void receiveBid(String trump)
 	{
 		//if (player accepted/named trump)
-		if (trump != 'p')
+		if (trump != "p")
 		{
 			if(state <= FOURTH_BID)
 			{
@@ -159,15 +159,27 @@ public class EuchreEngine
 		
 		//ask currentPlayer if he/she is going alone
 		currentPlayer().sendOpcode(Opcode.goingAlone);
-		//TODO: save answer as a boolean:
-		goingAlone = false;
 	}
+	
+	/**
+	 * sets the value of goingAlone (this happens after
+	 * the user has been prompted)
+	 * 
+	 * @param alone true if the player is going alone, false otherwise 
+	 */
+	public void setGoingAlone(boolean alone)
+	{
+		goingAlone = alone;
+		throwCard();
+	}
+	
+	
 	
 	/**
 	 * this method is called every time a player needs to
 	 * choose and throw a card for a trick.
 	 */
-	public void throwCard()
+	private void throwCard()
 	{
 		//if someone still needs to throw a card
 		if(state < THIRD_PLAYER_THROWS_CARD || (state < FOURTH_PLAYER_THROWS_CARD && !goingAlone))
