@@ -230,7 +230,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 
 
 		//TODO: initialize size of the applet <REMOVE LATER>
-		setSize(700, 550);
+		setSize(695, 550);
 
 		//set the layout manager to BorderLayout
 		setLayout(new BorderLayout());
@@ -333,13 +333,8 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 			temp.addMouseListener(this);
 			temp.setBackground(Color.LIGHT_GRAY);
 			temp.setFocusable(false);
-			if(x.getUsername().compareTo(userName) == 0)
-			{
-				gameCanvas.drawText(x.getUsername(), 85, 300, this);
-			}
 			if(client.getUser() != null)
 			{
-				gameCanvas.drawText(client.getUser().getUsername(), 85, 300, this);
 				if(x.getUsername().compareTo(client.getUser().getUsername()) == 0)
 				{
 					//gameCanvas.drawText(x.getUsername(), 85, 40, this);
@@ -740,30 +735,36 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	{
 		
 		Trace.dprint("Entering GUI setup");
-		for(Player p:playerList)
-		{
-			Trace.dprint(p.getUsername());
-			if(p.getUsername().equals(client.getUser().getUsername()))
-			{
-				p.pickupCard(new Card('d', 2));
-				p.pickupCard(new Card('s', 3));
-				p.pickupCard(new Card('h', 4));
-				p.pickupCard(new Card('c', 5));
-				p.pickupCard(new Card('d', 6));
-				
-				Trace.dprint("Index: " + p.getIndex(new Card('h', 4)));
 
-				gameCanvas.setPlayer(p);
-				
-				gameCanvas.addCard('d', 2, 85, PLAYER_CARD_Y);
-				gameCanvas.addCard('s', 3, 164, PLAYER_CARD_Y);
-				gameCanvas.addCard('h', 4, 244, PLAYER_CARD_Y);
-				gameCanvas.addCard('c', 5, 322, PLAYER_CARD_Y);
-				gameCanvas.addCard('d', 6, 401, PLAYER_CARD_Y);
-				
-				repaint();
-				this.doLayout();
-				break;
+		gameCanvas.drawText(client.getUser().getUsername(), 85, 300, this);
+		
+		if(playerList != null)
+		{
+			for(Player p:playerList)
+			{
+				Trace.dprint(p.getUsername());
+				if(p.getUsername().equals(client.getUser().getUsername()))
+				{
+					p.pickupCard(new Card('d', 2));
+					p.pickupCard(new Card('s', 3));
+					p.pickupCard(new Card('h', 4));
+					p.pickupCard(new Card('c', 5));
+					p.pickupCard(new Card('d', 6));
+					
+					Trace.dprint("Index: " + p.getIndex(new Card('h', 4)));
+	
+					gameCanvas.setPlayer(p);
+					
+					gameCanvas.addCard('d', 2, 85, PLAYER_CARD_Y);
+					gameCanvas.addCard('s', 3, 164, PLAYER_CARD_Y);
+					gameCanvas.addCard('h', 4, 244, PLAYER_CARD_Y);
+					gameCanvas.addCard('c', 5, 322, PLAYER_CARD_Y);
+					gameCanvas.addCard('d', 6, 401, PLAYER_CARD_Y);
+					
+					repaint();
+					this.doLayout();
+					break;
+				}
 			}
 		}
 		
