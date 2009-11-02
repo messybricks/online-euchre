@@ -119,10 +119,12 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 			ArrayList<Image> images = t.getImages();
 			int lastX = 0;
 			int x = 0;
+			int w = 0;
 			for(Image i: images)
 			{
-				g.drawImage(i, t.getX() + x * 18, t.getY(), null);
+				g.drawImage(i, t.getX() + w, t.getY(), null);
 				lastX = 18;
+				w = w + i.getWidth(getParent());
 				++x;
 			}
 		}
@@ -134,7 +136,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 			int y = 0;
 			for(Image i: images)
 			{
-				g.drawImage(i, t.getX(), t.getY() + y * 18, null);
+				g.drawImage(i, t.getX() + ((18 - i.getWidth(getParent()))/2), t.getY() + y * 18, null);
 				lastY = 18;
 				++y;
 			}
@@ -462,7 +464,10 @@ class text
 				URL url2;
 				Image img;
 				try {
-					url2 = new URL(owner.getCodeBase(), "letters/" + temp + ".gif");
+					if(temp > 90)
+						url2 = new URL(owner.getCodeBase(), "letters/" + temp + "_.gif");
+					else
+						url2 = new URL(owner.getCodeBase(), "letters/" + temp + ".gif");
 					img = ImageIO.read(url2);
 					letters.add(img);
 				} catch (MalformedURLException e) {
