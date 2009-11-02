@@ -247,7 +247,9 @@ public class NetClientThread extends NetworkThread
 	 */
 	private void onDealerDiscard(Packet packet)
 	{
-		//TODO: implement this		
+		//TODO: prompt the dealer to discard a card from his/her hand	
+		
+		send(Opcode.dealerDiscard);
 	}
 		
 	/**
