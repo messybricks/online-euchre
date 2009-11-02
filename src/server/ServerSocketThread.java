@@ -201,6 +201,16 @@ public class ServerSocketThread extends Thread implements TransactionThread
 		send(packet.getOpcode(), packet.getData());
 	}
 	
+	/**
+	 * Gets a value indicating whether or not this thread is closing or closed.
+	 * 
+	 * @return true if this thread is closing or closed; false otherwise
+	 */
+	public boolean disposed()
+	{
+		return exitThread;
+	}
+	
 	private void playPingPong(Set<String> invalidated)
 	{
 		long time = System.currentTimeMillis();
@@ -231,9 +241,14 @@ public class ServerSocketThread extends Thread implements TransactionThread
 		}
 	}
 	
-	public ServerSocket getServerSocket(){
+	/**
+	 * Returns the server socket associated with this thread.
+	 */
+	public ServerSocket getServerSocket()
+	{
 		return socket;
 	}
+	
 	private void authenticateClients()
 	{
 		// authenticate clients
@@ -286,14 +301,16 @@ public class ServerSocketThread extends Thread implements TransactionThread
 					clientMapping.get(key).stopThread();
 					try
 					{
-						// wait for that thread to finish whatever its doing
+						// wait for that thread to finish whatever it's doing
 						clientMapping.get(key).join(THREAD_KILL_TIMEOUT);
 					}
 					catch (InterruptedException ex)
 					{
 						Trace.dprint("ServerSocketThread was interrupted while joining client thread! Message: %s", ex.getMessage());
 					}
+					Integer playerGuid = new Integer(clientMapping.get(key).getPlayer().getGuid());
 					clientMapping.remove(key);
+					send(Opcode.RemovePlayer, playerGuid);
 				}
 				else
 					Trace.dprint("Client '%s' was marked as invalidated, but did not exist in clientMapping!", key);

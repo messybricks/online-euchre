@@ -21,9 +21,9 @@ public class EuchreServer
 	public static final int DEFAULT_PORT = 36212;
 	// waits this many milliseconds to ensure the clients receive this server's Quit packet upon disposal
 	public static final int QUIT_SLEEP_MS = 200;
-	
+
 	private static ServerSocketThread thread=null;
-	
+
 	/**
 	 * Server application entry point.
 	 * 
@@ -31,15 +31,15 @@ public class EuchreServer
 	 */
 	public static void main(String[] args)
 	{
-        //Schedule a job for the event-dispatching thread:
-        //creating and showing this application's GUI.
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                createAndShowGUI();
-            }
-        });
+		//Schedule a job for the event-dispatching thread:
+		//creating and showing this application's GUI.
+		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				createAndShowGUI();
+			}
+		});
 
-		
+
 		// say hi
 		System.out.println("EuchreServer v0.1");
 		Trace.dprint("Initializing...");
@@ -119,24 +119,14 @@ public class EuchreServer
 				System.out.println("Unknown command '" + command[0] + '\'');
 		}
 
-		try
-		{
-			Trace.dprint("Sending global '%s' packet...", Opcode.Quit.toString());
-			thread.send(Opcode.Quit, "Server is shutting down.");
-
-			Thread.sleep(QUIT_SLEEP_MS);
-		}
-		catch (InterruptedException ex)
-		{
-			Trace.dprint("Main thread was interrupted while joining ServerSocketThread!");
-		}
-		finally
+		if(!thread.disposed())
 		{
 			try
 			{
-				Trace.dprint("Stopping ServerSocketThread...");
-				thread.stopThread();
-				thread.join();
+				Trace.dprint("Sending global '%s' packet...", Opcode.Quit.toString());
+				thread.send(Opcode.Quit, "Server is shutting down.");
+
+				Thread.sleep(QUIT_SLEEP_MS);
 			}
 			catch (InterruptedException ex)
 			{
@@ -146,24 +136,37 @@ public class EuchreServer
 			{
 				try
 				{
-					// close the socket
-					Trace.dprint("Closing server socket...");
-					serverSocket.close();
+					Trace.dprint("Stopping ServerSocketThread...");
+					thread.stopThread();
+					thread.join();
 				}
-				catch (IOException e)
+				catch (InterruptedException ex)
 				{
-					Trace.dprint("Could not close socket. Message: %s", e.getMessage());
+					Trace.dprint("Main thread was interrupted while joining ServerSocketThread!");
+				}
+				finally
+				{
+					try
+					{
+						// close the socket
+						Trace.dprint("Closing server socket...");
+						serverSocket.close();
+					}
+					catch (IOException e)
+					{
+						Trace.dprint("Could not close socket. Message: %s", e.getMessage());
+					}
 				}
 			}
-		}
 
-		Trace.dprint("Terminated.");
+			Trace.dprint("Terminated.");
+		}
 	}
-	
-    private static void createAndShowGUI() 
-    {
-    	String myName = "";
-    	String myAddress = "";
+
+	private static void createAndShowGUI() 
+	{
+		String myName = "";
+		String myAddress = "";
 		try {
 			myName = InetAddress.getLocalHost().getHostName();
 			myAddress= InetAddress.getLocalHost().getHostAddress();
@@ -171,29 +174,29 @@ public class EuchreServer
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-        //Create and set up the window.
-        JFrame frame = new JFrame("EuchreServer");
-        
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.addWindowListener(new ServerWindowListener(thread));
-        frame.setLayout(new GridLayout(5,1));
 
-        //Add the ubiquitous "Hello World" label.
-        JLabel label = new JLabel(" Euchre Server Running...                  ");
-        JLabel name = new JLabel(" The name of my computer is " + myName + "  ");
-        JLabel addr = new JLabel(" The address of my computer is " + myAddress + "  ");
-        frame.getContentPane().add(new JLabel(""));
-        frame.getContentPane().add(label);
-        frame.getContentPane().add(name);
-        frame.getContentPane().add(addr);
-        frame.getContentPane().add(new JLabel(""));
-        
-        //Display the window.
-        frame.pack();
-        frame.setVisible(true);
-    }
+		//Create and set up the window.
+		JFrame frame = new JFrame("EuchreServer");
 
-	
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.addWindowListener(new ServerWindowListener(thread));
+		frame.setLayout(new GridLayout(5,1));
+
+		//Add the ubiquitous "Hello World" label.
+		JLabel label = new JLabel(" Euchre Server Running...                  ");
+		JLabel name = new JLabel(" The name of my computer is " + myName + "  ");
+		JLabel addr = new JLabel(" The address of my computer is " + myAddress + "  ");
+		frame.getContentPane().add(new JLabel(""));
+		frame.getContentPane().add(label);
+		frame.getContentPane().add(name);
+		frame.getContentPane().add(addr);
+		frame.getContentPane().add(new JLabel(""));
+
+		//Display the window.
+		frame.pack();
+		frame.setVisible(true);
+	}
+
+
 
 }
