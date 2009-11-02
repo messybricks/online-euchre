@@ -128,7 +128,7 @@ public class EuchreEngine
 		}
 		else  // if the player passed, go on to the next player
 		{
-			currentPlayerIndex = (currentPlayerIndex++) % 4;
+			currentPlayerIndex = (currentPlayerIndex + 1) % 4;
 			bid(currentPlayer());
 		}
 	}
