@@ -825,7 +825,13 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		Trace.dprint("Entering GUI setup");
 
 		gameCanvas.drawText(client.getUser().getUsername(), 85, 300, this);
-		gameCanvas.displayMessage("Hello World", this);
+		try 
+		{
+			int val = gameCanvas.displayMessage(this, "This is" , "a sample", "message" , 1);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		if(playerList != null)
 		{
