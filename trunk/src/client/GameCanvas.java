@@ -333,7 +333,8 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 	}
 
 	@Override
-	public void mouseMoved(MouseEvent e) {
+	public void mouseMoved(MouseEvent e) 
+	{
 
 //		g.drawImage(button.get(1), 364, 295, null);
 //		g.drawImage(button.get(3), 320, 295, null);
@@ -357,19 +358,44 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent e) {
+	public void mouseClicked(MouseEvent e) 
+	{
+		if((e.getX() > 320) && (e.getX() < 360) && ((e.getY() > 295) && (e.getY() < 313)))
+		{
+			Trace.dprint("YES!");
+			try {
+				displayMessage(this.owner, "","","",0);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}	
+		
+		if((e.getX() > 364) && (e.getX() < 394) && ((e.getY() > 295) && (e.getY() < 313)))
+		{
+			Trace.dprint("NO!");
+			try {
+				displayMessage(this.owner, "","","",0);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+
+		repaint();
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) 
+	{
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
+	public void mouseExited(MouseEvent e) 
+	{
 		// TODO Auto-generated method stub
 		
 	}
@@ -419,7 +445,6 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 						x = 20;
 						broke = true;
 						
-						Trace.dprint("" + (xLoc + x) + ", " + value);
 						if(value == 215)
 						{
 							playPos = selectedCard;
@@ -435,8 +460,6 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 						} 
 						else
 						{
-							Trace.dprint(selectedCard.toString());
-							Trace.dprint(playPos.toString());
 							if((playPos != null) && (selectedCard == playPos))
 							{
 								playPos = null;
