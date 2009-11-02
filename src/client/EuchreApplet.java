@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Vector;
 import java.io.*;
 import java.net.InetAddress;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import chat.ChatObject;
@@ -48,10 +49,14 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	private boolean inputTextDeleted;
 	private String userName;
 	boolean drawn = false;
+	private ArrayList<Image> cardImages;
 	
 	// this list contains the players currently playing
 	private ArrayList<Player> playerList;
 
+	
+	
+	
 	/**
 	 * Initializes the client and applet, calls helper methods setUpClient and setUpApplet
 	 */
@@ -66,6 +71,89 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		setUpApplet();
 
 		playerList = new ArrayList<Player>(4);
+		
+		cardImages = new ArrayList<Image>();
+		
+		for(int x = 0; x < 13; x++)
+		{		
+			char theSuit = 'c';
+			URL url2;
+			Image img = null;
+			try 
+			{
+				url2 = new URL(getCodeBase(), "cards/" + theSuit + (x + 1) + ".gif");
+				img = ImageIO.read(url2);
+			} 
+			catch (MalformedURLException e) 
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+			catch (IOException e) 
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			cardImages.add(img);
+			
+			theSuit = 'd';
+			
+			try 
+			{
+				url2 = new URL(getCodeBase(), "cards/" + theSuit + (x + 1) + ".gif");
+				img = ImageIO.read(url2);
+			} 
+			catch (MalformedURLException e) 
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+			catch (IOException e) 
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			cardImages.add(img);
+			
+			theSuit = 'h';
+			
+			try 
+			{
+				url2 = new URL(getCodeBase(), "cards/" + theSuit + (x + 1) + ".gif");
+				img = ImageIO.read(url2);
+			} 
+			catch (MalformedURLException e) 
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+			catch (IOException e) 
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			cardImages.add(img);
+			
+			theSuit = 's';
+			
+			try 
+			{
+				url2 = new URL(getCodeBase(), "cards/" + theSuit + (x + 1) + ".gif");
+				img = ImageIO.read(url2);
+			} 
+			catch (MalformedURLException e) 
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+			catch (IOException e) 
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			cardImages.add(img);
+
+		}
 	}
 
 	/**
@@ -769,6 +857,11 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 			}
 		}
 		
+	}
+
+	public Image getCardImg(char suit, int value) 
+	{
+		return cardImages.get(0);
 	}
 
 }
