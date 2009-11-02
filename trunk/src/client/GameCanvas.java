@@ -31,6 +31,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 	int why = 10;
 	URL url, url2;
 	char suit = 'n';
+	text msg;
 
 	BufferedImage img = null;
 	BufferedImage card = null;
@@ -113,6 +114,21 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 	{
 		//Draw background
 		g.drawImage(img, 0, 0, null);
+		
+		if(msg != null)
+		{
+			ArrayList<Image> images = msg.getImages();
+			int lastX = 0;
+			int x = 0;
+			int w = 0;
+			for(Image i: images)
+			{
+				g.drawImage(i, msg.getX() + w, msg.getY(), null);
+				lastX = 18;
+				w = w + i.getWidth(getParent());
+				++x;
+			}			
+		}
 		
 		for(text t: words)
 		{
@@ -204,8 +220,13 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 				e.printStackTrace();
 			}
 
-			g.drawImage(suitImage, 253, 140, null);
+			g.drawImage(suitImage, 255, 140, null);
 		}
+	}
+	
+	void displayMessage(String txt, EuchreApplet owner)
+	{
+		msg = new text(txt, 320, 220, owner);
 	}
 	
 	public void drawOtherPlayers(Graphics g)
@@ -464,7 +485,11 @@ class text
 				URL url2;
 				Image img;
 				try {
-					if(temp > 90)
+					if(temp == ' ')
+					{
+						url2 = new URL(owner.getCodeBase(), "letters/_.gif");
+					}
+					else if(temp > 90)
 						url2 = new URL(owner.getCodeBase(), "letters/" + temp + "_.gif");
 					else
 						url2 = new URL(owner.getCodeBase(), "letters/" + temp + ".gif");
