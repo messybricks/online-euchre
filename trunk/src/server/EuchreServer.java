@@ -1,6 +1,8 @@
 package server;
 
 import java.awt.GridLayout;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.*;
 import java.net.*;
 
@@ -16,10 +18,12 @@ import utility.*;
 public class EuchreServer
 {
 	// default port to listen for connections on if no specific port is given at command line
-	private static final int DEFAULT_PORT = 36212;
+	public static final int DEFAULT_PORT = 36212;
 	// waits this many milliseconds to ensure the clients receive this server's Quit packet upon disposal
-	private static final int QUIT_SLEEP_MS = 200;
-
+	public static final int QUIT_SLEEP_MS = 200;
+	
+	private static ServerSocketThread thread=null;
+	
 	/**
 	 * Server application entry point.
 	 * 
@@ -83,7 +87,7 @@ public class EuchreServer
 
 		// initialize the server socket thread
 		Trace.dprint("Initializing ServerSocketThread...");
-		ServerSocketThread thread = new ServerSocketThread(serverSocket);
+		thread = new ServerSocketThread(serverSocket);
 		Trace.dprint("Starting ServerSocketThread...");
 		thread.start();
 
@@ -170,7 +174,9 @@ public class EuchreServer
 		
         //Create and set up the window.
         JFrame frame = new JFrame("EuchreServer");
+        
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.addWindowListener(new ServerWindowListener(thread));
         frame.setLayout(new GridLayout(5,1));
 
         //Add the ubiquitous "Hello World" label.
@@ -187,5 +193,7 @@ public class EuchreServer
         frame.pack();
         frame.setVisible(true);
     }
+
+	
 
 }
