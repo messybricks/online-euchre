@@ -175,7 +175,7 @@ public class NetClientThread extends NetworkThread
 		List<Player> list = euchreApplet.getPlayerList();
 		for(int i = 0; i < list.size(); ++i)
 		{
-			if(list.get(i).getGuid() == (Integer)packet.getData())
+			if(list.get(i).getGuid() == ((Integer)packet.getData()).intValue())
 			{
 				list.remove(i);
 				break;
