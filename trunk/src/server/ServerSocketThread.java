@@ -274,6 +274,13 @@ public class ServerSocketThread extends Thread implements TransactionThread
 						toAdd.add(tempThread);
 						
 						Trace.dprint("'%s' -> '%s'", entry.getKey(), tempThread.getUser().getUsername());
+						
+						// create remote players on this client's appdomain
+						for(Entry<String, PacketQueueThread> subEntry : clientMapping.entrySet())
+						{
+							if(subEntry != entry)
+								subEntry.getValue().getPlayer().createRemotePlayer(entry.getValue());
+						}
 					}
 				}
 			}

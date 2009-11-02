@@ -37,7 +37,7 @@ public class Player implements Serializable {
 		this.subPlayer = new SubPlayer(nextGuid++);
 		thread = linkage;
 		
-		linkage.send(Opcode.CreatePlayer, new PlayerInitializationVector(user, subPlayer));
+		createRemotePlayer(linkage);
 	}
 	
 	/**
@@ -57,6 +57,16 @@ public class Player implements Serializable {
 		}
 		else
 			throw new IllegalArgumentException(String.format("Cannot create a remote player instance using a Packet with opcode '%s'.", remote.getOpcode().toString()));
+	}
+	
+	/**
+	 * Sends a CreatePlayer packet to the given thread that will create a remote instance of this player on that client.
+	 * 
+	 * @param remote remote thread to create a new Player on
+	 */
+	public void createRemotePlayer(TransactionThread remote)
+	{
+		remote.send(Opcode.CreatePlayer, new PlayerInitializationVector(user, subPlayer));
 	}
 	
 	/*
