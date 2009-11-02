@@ -146,6 +146,8 @@ public class PacketQueueThread extends NetworkThread
 			onUpdatePlayer(packet);
 		else if(packet.getOpcode() == Opcode.requestBid)
 			onRequestBid(packet);
+		else if(packet.getOpcode() == Opcode.requestAlternateBid)
+			onRequestAlternateBid(packet);
 		else if(packet.getOpcode() == Opcode.dealerDiscard)
 			onDealerDiscard(packet);
 		else if(packet.getOpcode() == Opcode.goingAlone)
@@ -240,6 +242,16 @@ public class PacketQueueThread extends NetworkThread
 	}
 	
 	/**
+	 * Processes a requestAlternateBid packet.
+	 * 
+	 * @param packet Packet to process
+	 */
+	private void onRequestAlternateBid(Packet packet)
+	{
+		//TODO: implement this
+	}
+	
+	/**
 	 * Processes a dealerDiscard packet.
 	 * 
 	 * @param packet Packet to process
@@ -256,7 +268,9 @@ public class PacketQueueThread extends NetworkThread
 	 */
 	private void onGoingAlone(Packet packet)
 	{
-		//TODO: implement this
+		Boolean answer = (Boolean)packet.getData();
+		
+		//TODO: send answer to the setGoingAlone() method in EuchreEngine
 	}
 	
 	/**
