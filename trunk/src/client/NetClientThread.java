@@ -204,10 +204,16 @@ public class NetClientThread extends NetworkThread
 	private void onRequestBid(Packet packet)
 	{
 		String suit = (String)packet.getData();
+		if(suit.toLowerCase().charAt(0) == 'h')
+			suit = "hearts";
+		else if(suit.toLowerCase().charAt(0) == 'd')
+			suit = "diamonds";
+		else if(suit.toLowerCase().charAt(0) == 'c')
+			suit = "clubs";
+		else if(suit.toLowerCase().charAt(0) == 's')
+			suit = "spades";
 		JOptionPane.showOptionDialog(euchreApplet, "Do you want " + suit + " to be trump?", "Bidding", JOptionPane.YES_NO_OPTION, 
-									 JOptionPane.QUESTION_MESSAGE, null, null, JOptionPane.NO_OPTION);
-			
-		
+									 JOptionPane.QUESTION_MESSAGE, null, null, JOptionPane.NO_OPTION);		
 	}
 	
 	/**
@@ -251,7 +257,19 @@ public class NetClientThread extends NetworkThread
 	 */
 	private void onGoingAlone(Packet packet)
 	{
-		//TODO: implement this
+		int option;
+		option = JOptionPane.showOptionDialog(euchreApplet, "Would you like to go alone?", "Going Alone?", JOptionPane.YES_NO_OPTION, 
+				 JOptionPane.QUESTION_MESSAGE, null,null, JOptionPane.NO_OPTION);
+		
+		if(option == JOptionPane.YES_OPTION)
+			send(Opcode.goingAlone, new Boolean(true));
+		else if(option == JOptionPane.NO_OPTION)
+			send(Opcode.goingAlone, new Boolean(false));
+		else
+		{
+			send(Opcode.goingAlone, new Boolean(false));
+			Trace.dprint("Did not receive answer from user, defaulting to 'Not going alone'");
+		}
 	}
 	
 	/**
