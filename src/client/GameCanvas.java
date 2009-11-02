@@ -401,16 +401,7 @@ class card
 		suit = theSuit;
 		value = val;
 		URL url2;
-		try {
-			url2 = new URL(owner.getCodeBase(), "cards/" + theSuit + val + ".gif");
-			img = ImageIO.read(url2);
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		img = owner.getCardImg(suit, value);
 	}
 	
 	public int getVal() 
@@ -436,7 +427,8 @@ class card
 		
 	}
 
-	public Image getImage() {
+	public Image getImage() 
+	{
 		return img;
 	}
 
