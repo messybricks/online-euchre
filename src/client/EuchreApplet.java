@@ -260,6 +260,8 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		client = new EuchreNetClient(serverIP, new Integer(port).intValue(), this);
 		//>>>>>>> .merge-right.r48
 		//error messages
+		// TODO looks like we can merge these two ifs into just the bottom one. client.start() calls isValid inside itself.
+		// make the error message be the one from the first if.
 		if(!client.isValid())
 		{
 			JOptionPane.showMessageDialog(this, "Unable to establish connection with server. Cannot continue.");
