@@ -57,14 +57,22 @@ public class EuchreEngineTest extends TestCase {
 	}
 
 	/**
-	 * unit testing for the throwCard method
+	 * unit testing for the setGoingAlone method
 	 */
-	public void testThrowCard() {
-		//assertTrue(false);
+	public void testSetGoingAlone() {
 		testGoingAlone();
 		e.setGoingAlone(false);
 		assertTrue(e.getState() == EuchreEngine.FIRST_PLAYER_THROWS_CARD);
+	}
+	
+	/**
+	 * unit testing for the throwCard method
+	 */
+	public void testThrowCard() {
+		testGoingAlone();
+		e.setGoingAlone(false);
 		/*
+		assertTrue(e.getState() == EuchreEngine.FIRST_PLAYER_THROWS_CARD);
 		e.throwCard();
 		assertTrue(e.getState() == EuchreEngine.SECOND_PLAYER_THROWS_CARD);
 		e.throwCard();

@@ -280,6 +280,8 @@ public class PacketQueueThread extends NetworkThread
 	 */
 	private void onThrowCard(Packet packet)
 	{
-		//TODO: implement this
+		Card thrown = (Card)packet.getData();
+		
+		//TODO: send thrown to the receiveCard() method in EuchreEngine
 	}
 }
