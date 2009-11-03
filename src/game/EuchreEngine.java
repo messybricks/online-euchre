@@ -38,7 +38,10 @@ public class EuchreEngine
 	private boolean goingAlone = false;
 	private CardDistributor cardDistributor;
 	private int currentPlayerIndex;
-	private Card trump;
+	private int notPlaying;
+	private Card trumpCard;
+	private Card[] trick;
+	private char trump;
 	
 	public EuchreEngine(Player dealer, Player left, Player across, Player right)
 	{
@@ -53,9 +56,7 @@ public class EuchreEngine
 	{
 		state = START;
 		Trace.dprint("new state: " + state);
-		
-		//TODO: implement start state		
-		
+				
 		deal();		
 	}
 	
@@ -73,7 +74,7 @@ public class EuchreEngine
 		
 		//deal this hand
 		cardDistributor.dealRound();
-		trump = cardDistributor.flipTrump();
+		trumpCard = cardDistributor.flipTrump();
 		
 		//player to the left of the dealer bids
 		currentPlayerIndex = CardDistributor.LEFT;
@@ -101,24 +102,25 @@ public class EuchreEngine
 		}
 		
 		//send opcode to player to request a bid
-		currentPlayer().sendData(Opcode.requestBid, "" + trump.getSuit());
+		currentPlayer().sendData(Opcode.requestBid, "" + trumpCard.getSuit());
 	}
 	
 	/**
 	 * receive input from the player:
-	 * 's' = spades is named as trump
-	 * 'd' = diamonds is named as trump
-	 * 'h' = hearts is named as trump
-	 * 'c' = clubs is named as trump
-	 * 'p' = pass (nothing named as trump yet)
+	 * "s" = spades is named as trump
+	 * "d" = diamonds is named as trump
+	 * "h" = hearts is named as trump
+	 * "c" = clubs is named as trump
+	 * "p" = pass (nothing named as trump yet)
 	 * 
-	 * @param trump the character of the suit named as trump (or 'p' for pass)
+	 * @param t the first letter of the suit named as trump (or "p" for pass)
 	 */
-	public void receiveBid(String trump)
+	public void receiveBid(String t)
 	{
 		//if (player accepted/named trump)
-		if (trump != "p")
+		if (t != "p")
 		{
+			trump = t.charAt(0);
 			if(state <= FOURTH_BID)
 			{
 				dealerDiscard();				
@@ -171,6 +173,11 @@ public class EuchreEngine
 	{
 		goingAlone = alone;
 		throwCard();
+		
+		if(alone)
+			notPlaying = (currentPlayerIndex + 2) % 4;
+		
+		trick = new Card[4];
 	}
 	
 	
@@ -186,9 +193,7 @@ public class EuchreEngine
 			state++;
 		else //if the last player has thrown a card
 		{
-			//TODO: replace this player with the player that won the trick
-			Player winner = new Player(new User("winner"), new FakeThread());
-			endOfTrick(winner);
+			endOfTrick(winnerOfTrick());
 		}
 		Trace.dprint("new state: " + state);
 		
@@ -198,7 +203,47 @@ public class EuchreEngine
 		else
 			currentPlayerIndex = (currentPlayerIndex + 1) % 4;
 		
-		//TODO: ask currentPlayerIndex to choose and throw a card
+		//if this player's partner is going alone, skip them
+		if(currentPlayerIndex == notPlaying)
+			receiveCard(Card.nullCard());
+		
+		//ask current player to choose and throw a card
+		currentPlayer().sendOpcode(Opcode.throwCard);
+	}
+	
+	/**
+	 * receives the card that was thrown by the current player
+	 * 
+	 * @param thrown the card that was thrown
+	 */
+	public void receiveCard(Card thrown)
+	{
+		//add the card to the current trick
+		int numberOfCardsThrown = state - FIRST_PLAYER_THROWS_CARD;
+		trick[numberOfCardsThrown] = thrown;
+		
+		//throw another card
+		throwCard();
+	}
+	
+	/**
+	 * returns the player who won this trick
+	 * 
+	 * @return the player who won this trick
+	 */
+	private Player winnerOfTrick()
+	{
+		int winningCardIndex = 0;
+		for(int i = 1; i < trick.length; i++)			 
+			if(trick[i].getValue() > 0 &&											//if this card is not null and
+					(trick[i].getSuit() == trump || 								//(this card is trump or
+					trick[i].getSuit() == trick[winningCardIndex].getSuit())		//the same suit as the winning card)
+					&& trick[i].getValue() > trick[winningCardIndex].getValue())	//and it's higher than the winning card
+					winningCardIndex = i;											//		then this is the new winning card
+																
+		Trace.dprint("winning card index: " + winningCardIndex);
+		
+		return cardDistributor.getPlayerOrder()[winningCardIndex];
 	}
 	
 	/**
@@ -211,14 +256,16 @@ public class EuchreEngine
 	{
 		state = END_OF_TRICK;
 		Trace.dprint("new state: " + state);
+		Trace.dprint("player " + winner.toString() + "has won the trick.");
 		
-		//TODO: score points appropriately
+		//TODO: increment the score of tricks for the winning team
 		
 		//TODO: check to see if there are cards left, then play another trick or end the round
 		boolean cardsLeft = false;
 		if(cardsLeft)
 		{
 			state = FIRST_PLAYER_THROWS_CARD;
+			trick = new Card[4];
 			throwCard();
 		}
 		else
@@ -234,11 +281,16 @@ public class EuchreEngine
 		state = END_OF_ROUND;
 		Trace.dprint("new state: " + state);
 		
+		//TODO: score points appropriately
+		
 		//TODO: if a team has won the game, 
-			// display "You won!", options for playing a new game, etc.
-			//System.exit(1);
-		//TODO: else, deal a new hand:
-			//deal();
+		boolean gameIsOver = true;
+		if(gameIsOver)
+		{
+			//TODO: display "You won!", options for playing a new game, etc.
+		}
+		else
+			deal();
 	}
 	
 	/**
