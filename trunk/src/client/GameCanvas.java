@@ -42,6 +42,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 	ArrayList<text> words = new ArrayList<text>();
 	ArrayList<text> wordsVertical = new ArrayList<text>();
 	ArrayList<Image> button = new ArrayList<Image>();
+	ArrayList<Player> players = new ArrayList<Player>();
 	boolean cardSelected = false;
 	card selectedCard = null;
 	int xCon = 0;
@@ -546,6 +547,41 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 		}
 		
 		return opt;
+	}
+
+	public void updatePlayer(Player player2) 
+	{
+		if(!players.contains(player2))
+		{
+			players.add(player2);
+		}
+	
+		if(player2.equals(owner.getPlayer()))
+		{
+			int size = player2.getCards().length;
+			Card[] cards = player2.getCards();
+			cards[0].getSuit();
+			
+			if(size > 0)
+			{
+				addCard(cards[0].getSuit(), cards[0].getValue(), 85, PLAYER_CARD_Y);
+				if(size > 1)
+				{
+					addCard(cards[1].getSuit(), cards[1].getValue(), 164, PLAYER_CARD_Y);
+				
+					if(size > 2)
+					{
+						addCard(cards[2].getSuit(), cards[2].getValue(), 244, PLAYER_CARD_Y);
+						if(size > 3)
+						{
+							addCard(cards[3].getSuit(), cards[3].getValue(), 322, PLAYER_CARD_Y);
+							if(size > 4)
+								addCard(cards[4].getSuit(), cards[4].getValue(), 401, PLAYER_CARD_Y);
+						}
+					}
+				}
+			}
+		}
 	}
 
 }

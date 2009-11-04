@@ -2,6 +2,7 @@ package client;
 
 import game.Card;
 import game.Player;
+import game.PlayerChangedCallback;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -24,7 +25,7 @@ import chat.User;
 /**
  * The Graphical User Interface of the Online Euchre Game
  */
-public class EuchreApplet extends JApplet implements ActionListener, KeyListener, MouseListener
+public class EuchreApplet extends JApplet implements ActionListener, KeyListener, MouseListener, PlayerChangedCallback
 {
 	private static final long serialVersionUID = 1L;
 
@@ -858,13 +859,9 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		Trace.dprint("Entering GUI setup");
 
 		gameCanvas.drawText(client.getUser().getUsername(), 85, 300, this);
-		try 
-		{
-			int val = gameCanvas.displayMessage(this, "This is" , "a sample", "message" , 1);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		int val = displayYesNoMessage("Jason King is typing");
+		gameCanvas.repaint();
+		//int val = gameCanvas.displayMessage(this, "This is" , "a sample", "message" , 1);
 		
 		if(playerList != null)
 		{
@@ -913,6 +910,12 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	public Player getPlayer()
 	{
 		return player;
+	}
+
+	@Override
+	public void PlayerUpdated(Player player) 
+	{
+		gameCanvas.updatePlayer(player);
 	}
 
 }
