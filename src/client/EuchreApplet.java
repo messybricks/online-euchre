@@ -806,6 +806,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	 */
 	public void addPlayer(Player player)
 	{
+		player.setPlayerChangedCallback(this);
 		playerList.add(player);
 	}
 	
