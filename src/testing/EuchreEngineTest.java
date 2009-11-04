@@ -1,5 +1,6 @@
 package testing;
 
+import utility.Trace;
 import chat.*;
 import game.*;
 import junit.framework.TestCase;
@@ -71,15 +72,32 @@ public class EuchreEngineTest extends TestCase {
 	public void testThrowCard() {
 		testGoingAlone();
 		e.setGoingAlone(false);
-		/*
+		
+		
+		//TODO: make this work
+		char trump = e.getTrump();
 		assertTrue(e.getState() == EuchreEngine.FIRST_PLAYER_THROWS_CARD);
-		e.throwCard();
+		e.receiveCard(new Card(trump, 10));
 		assertTrue(e.getState() == EuchreEngine.SECOND_PLAYER_THROWS_CARD);
-		e.throwCard();
+		e.receiveCard(new Card('d', 12));
 		assertTrue(e.getState() == EuchreEngine.THIRD_PLAYER_THROWS_CARD);
-		e.throwCard();
+		e.receiveCard(new Card(trump, 11));
 		assertTrue(e.getState() == EuchreEngine.FOURTH_PLAYER_THROWS_CARD);
-		e.throwCard();
+		e.receiveCard(new Card(trump, 9));
+		assertTrue(e.getState() == EuchreEngine.END_OF_ROUND);
+		
+		/* Make this work!
+		e.goingAlone();
+		e.setGoingAlone(true);
+		trump = e.getTrump();
+		assertTrue(e.getState() == EuchreEngine.FIRST_PLAYER_THROWS_CARD);
+		e.receiveCard(new Card('d', 10));
+		assertTrue(e.getState() == EuchreEngine.SECOND_PLAYER_THROWS_CARD);
+		e.receiveCard(new Card('c', 12));
+		assertTrue(e.getState() == EuchreEngine.THIRD_PLAYER_THROWS_CARD);
+		e.receiveCard(new Card('d', 11));
+		assertTrue(e.getState() == EuchreEngine.FOURTH_PLAYER_THROWS_CARD);
+		e.receiveCard(new Card('c', 14));
 		assertTrue(e.getState() == EuchreEngine.END_OF_ROUND);
 		*/
 	}
