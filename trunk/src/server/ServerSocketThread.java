@@ -1,5 +1,8 @@
 package server;
 
+import game.EuchreEngine;
+import game.Player;
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -13,6 +16,7 @@ import utility.*;
 public class ServerSocketThread extends Thread implements TransactionThread
 {
 	private ServerSocket socket = null;
+	private EuchreEngine engine = null;
 	private Map<String, PacketQueueThread> clientMapping = null;
 
 	private volatile boolean exitThread = false;
@@ -292,6 +296,34 @@ public class ServerSocketThread extends Thread implements TransactionThread
 			// add new mappings
 			for(PacketQueueThread addition : toAdd)
 				clientMapping.put(addition.getUser().getUsername(), addition);
+		}
+
+		// start the game, if we have four players
+		// TODO: make this not just use the first four, and give some option
+		int authedCount = 0;
+		PacketQueueThread[] playersForGame = new PacketQueueThread[4];
+		for(Entry<String, PacketQueueThread> entry : clientMapping.entrySet())
+		{
+			if(entry.getValue().isAuthenticated() && authedCount < 4)
+				playersForGame[authedCount++] = entry.getValue();
+		}
+		
+		try
+		{
+			sleep(1000);
+		}
+		catch (InterruptedException ex)
+		{
+			
+		}
+		if(engine == null && authedCount == 4)
+		{
+			engine = new EuchreEngine(playersForGame[0].getPlayer(), playersForGame[1].getPlayer(), playersForGame[2].getPlayer(), playersForGame[3].getPlayer());
+			playersForGame[0].setStateMachine(engine);
+			playersForGame[1].setStateMachine(engine);
+			playersForGame[2].setStateMachine(engine);
+			playersForGame[3].setStateMachine(engine);
+			engine.start();
 		}
 	}
 	

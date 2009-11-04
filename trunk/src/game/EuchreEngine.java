@@ -76,11 +76,11 @@ public class EuchreEngine
 
 		//deal this hand
 		cardDistributor.dealRound();
-		trumpCard = cardDistributor.flipTrump();
+		//trumpCard = cardDistributor.flipTrump();
 
 		//player to the left of the dealer bids
-		currentPlayerIndex = CardDistributor.LEFT;
-		bid(currentPlayer());
+		//currentPlayerIndex = CardDistributor.LEFT;
+		//bid(currentPlayer());
 	}
 
 	/**
