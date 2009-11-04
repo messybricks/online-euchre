@@ -11,6 +11,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Vector;
 import java.io.*;
 import java.net.InetAddress;
@@ -49,7 +50,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	private boolean inputTextDeleted;
 	private String userName;
 	boolean drawn = false;
-	private ArrayList<Image> cardImages;
+	public HashMap<String,Image> cardImages;
 	
 	// this list contains the players currently playing
 	private ArrayList<Player> playerList;
@@ -63,7 +64,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	public void init() 
 	{
 		super.init();
-		
+		loadCards();
 		//set up the client
 		setUpClient();
 
@@ -75,7 +76,8 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	
 	public void loadCards()
 	{
-		cardImages = new ArrayList<Image>();
+		Trace.dprint("loading cards...");
+		cardImages = new HashMap<String, Image>();
 		
 		for(int x = 0; x < 13; x++)
 		{		
@@ -97,7 +99,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			cardImages.add(img);
+			cardImages.put(theSuit + "" + x, img);
 			
 			theSuit = 'd';
 			
@@ -116,7 +118,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			cardImages.add(img);
+			cardImages.put(theSuit + "" + x, img);
 			
 			theSuit = 'h';
 			
@@ -135,7 +137,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			cardImages.add(img);
+			cardImages.put(theSuit + "" + x, img);
 			
 			theSuit = 's';
 			
@@ -154,9 +156,10 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			cardImages.add(img);
+			cardImages.put(theSuit + "" + x, img);
 
 		}
+		Trace.dprint("done loading cards...");
 	}
 
 	/**
@@ -827,7 +830,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	public void setUp() 
 	{
 		
-		loadCards();
+		
 		setSize(695, 550);
 		Trace.dprint("Entering GUI setup");
 
