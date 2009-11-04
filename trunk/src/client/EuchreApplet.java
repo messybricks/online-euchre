@@ -63,7 +63,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	public void init() 
 	{
 		super.init();
-
+		
 		//set up the client
 		setUpClient();
 
@@ -71,7 +71,10 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		setUpApplet();
 
 		playerList = new ArrayList<Player>(4);
-		
+	}
+	
+	public void loadCards()
+	{
 		cardImages = new ArrayList<Image>();
 		
 		for(int x = 0; x < 13; x++)
@@ -823,6 +826,8 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 
 	public void setUp() 
 	{
+		
+		loadCards();
 		setSize(695, 550);
 		Trace.dprint("Entering GUI setup");
 
