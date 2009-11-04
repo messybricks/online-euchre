@@ -176,6 +176,8 @@ public class EuchreEngine
 		
 		if(alone)
 			notPlaying = (currentPlayerIndex + 2) % 4;
+		else
+			notPlaying = -1;
 		
 		trick = new Card[4];
 	}
@@ -190,25 +192,28 @@ public class EuchreEngine
 	{
 		//if someone still needs to throw a card
 		if(state < THIRD_PLAYER_THROWS_CARD || (state < FOURTH_PLAYER_THROWS_CARD && !goingAlone))
+		{
 			state++;
+			Trace.dprint("new state: player " + (state - FIRST_PLAYER_THROWS_CARD) + " throws card");
+			
+			//decide whose turn it is to throw a card
+			if(state == FIRST_PLAYER_THROWS_CARD)
+				currentPlayerIndex = CardDistributor.LEFT;
+			else
+				currentPlayerIndex = (currentPlayerIndex + 1) % 4;
+			
+			//if this player's partner is going alone, skip them
+			if(currentPlayerIndex == notPlaying)
+				receiveCard(Card.nullCard());
+			
+			//ask current player to choose and throw a card
+			currentPlayer().sendOpcode(Opcode.throwCard);
+
+		}
 		else //if the last player has thrown a card
 		{
 			endOfTrick(winnerOfTrick());
 		}
-		Trace.dprint("new state: " + state);
-		
-		//decide whose turn it is to throw a card
-		if(state == FIRST_PLAYER_THROWS_CARD)
-			currentPlayerIndex = CardDistributor.LEFT;
-		else
-			currentPlayerIndex = (currentPlayerIndex + 1) % 4;
-		
-		//if this player's partner is going alone, skip them
-		if(currentPlayerIndex == notPlaying)
-			receiveCard(Card.nullCard());
-		
-		//ask current player to choose and throw a card
-		currentPlayer().sendOpcode(Opcode.throwCard);
 	}
 	
 	/**
@@ -218,6 +223,8 @@ public class EuchreEngine
 	 */
 	public void receiveCard(Card thrown)
 	{
+		Trace.dprint("received card: " + thrown.toString());
+		
 		//add the card to the current trick
 		int numberOfCardsThrown = state - FIRST_PLAYER_THROWS_CARD;
 		trick[numberOfCardsThrown] = thrown;
@@ -241,7 +248,7 @@ public class EuchreEngine
 					&& trick[i].getValue() > trick[winningCardIndex].getValue())	//and it's higher than the winning card
 					winningCardIndex = i;											//		then this is the new winning card
 																
-		Trace.dprint("winning card index: " + winningCardIndex);
+		Trace.dprint("winning card: " + trick[winningCardIndex]);
 		
 		return cardDistributor.getPlayerOrder()[winningCardIndex];
 	}
@@ -301,6 +308,16 @@ public class EuchreEngine
 	public int getState()
 	{
 		return state;
+	}
+	
+	/**
+	 * returns a char containing the first letter of the suit that is currently trump
+	 * 
+	 * @return a char containing the first letter of the suit that is currently trump
+	 */
+	public char getTrump()
+	{
+		return trump;
 	}
 	
 	/**
