@@ -1,5 +1,7 @@
 package game;
 
+import java.io.Serializable;
+
 import chat.User;
 import testing.FakeThread;
 import utility.Opcode;
@@ -14,7 +16,7 @@ public class EuchreEngine
 {
 	//the state of this machine
 	private int state;
-	
+
 	//possible states
 	public static final int START = 0;
 	public static final int DEAL = 1;
@@ -34,7 +36,7 @@ public class EuchreEngine
 	public static final int FOURTH_PLAYER_THROWS_CARD = 15;
 	public static final int END_OF_TRICK = 16;
 	public static final int END_OF_ROUND = 17;
-	
+
 	private boolean goingAlone = false;
 	private CardDistributor cardDistributor;
 	private int currentPlayerIndex;
@@ -42,13 +44,13 @@ public class EuchreEngine
 	private Card trumpCard;
 	private Card[] trick;
 	private char trump;
-	
+
 	public EuchreEngine(Player dealer, Player left, Player across, Player right)
 	{
 		cardDistributor = new CardDistributor(dealer, left, across, right);
 	}
-	
-	
+
+
 	/**
 	 * starts the euchre engine state machine
 	 */
@@ -56,10 +58,10 @@ public class EuchreEngine
 	{
 		state = START;
 		Trace.dprint("new state: " + state);
-				
+
 		deal();		
 	}
-	
+
 	/**
 	 * deals a hand
 	 */
@@ -68,19 +70,19 @@ public class EuchreEngine
 		//rotate the dealer if this is not the first time
 		if(state != START)
 			cardDistributor.nextRound();
-		
+
 		state = DEAL;
 		Trace.dprint("new state: " + state);
-		
+
 		//deal this hand
 		cardDistributor.dealRound();
 		trumpCard = cardDistributor.flipTrump();
-		
+
 		//player to the left of the dealer bids
 		currentPlayerIndex = CardDistributor.LEFT;
 		bid(currentPlayer());
 	}
-	
+
 	/**
 	 * gives a player the chance to accept/name trump
 	 * 
@@ -93,18 +95,18 @@ public class EuchreEngine
 			state++;
 		else
 			deal();
-		
+
 		Trace.dprint("new state: " + state);
-		
+
 		if(state == FIFTH_BID)
 		{
 			//TODO: flip down trump card
 		}
-		
+
 		//send opcode to player to request a bid
 		currentPlayer().sendData(Opcode.requestBid, "" + trumpCard.getSuit());
 	}
-	
+
 	/**
 	 * receive input from the player:
 	 * "s" = spades is named as trump
@@ -134,7 +136,7 @@ public class EuchreEngine
 			bid(currentPlayer());
 		}
 	}
-	
+
 	/**
 	 * the dealer chooses and discards one card
 	 */
@@ -142,11 +144,11 @@ public class EuchreEngine
 	{
 		state = DEALER_DISCARD;
 		Trace.dprint("new state: " + state);
-		
+
 		//send an opcode to the dealer to tell them to discard
 		cardDistributor.getPlayerOrder()[0].sendOpcode(Opcode.dealerDiscard);
 	}
-	
+
 	/**
 	 * this method is called after the bidding is done
 	 * and after the player who is the dealer discards
@@ -158,11 +160,11 @@ public class EuchreEngine
 	{
 		state = GOING_ALONE;
 		Trace.dprint("new state: " + state);
-		
+
 		//ask currentPlayer if he/she is going alone
 		currentPlayer().sendOpcode(Opcode.goingAlone);
 	}
-	
+
 	/**
 	 * sets the value of goingAlone (this happens after
 	 * the user has been prompted)
@@ -173,17 +175,17 @@ public class EuchreEngine
 	{
 		goingAlone = alone;
 		throwCard();
-		
+
 		if(alone)
 			notPlaying = (currentPlayerIndex + 2) % 4;
 		else
 			notPlaying = -1;
-		
+
 		trick = new Card[4];
 	}
-	
-	
-	
+
+
+
 	/**
 	 * this method is called every time a player needs to
 	 * choose and throw a card for a trick.
@@ -195,17 +197,17 @@ public class EuchreEngine
 		{
 			state++;
 			Trace.dprint("new state: player " + (state - FIRST_PLAYER_THROWS_CARD) + " throws card");
-			
+
 			//decide whose turn it is to throw a card
 			if(state == FIRST_PLAYER_THROWS_CARD)
 				currentPlayerIndex = CardDistributor.LEFT;
 			else
 				currentPlayerIndex = (currentPlayerIndex + 1) % 4;
-			
+
 			//if this player's partner is going alone, skip them
 			if(currentPlayerIndex == notPlaying)
 				receiveCard(Card.nullCard());
-			
+
 			//ask current player to choose and throw a card
 			currentPlayer().sendOpcode(Opcode.throwCard);
 
@@ -215,7 +217,7 @@ public class EuchreEngine
 			endOfTrick(winnerOfTrick());
 		}
 	}
-	
+
 	/**
 	 * receives the card that was thrown by the current player
 	 * 
@@ -224,15 +226,15 @@ public class EuchreEngine
 	public void receiveCard(Card thrown)
 	{
 		Trace.dprint("received card: " + thrown.toString());
-		
+
 		//add the card to the current trick
 		int numberOfCardsThrown = state - FIRST_PLAYER_THROWS_CARD;
 		trick[numberOfCardsThrown] = thrown;
-		
+
 		//throw another card
 		throwCard();
 	}
-	
+
 	/**
 	 * returns the player who won this trick
 	 * 
@@ -244,15 +246,15 @@ public class EuchreEngine
 		for(int i = 1; i < trick.length; i++)			 
 			if(trick[i].getValue() > 0 &&											//if this card is not null and
 					(trick[i].getSuit() == trump || 								//(this card is trump or
-					trick[i].getSuit() == trick[winningCardIndex].getSuit())		//the same suit as the winning card)
-					&& trick[i].getValue() > trick[winningCardIndex].getValue())	//and it's higher than the winning card
-					winningCardIndex = i;											//		then this is the new winning card
-																
+							trick[i].getSuit() == trick[winningCardIndex].getSuit())		//the same suit as the winning card)
+							&& trick[i].getValue() > trick[winningCardIndex].getValue())	//and it's higher than the winning card
+				winningCardIndex = i;											//		then this is the new winning card
+
 		Trace.dprint("winning card: " + trick[winningCardIndex]);
-		
+
 		return cardDistributor.getPlayerOrder()[winningCardIndex];
 	}
-	
+
 	/**
 	 * score points appropriately at the end of a trick.  If there are cards left, play another trick.
 	 * Otherwise, end the round.
@@ -264,9 +266,9 @@ public class EuchreEngine
 		state = END_OF_TRICK;
 		Trace.dprint("new state: " + state);
 		Trace.dprint("player " + winner.toString() + "has won the trick.");
-		
+
 		//TODO: increment the score of tricks for the winning team
-		
+
 		//TODO: check to see if there are cards left, then play another trick or end the round
 		boolean cardsLeft = false;
 		if(cardsLeft)
@@ -278,7 +280,7 @@ public class EuchreEngine
 		else
 			endOfRound();
 	}
-	
+
 	/**
 	 * go here at the end of a trick when there are no cards left.  If the game is not over, deal a 
 	 * new hand.  Otherwise, exit. 
@@ -287,9 +289,9 @@ public class EuchreEngine
 	{ 
 		state = END_OF_ROUND;
 		Trace.dprint("new state: " + state);
-		
+
 		//TODO: score points appropriately
-		
+
 		//TODO: if a team has won the game, 
 		boolean gameIsOver = true;
 		if(gameIsOver)
@@ -299,7 +301,7 @@ public class EuchreEngine
 		else
 			deal();
 	}
-	
+
 	/**
 	 * returns the state of this state machine
 	 * 
@@ -309,7 +311,7 @@ public class EuchreEngine
 	{
 		return state;
 	}
-	
+
 	/**
 	 * returns a char containing the first letter of the suit that is currently trump
 	 * 
@@ -319,7 +321,7 @@ public class EuchreEngine
 	{
 		return trump;
 	}
-	
+
 	/**
 	 * helper method that returns the current player, using the currentPlayerIndex.
 	 * 
@@ -329,5 +331,26 @@ public class EuchreEngine
 	{
 		return cardDistributor.getPlayerOrder()[currentPlayerIndex];
 	}
-		
+
+	/**
+	 * Receives forwarded packets from PacketQueueThread for processing/state updating.
+	 * 
+	 * @param player The player that sent the packet
+	 * @param opcode The opcode associated with the packet
+	 * @param data The data associated with the packet
+	 */
+	public void forwardPacket(Player player, Opcode opcode, Serializable data)
+	{
+		if(opcode == Opcode.requestBid)
+			receiveBid((String)data);
+		else if(opcode == Opcode.requestAlternateBid)
+			receiveBid((String)data);
+		else if(opcode == Opcode.goingAlone)
+			setGoingAlone((Boolean) data);
+		else if(opcode == Opcode.dealerDiscard)
+			goingAlone();
+		else
+			Trace.dprint("EuchreEngine received forwarded packet from player '%s' with unimplemented opcode '%s' - ignoring.", player.getUsername(), opcode.toString());
+	}
 }
+
