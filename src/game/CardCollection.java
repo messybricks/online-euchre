@@ -46,6 +46,11 @@ public class CardCollection implements Serializable
 		}
 		return -1;
 	}
+	
+	public Card[] getCards()
+	{
+		return cards;
+	}
 
 	/**
 	 * Adds a new card to the end of the card collection.

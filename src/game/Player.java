@@ -153,6 +153,11 @@ public class Player implements Serializable {
 		return str;
 	}
 	
+	public Card[] getCards()
+	{
+		return subPlayer.getHand().getCards();
+	}
+	
 	/**
 	 * Gets this Player's globally unique identifier.
 	 */
