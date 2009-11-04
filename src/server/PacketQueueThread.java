@@ -17,6 +17,7 @@ public class PacketQueueThread extends NetworkThread
 	private boolean verified = false;
 	private User associate = null;
 	private Player myPlayer = null;
+	private EuchreEngine stateMachine = null;
 
 	private static int uid = 0;
 
@@ -121,6 +122,16 @@ public class PacketQueueThread extends NetworkThread
 	{
 		return associate;
 	}
+	
+	/**
+	 * Associates a EuchreEngine state machine with this thread (meaning that its player has joined the game.)
+	 * 
+	 * @param engine State machine to associate
+	 */
+	public void setStateMachine(EuchreEngine engine)
+	{
+		stateMachine = engine;
+	}
 
 	// processing packets starts here. you can change code below this line as you see fit.
 	//  please try to maintain the same style i have created here. for each packet you
@@ -144,7 +155,7 @@ public class PacketQueueThread extends NetworkThread
 			onSendMessage(packet);
 		else if(packet.getOpcode() == Opcode.UpdatePlayer)
 			onUpdatePlayer(packet);
-		else if(packet.getOpcode() == Opcode.requestBid)
+		/*else if(packet.getOpcode() == Opcode.requestBid)
 			onRequestBid(packet);
 		else if(packet.getOpcode() == Opcode.requestAlternateBid)
 			onRequestAlternateBid(packet);
@@ -153,9 +164,11 @@ public class PacketQueueThread extends NetworkThread
 		else if(packet.getOpcode() == Opcode.goingAlone)
 			onGoingAlone(packet);
 		else if(packet.getOpcode() == Opcode.throwCard)
-			onThrowCard(packet);
+			onThrowCard(packet);*/
+		else if(stateMachine != null)
+			stateMachine.forwardPacket(myPlayer, packet.getOpcode(), packet.getData());
 		else
-			Trace.dprint("Received packet with unimplemented opcode '%s' - ignoring.", packet.getOpcode().toString());
+			Trace.dprint("Received packet with unimplemented opcode '%s' from player not in game - ignoring.", packet.getOpcode().toString());
 	}
 
 	/**
