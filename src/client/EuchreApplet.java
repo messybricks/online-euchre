@@ -852,7 +852,8 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	public void setUp() 
 	{
 		
-		
+
+		setSize(696, 550);
 		setSize(695, 550);
 		Trace.dprint("Entering GUI setup");
 
