@@ -274,11 +274,6 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 		}
 	}
 	
-	void displayMessage(String txt, EuchreApplet owner)
-	{
-		msg = new text(txt, 320, 220, owner);
-	}
-	
 	public void drawOtherPlayers(Graphics g)
 	{
 		try
@@ -376,8 +371,11 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 			Trace.dprint("NO!");
 			try {
 				displayMessage(this.owner, "","","",0);
-				playPos.setX(openX);
-				playPos.setY(openY);
+				if(playPos != null)
+				{
+					playPos.setX(openX);
+					playPos.setY(openY);
+				}
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
