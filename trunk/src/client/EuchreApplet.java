@@ -51,6 +51,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	private String userName;
 	boolean drawn = false;
 	public HashMap<String,Image> cardImages;
+	private Player player;
 	
 	// this list contains the players currently playing
 	private ArrayList<Player> playerList;
@@ -826,6 +827,27 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	{
 		return playerList;
 	}
+	
+	public int displayYesNoMessage(String txt)
+	{
+		try 
+		{
+			if(txt.length() < 10)
+				return gameCanvas.displayMessage(this, txt, "", "", 1);
+			else if(txt.length() < 19)
+				return gameCanvas.displayMessage(this, txt.substring(0, 9), txt.substring(9, txt.length()), "", 1);
+			else
+				return gameCanvas.displayMessage(this, txt.substring(0, 9), txt.substring(9, 18), txt.substring(18, txt.length()), 1);
+				
+				
+		} 
+		catch (IOException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return 0;
+	}
 
 	public void setUp() 
 	{
@@ -850,21 +872,22 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 				Trace.dprint(p.getUsername());
 				if(p.getUsername().equals(client.getUser().getUsername()))
 				{
-					p.pickupCard(new Card('d', 2));
+			/*		p.pickupCard(new Card('d', 2));
 					p.pickupCard(new Card('s', 3));
 					p.pickupCard(new Card('h', 4));
 					p.pickupCard(new Card('c', 5));
 					p.pickupCard(new Card('d', 6));
 					
-					Trace.dprint("Index: " + p.getIndex(new Card('h', 4)));
+					Trace.dprint("Index: " + p.getIndex(new Card('h', 4)));*/
 	
 					gameCanvas.setPlayer(p);
+					this.setPlayer(p);
 					
-					gameCanvas.addCard('d', 2, 85, PLAYER_CARD_Y);
+				/*	gameCanvas.addCard('d', 2, 85, PLAYER_CARD_Y);
 					gameCanvas.addCard('s', 3, 164, PLAYER_CARD_Y);
 					gameCanvas.addCard('h', 4, 244, PLAYER_CARD_Y);
 					gameCanvas.addCard('c', 5, 322, PLAYER_CARD_Y);
-					gameCanvas.addCard('d', 6, 401, PLAYER_CARD_Y);
+					gameCanvas.addCard('d', 6, 401, PLAYER_CARD_Y);*/
 					
 					repaint();
 					this.doLayout();
@@ -878,6 +901,17 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	public Image getCardImg(char suit, int value) 
 	{
 		return cardImages.get(0);
+	}
+	
+	public void setPlayer(Player p) 
+	{
+		player = p;
+		
+	}
+	
+	public Player getPlayer()
+	{
+		return player;
 	}
 
 }

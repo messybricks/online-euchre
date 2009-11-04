@@ -1,5 +1,7 @@
 package client;
 
+import game.Player;
+
 import java.net.*;
 import java.io.*;
 import utility.*;
@@ -154,4 +156,6 @@ public class EuchreNetClient
 	{
 		return thread.getUser();
 	}
+
+
 }

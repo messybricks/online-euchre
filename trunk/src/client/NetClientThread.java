@@ -212,8 +212,14 @@ public class NetClientThread extends NetworkThread
 			suit = "clubs";
 		else if(suit.toLowerCase().charAt(0) == 's')
 			suit = "spades";
-		JOptionPane.showOptionDialog(euchreApplet, "Do you want " + suit + " to be trump?", "Bidding", JOptionPane.YES_NO_OPTION, 
-									 JOptionPane.QUESTION_MESSAGE, null, null, JOptionPane.NO_OPTION);		
+	//	JOptionPane.showOptionDialog(euchreApplet, "Do you want " + suit + " to be trump?", "Bidding", JOptionPane.YES_NO_OPTION, 
+	//								 JOptionPane.QUESTION_MESSAGE, null, null, JOptionPane.NO_OPTION);	
+
+		int t = euchreApplet.displayYesNoMessage("Would you like " + suit + " to be trump?");
+		if(t == 1)
+			send(Opcode.requestBid, suit);
+		else
+			send(Opcode.requestBid, "p");
 	}
 	
 	/**
@@ -235,9 +241,54 @@ public class NetClientThread extends NetworkThread
 			suits[i++] = "clubs";
 		if(suit.toLowerCase().charAt(0) != 's')
 			suits[i++] = "spades";
-				
-		JOptionPane.showOptionDialog(euchreApplet, "Would you like to name trump?", "Bidding", JOptionPane.YES_NO_OPTION, 
-				 JOptionPane.QUESTION_MESSAGE, null,suits, JOptionPane.NO_OPTION);
+		
+		int answer = euchreApplet.displayYesNoMessage("Would you like to name trump?");	
+//		JOptionPane.showOptionDialog(euchreApplet, "Would you like to name trump?", "Bidding", JOptionPane.YES_NO_OPTION, 
+//				 JOptionPane.QUESTION_MESSAGE, null,suits, JOptionPane.NO_OPTION);
+
+		int c, d, s, h;
+		if(answer == 1)
+		{
+			c = euchreApplet.displayYesNoMessage("Would you like Clubs to be trump?");	
+			if(c == 0)
+			{
+				d = euchreApplet.displayYesNoMessage("Would you like to name Diamonds as trump?");	
+				if(d ==  0)
+				{
+					s = euchreApplet.displayYesNoMessage("Would you like to name Spades as trump?");	
+					if(s == 0)
+					{
+						h = euchreApplet.displayYesNoMessage("Naming Hearts as trump. Confirm?");
+						if(h == 1)
+						{
+							send(Opcode.requestAlternateBid, "h");
+						}
+						else
+						{
+							answer = 0;
+							send(Opcode.requestAlternateBid, "p");
+						}
+						
+					}
+					else
+					{
+						send(Opcode.requestAlternateBid, "s");
+					}
+				}
+				else
+				{
+					send(Opcode.requestAlternateBid, "d");
+				}
+			}
+			else
+			{
+				send(Opcode.requestAlternateBid, "c");
+			}
+		}
+		else
+		{
+			send(Opcode.requestAlternateBid, "p");
+		}
 	}
 	
 	/**
@@ -260,8 +311,10 @@ public class NetClientThread extends NetworkThread
 	private void onGoingAlone(Packet packet)
 	{
 		int option;
-		option = JOptionPane.showOptionDialog(euchreApplet, "Would you like to go alone?", "Going Alone?", JOptionPane.YES_NO_OPTION, 
-				 JOptionPane.QUESTION_MESSAGE, null,null, JOptionPane.NO_OPTION);
+//		option = JOptionPane.showOptionDialog(euchreApplet, "Would you like to go alone?", "Going Alone?", JOptionPane.YES_NO_OPTION, 
+//				 JOptionPane.QUESTION_MESSAGE, null,null, JOptionPane.NO_OPTION);
+		
+		option = euchreApplet.displayYesNoMessage("Would you like to go alone?");
 		
 		if(option == JOptionPane.YES_OPTION)
 			send(Opcode.goingAlone, new Boolean(true));
