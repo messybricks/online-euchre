@@ -89,7 +89,16 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 	
 	public void addCard(char theSuit, int val, int xPos, int yPos)
 	{
-		Cards.add(new card(theSuit, val, xPos, yPos, owner));
+		boolean init = false;
+		for(card c:Cards)
+		{
+			if(c.getSuit() == theSuit && c.getVal() == val)
+				init = true;
+				//Cards.remove(c);
+		}
+	//	if(!Cards.contains(new card(theSuit, val, xPos, yPos, owner)))
+		if(!init)
+			Cards.add(new card(theSuit, val, xPos, yPos, owner));
 		repaint();
 	}
 
