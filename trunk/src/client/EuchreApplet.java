@@ -81,14 +81,14 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		Trace.dprint("loading cards...");
 		cardImages = new HashMap<String, Image>();
 		
-		for(int x = 0; x < 13; x++)
+		for(int x = 1; x <= 14; x++)
 		{		
 			char theSuit = 'c';
 			URL url2;
 			Image img = null;
 			try 
 			{
-				url2 = new URL(getCodeBase(), "cards/" + theSuit + (x + 1) + ".gif");
+				url2 = new URL(getCodeBase(), "cards/" + theSuit + (x) + ".gif");
 				img = ImageIO.read(url2);
 			} 
 			catch (MalformedURLException e) 
@@ -107,7 +107,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 			
 			try 
 			{
-				url2 = new URL(getCodeBase(), "cards/" + theSuit + (x + 1) + ".gif");
+				url2 = new URL(getCodeBase(), "cards/" + theSuit + (x) + ".gif");
 				img = ImageIO.read(url2);
 			} 
 			catch (MalformedURLException e) 
@@ -126,7 +126,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 			
 			try 
 			{
-				url2 = new URL(getCodeBase(), "cards/" + theSuit + (x + 1) + ".gif");
+				url2 = new URL(getCodeBase(), "cards/" + theSuit + (x) + ".gif");
 				img = ImageIO.read(url2);
 			} 
 			catch (MalformedURLException e) 
@@ -145,7 +145,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 			
 			try 
 			{
-				url2 = new URL(getCodeBase(), "cards/" + theSuit + (x + 1) + ".gif");
+				url2 = new URL(getCodeBase(), "cards/" + theSuit + (x) + ".gif");
 				img = ImageIO.read(url2);
 			} 
 			catch (MalformedURLException e) 
@@ -899,7 +899,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 
 	public Image getCardImg(char suit, int value) 
 	{
-		return cardImages.get(0);
+		return cardImages.get(suit + "" + value);
 	}
 	
 	public void setPlayer(Player p) 
