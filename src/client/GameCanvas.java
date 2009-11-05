@@ -607,6 +607,8 @@ class card
 		value = val;
 		URL url2;
 		img = owner.getCardImg(suit, value);
+		if(img == null)
+			Trace.dprint(suit + ", " + value);
 	}
 	
 	public int getVal() 
@@ -645,6 +647,8 @@ class card
 		y = yPos;
 
 		img = owner.getCardImg(suit, value);
+		if(img == null)
+			Trace.dprint(suit + ", " + value);
 	}
 	public int getX()
 	{
