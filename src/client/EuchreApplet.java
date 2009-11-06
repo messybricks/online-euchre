@@ -802,25 +802,25 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	 * 
 	 * @param player Player to add
 	 */
-	public void addPlayer(Player player)
+	public void addPlayer(Player aPlayer)
 	{
 		player.setPlayerChangedCallback(this);
 		playerList.add(player);
-				
-		if(curPlayer == 0)
-			curPlayer++;
-		else if(curPlayer == 2)
+		
+		if(player.getTeam() == aPlayer.getTeam())
 		{
 			gameCanvas.drawText(player.getUsername(), 475 - (18 * player.getUsername().length()), 40, this);
-			curPlayer++;
 		}
-		else if(curPlayer == 1)
+		else
 		{
-			gameCanvas.drawTextVertical(player.getUsername(), 60, 110, this);
-			curPlayer++;
+			if(curPlayer == 0)
+			{
+				gameCanvas.drawTextVertical(player.getUsername(), 60, 110, this);
+				curPlayer++;
+			}
+			else
+				gameCanvas.drawTextVertical(player.getUsername(), 480, 302 - (18 * player.getUsername().length()), this);
 		}
-		else if(curPlayer == 3)
-			gameCanvas.drawTextVertical(player.getUsername(), 480, 302 - (18 * player.getUsername().length()), this);
 	}
 	
 	/**
