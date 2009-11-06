@@ -59,6 +59,16 @@ public class Player implements Serializable {
 			throw new IllegalArgumentException(String.format("Cannot create a remote player instance using a Packet with opcode '%s'.", remote.getOpcode().toString()));
 	}
 	
+	public int getTeam()
+	{
+		return user.getTeam();
+	}
+	
+	public void setTeam(int x)
+	{
+		user.setTeam(x);
+	}
+	
 	/**
 	 * Sends a CreatePlayer packet to the given thread that will create a remote instance of this player on that client.
 	 * 
