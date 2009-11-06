@@ -8,6 +8,7 @@ import java.io.Serializable;
 public class User implements Serializable
 {
 	private String username;
+	private int team = 0;
 
 	/**
 	 * Default Constructor
@@ -17,6 +18,16 @@ public class User implements Serializable
 	public User(String user)
 	{
 		username = user;
+	}
+	
+	public void setTeam(int x)
+	{
+		team = x;
+	}
+	
+	public int getTeam()
+	{
+		return team;
 	}
 
 	/**
