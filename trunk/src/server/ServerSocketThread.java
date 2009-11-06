@@ -328,6 +328,10 @@ public class ServerSocketThread extends Thread implements TransactionThread
 		if(engine == null && authedCount == 4)
 		{
 			engine = new EuchreEngine(playersForGame[0].getPlayer(), playersForGame[1].getPlayer(), playersForGame[2].getPlayer(), playersForGame[3].getPlayer());
+			playersForGame[0].getPlayer().setTeam(1);
+			playersForGame[2].getPlayer().setTeam(1);
+			playersForGame[1].getPlayer().setTeam(2);
+			playersForGame[3].getPlayer().setTeam(2);
 			playersForGame[0].setStateMachine(engine);
 			playersForGame[1].setStateMachine(engine);
 			playersForGame[2].setStateMachine(engine);
