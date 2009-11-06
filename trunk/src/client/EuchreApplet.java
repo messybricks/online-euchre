@@ -53,6 +53,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	boolean drawn = false;
 	public HashMap<String,Image> cardImages;
 	private Player player;
+	int curPlayer = 0;
 	
 	// this list contains the players currently playing
 	private ArrayList<Player> playerList;
@@ -346,9 +347,6 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		gameArea.setSize(200, 200);
 		gameCanvas.setSize(554, 432);
 
-		gameCanvas.drawText("Mike", 85, 40, this);
-		gameCanvas.drawTextVertical("Bert", 60, 110, this);
-		gameCanvas.drawTextVertical("Player", 480, 302 - (18 * "Player".length()), this);
 		gameCanvas.setSuit('d');
 		//gameCanvas.setBackground(new Color())
 		gameArea.add(gameCanvas);
@@ -808,6 +806,21 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	{
 		player.setPlayerChangedCallback(this);
 		playerList.add(player);
+				
+		if(curPlayer == 0)
+			curPlayer++;
+		else if(curPlayer == 2)
+		{
+			gameCanvas.drawText(player.getUsername(), 85, 40, this);
+			curPlayer++;
+		}
+		else if(curPlayer == 1)
+		{
+			gameCanvas.drawTextVertical(player.getUsername(), 60, 110, this);
+			curPlayer++;
+		}
+		else if(curPlayer == 3)
+			gameCanvas.drawTextVertical(player.getUsername(), 480, 302 - (18 * player.getUsername().length()), this);
 	}
 	
 	/**
