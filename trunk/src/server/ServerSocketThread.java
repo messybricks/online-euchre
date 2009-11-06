@@ -332,10 +332,11 @@ public class ServerSocketThread extends Thread implements TransactionThread
 			playersForGame[2].getPlayer().setTeam(1);
 			playersForGame[1].getPlayer().setTeam(2);
 			playersForGame[3].getPlayer().setTeam(2);
-			playersForGame[0].setStateMachine(engine);
-			playersForGame[1].setStateMachine(engine);
-			playersForGame[2].setStateMachine(engine);
-			playersForGame[3].setStateMachine(engine);
+			for(byte i = 0; i < 4; ++i)
+			{
+				playersForGame[i].setStateMachine(engine);
+				playersForGame[i].send(Opcode.GameStarting);
+			}
 			engine.start();
 		}
 	}

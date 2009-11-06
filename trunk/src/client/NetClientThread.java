@@ -69,6 +69,8 @@ public class NetClientThread extends NetworkThread
 			onUpdatePlayer(packet);
 		else if(packet.getOpcode() == Opcode.RemovePlayer)
 			onRemovePlayer(packet);
+		else if(packet.getOpcode() == Opcode.GameStarting)
+			onGameStarting(packet);
 		else if(packet.getOpcode() == Opcode.requestBid)
 			onRequestBid(packet);
 		else if(packet.getOpcode() == Opcode.requestAlternateBid)
@@ -153,6 +155,16 @@ public class NetClientThread extends NetworkThread
 		User tempUser = new User(newName);
 		send(Opcode.Auth, tempUser);
 		associate = tempUser;
+	}
+	
+	/**
+	 * Signals the EuchreApplet that teams have been chosen and the game is about to begin.
+	 * 
+	 * @param packet Packet to process
+	 */
+	private void onGameStarting(Packet packet)
+	{
+		euchreApplet.onGameStarting();
 	}
 
 	/**

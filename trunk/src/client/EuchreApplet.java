@@ -921,4 +921,13 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		gameCanvas.updatePlayer(player);
 	}
 
+	/**
+	 * Called when the teams have been chosen and the game is about to begin.
+	 */
+	public void onGameStarting()
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -24,6 +24,9 @@ public enum Opcode
 	RemovePlayer,
 	UpdatePlayer,
 	
+	// ui signals
+	GameStarting,
+	
 	//prompts from the EuchreEngine
 	requestBid,
 	requestAlternateBid,
