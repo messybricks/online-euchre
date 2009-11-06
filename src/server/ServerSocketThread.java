@@ -283,7 +283,16 @@ public class ServerSocketThread extends Thread implements TransactionThread
 						for(Entry<String, PacketQueueThread> subEntry : clientMapping.entrySet())
 						{
 							if(subEntry != entry)
-								subEntry.getValue().getPlayer().createRemotePlayer(entry.getValue());
+							{
+								if(subEntry == null)
+									Trace.dprint("### WARNING: subEntry was null @ remote player creation.");
+								else if(subEntry.getValue() == null)
+									Trace.dprint("### WARNING: subEntry.getValue() was null @ remote player creation.");
+								else if(subEntry.getValue().getPlayer() == null)
+									Trace.dprint("### WARNING: subEntry.getValue().getPlayer() was null @ remote player creation.");
+								else
+									subEntry.getValue().getPlayer().createRemotePlayer(entry.getValue());
+							}
 						}
 					}
 				}
