@@ -811,7 +811,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 			curPlayer++;
 		else if(curPlayer == 2)
 		{
-			gameCanvas.drawText(player.getUsername(), 85, 40, this);
+			gameCanvas.drawText(player.getUsername(), 475 - (18 * player.getUsername().length()), 40, this);
 			curPlayer++;
 		}
 		else if(curPlayer == 1)
@@ -873,7 +873,6 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		Trace.dprint("Entering GUI setup");
 
 		gameCanvas.drawText(client.getUser().getUsername(), 85, 300, this);
-		int val = displayYesNoMessage("Jason King is typing");
 		gameCanvas.repaint();
 		//int val = gameCanvas.displayMessage(this, "This is" , "a sample", "message" , 1);
 		
