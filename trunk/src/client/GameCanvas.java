@@ -55,6 +55,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 	boolean offOver = false;
 	card playPos;
 	int openX, openY;
+	private boolean gameStarted = false;
 	
 	public void setOwner(EuchreApplet apl)
 	{		
@@ -102,13 +103,13 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 		repaint();
 	}
 
-	public void drawText(String txt, int x, int y, EuchreApplet owner)
+	public void drawText(String txt, int x, int y)
 	{
 		words.add(new text(txt, x, y, owner));
 		repaint();
 	}
 
-	public void drawTextVertical(String txt, int x, int y, EuchreApplet owner)
+	public void drawTextVertical(String txt, int x, int y)
 	{
 		wordsVertical.add(new text(txt, x, y, owner));
 		repaint();
@@ -286,37 +287,40 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 	
 	public void drawOtherPlayers(Graphics g)
 	{
-		try
+		if(gameStarted)
 		{
-			URL tempURL = new URL(owner.getCodeBase(), "cards/b2fh.gif");
-			URL tempURL2 = new URL(owner.getCodeBase(), "cards/b2fv.gif");
-			g.drawImage(ImageIO.read(tempURL), -40, 110, null);
-			g.drawImage(ImageIO.read(tempURL), -40, 140, null);
-			g.drawImage(ImageIO.read(tempURL), -40, 170, null);
-			g.drawImage(ImageIO.read(tempURL), -40, 200, null);
-			g.drawImage(ImageIO.read(tempURL), -40, 230, null);
-
-			g.drawImage(ImageIO.read(tempURL), 500, 110, null);
-			g.drawImage(ImageIO.read(tempURL), 500, 140, null);
-			g.drawImage(ImageIO.read(tempURL), 500, 170, null);
-			g.drawImage(ImageIO.read(tempURL), 500, 200, null);
-			g.drawImage(ImageIO.read(tempURL), 500, 230, null);
-
-			g.drawImage(ImageIO.read(tempURL2), 85, -60, null);
-			g.drawImage(ImageIO.read(tempURL2), 164, -60, null);
-			g.drawImage(ImageIO.read(tempURL2), 244, -60, null);
-			g.drawImage(ImageIO.read(tempURL2), 322, -60, null);
-			g.drawImage(ImageIO.read(tempURL2), 401, -60, null);
-			
-		}
-		catch (MalformedURLException e) 
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) 
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			try
+			{
+				URL tempURL = new URL(owner.getCodeBase(), "cards/b2fh.gif");
+				URL tempURL2 = new URL(owner.getCodeBase(), "cards/b2fv.gif");
+				g.drawImage(ImageIO.read(tempURL), -40, 110, null);
+				g.drawImage(ImageIO.read(tempURL), -40, 140, null);
+				g.drawImage(ImageIO.read(tempURL), -40, 170, null);
+				g.drawImage(ImageIO.read(tempURL), -40, 200, null);
+				g.drawImage(ImageIO.read(tempURL), -40, 230, null);
+	
+				g.drawImage(ImageIO.read(tempURL), 500, 110, null);
+				g.drawImage(ImageIO.read(tempURL), 500, 140, null);
+				g.drawImage(ImageIO.read(tempURL), 500, 170, null);
+				g.drawImage(ImageIO.read(tempURL), 500, 200, null);
+				g.drawImage(ImageIO.read(tempURL), 500, 230, null);
+	
+				g.drawImage(ImageIO.read(tempURL2), 85, -60, null);
+				g.drawImage(ImageIO.read(tempURL2), 164, -60, null);
+				g.drawImage(ImageIO.read(tempURL2), 244, -60, null);
+				g.drawImage(ImageIO.read(tempURL2), 322, -60, null);
+				g.drawImage(ImageIO.read(tempURL2), 401, -60, null);
+				
+			}
+			catch (MalformedURLException e) 
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) 
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -464,7 +468,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 							openY = origY;
 							try 
 							{
-								displayMessage(this.owner, "Play this", "card","",1);
+								displayMessage(this.owner, "Play this", "card?","",1);
 							} 
 							catch (IOException e1) 
 							{
@@ -591,6 +595,11 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 				}
 			}
 		}
+	}
+	
+	public void setGameStarted(boolean start)
+	{
+		gameStarted = start;
 	}
 
 }

@@ -57,6 +57,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	
 	// this list contains the players currently playing
 	private ArrayList<Player> playerList;
+	private ArrayList<Player> otherTeam = new ArrayList<Player>();
 
 	
 	
@@ -862,7 +863,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		setSize(700, 550);
 		Trace.dprint("Entering GUI setup");
 
-		gameCanvas.drawText(client.getUser().getUsername(), 85, 300, this);
+		gameCanvas.drawText(client.getUser().getUsername(), 85, 300);
 		gameCanvas.repaint();
 		//int val = gameCanvas.displayMessage(this, "This is" , "a sample", "message" , 1);
 		
@@ -926,8 +927,51 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	 */
 	public void onGameStarting()
 	{
-		// TODO Auto-generated method stub
-		
+		gameCanvas.setGameStarted(true);
+		int otherGUID = 0;
+		for(Player p:playerList)
+		{
+			Trace.dprint("player team:" + player.getPID());
+			/*if(p.getGuid() != player.getGuid())
+			{
+				if(p.getPID()%2 == player.getPID()%2)
+				{
+					gameCanvas.drawText(p.getUsername(), 85, 40);
+					otherGUID = p.getGuid();
+				}
+				else
+				{
+					otherTeam.add(p);
+				}
+			}
+		}
+			if((otherTeam.get(0).getPID() == player.getPID() + 1) || (otherTeam.get(0).getPID() == player.getPID() - 1))
+			{
+				gameCanvas.drawTextVertical(otherTeam.get(0).getUsername(), 480, 302 - (18 * otherTeam.get(0).getUsername().length()));
+				gameCanvas.drawTextVertical(otherTeam.get(1).getUsername(), 60, 110);
+			}
+			else
+			{
+				gameCanvas.drawTextVertical(otherTeam.get(1).getUsername(), 480, 302 - (18 * otherTeam.get(1).getUsername().length()));
+				gameCanvas.drawTextVertical(otherTeam.get(0).getUsername(), 60, 110);
+			}*/
+			
+			int current = player.getPID() % 4 + 1;
+			gameCanvas.drawTextVertical(getPlayerByPID(current).getUsername(), 60, 110);
+			current = current % 4 + 1;
+			gameCanvas.drawText(getPlayerByPID(current).getUsername(), 85, 40);
+			current = current % 4 + 1;
+			gameCanvas.drawTextVertical(getPlayerByPID(current).getUsername(), 480, 302 - (18 * getPlayerByPID(current).getUsername().length()));
+		}
+	
+	}
+	
+	private Player getPlayerByPID(int pid)
+	{
+		for(Player player : playerList)
+			if(player.getPID() == pid)
+				return player;
+		return null;
 	}
 
 }
