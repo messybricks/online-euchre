@@ -243,6 +243,15 @@ public class Player implements Serializable {
 	}
 	
 	/**
+	 * Increments the score for this team by a given value
+	 */
+	public void incrementScore(int points)
+	{
+		subPlayer.incrementScore(points);
+		transferData();
+	}
+	
+	/**
 	 * Represents a serializable subset of intransient information passed back and forth between remote instances of the Player class.
 	 * 
 	 * @author bert
@@ -251,7 +260,7 @@ public class Player implements Serializable {
 	private class SubPlayer implements Serializable
 	{
 		private Hand hand;
-		private int roundsWon = 0;
+		private int score = 0;
 		private int gamesWon = 0;
 		private int team = 0;
 
@@ -304,9 +313,17 @@ public class Player implements Serializable {
 		 * 
 		 * @return the number of rounds that this SubPlayer has won.
 		 */
-		public int getRoundsWon()
+		public int getScore()
 		{
-			return roundsWon;
+			return score;
+		}
+		
+		/**
+		 * Increments the score for this team by a given value
+		 */
+		public void incrementScore(int points)
+		{
+			score = score + points;
 		}
 		
 		/**
