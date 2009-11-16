@@ -59,16 +59,6 @@ public class Player implements Serializable {
 			throw new IllegalArgumentException(String.format("Cannot create a remote player instance using a Packet with opcode '%s'.", remote.getOpcode().toString()));
 	}
 	
-	public int getTeam()
-	{
-		return user.getTeam();
-	}
-	
-	public void setTeam(int x)
-	{
-		user.setTeam(x);
-	}
-	
 	/**
 	 * Sends a CreatePlayer packet to the given thread that will create a remote instance of this player on that client.
 	 * 
@@ -167,7 +157,7 @@ public class Player implements Serializable {
 	{
 		return subPlayer.getHand().getCards();
 	}
-	
+		
 	/**
 	 * Gets this Player's globally unique identifier.
 	 */
@@ -195,6 +185,18 @@ public class Player implements Serializable {
 	public void sendOpcode(Opcode opcode)
 	{
 		thread.send(opcode);
+	}
+
+	
+	public void setPID(int x)
+	{
+		subPlayer.team = x;
+		transferData();
+	}
+	
+	public int getPID()
+	{
+		return subPlayer.team;
 	}
 	
 	/**
@@ -251,6 +253,7 @@ public class Player implements Serializable {
 		private Hand hand;
 		private int roundsWon = 0;
 		private int gamesWon = 0;
+		private int team = 0;
 
 		private final int uid;
 		
@@ -265,6 +268,17 @@ public class Player implements Serializable {
 		{
 			uid = guid;
 			hand = new Hand(5);
+		}
+
+		
+		public void setPID(int x)
+		{
+			team = x;
+		}
+		
+		public int getPID()
+		{
+			return team;
 		}
 		
 		/**
