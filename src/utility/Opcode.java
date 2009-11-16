@@ -33,7 +33,9 @@ public enum Opcode
 	dealerDiscard,
 	goingAlone,
 	throwCard,
-	displayCard;
+	displayCard,
+	flipDownTrump,
+	endGame;
 
 	/**
 	 * Generates an instance of Opcode with the given ordinal value.

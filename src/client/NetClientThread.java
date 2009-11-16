@@ -83,6 +83,10 @@ public class NetClientThread extends NetworkThread
 			onThrowCard(packet);
 		else if(packet.getOpcode() == Opcode.displayCard)
 			onDisplayCard(packet);
+		else if(packet.getOpcode() == Opcode.endGame)
+			onEndGame(packet);
+		else if(packet.getOpcode() == Opcode.flipDownTrump)
+			onFlipDownTrump(packet);
 		else
 			Trace.dprint("Received packet with unimplemented opcode '%s' - ignoring.", packet.getOpcode().toString());
 	}
@@ -348,7 +352,9 @@ public class NetClientThread extends NetworkThread
 	 */
 	private void onThrowCard(Packet packet)
 	{
-		//TODO: implement this
+		//TODO: ask the player to choose and throw a card
+		//TODO: display the thrown card on everyone's screen
+		//TODO: pass the thrown card back to the EuchreEngine
 	}
 	
 	/**
@@ -358,7 +364,30 @@ public class NetClientThread extends NetworkThread
 	 */
 	private void onDisplayCard(Packet packet)
 	{
-		//TODO: implement this
+		//this should receive a card
+		//TODO: display the card
+	}
+	
+	/**
+	 * Processes an endGame packet.
+	 * 
+	 * @param packet Packet to process
+	 */
+	private void onEndGame(Packet packet)
+	{
+		//this should receive a Boolean, containing true if this player's team won, false if they lost.
+		//TODO: notify player
+		//TODO: offer options for playing a new game or exiting
+	}
+	
+	/**
+	 * Processes a flipDownTrump packet.
+	 * 
+	 * @param packet Packet to process
+	 */
+	private void onFlipDownTrump(Packet packet)
+	{
+		//TODO: flip down the trump card in the GUI
 	}
 	
 }
