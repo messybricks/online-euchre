@@ -32,8 +32,8 @@ public enum Opcode
 	requestAlternateBid,
 	dealerDiscard,
 	goingAlone,
-	throwCard;
-	
+	throwCard,
+	displayCard;
 
 	/**
 	 * Generates an instance of Opcode with the given ordinal value.
