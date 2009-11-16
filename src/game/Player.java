@@ -244,11 +244,32 @@ public class Player implements Serializable {
 	
 	/**
 	 * Increments the score for this team by a given value
+	 * 
+	 * @param points the number of points to add to this team's score
 	 */
 	public void incrementScore(int points)
 	{
 		subPlayer.incrementScore(points);
 		transferData();
+	}
+	
+	/**
+	 * Increments the number of tricks won by this team this round.
+	 */
+	public void winTrick()
+	{
+		subPlayer.winTrick();
+		transferData();
+	}
+	
+	/**
+	 * returns the number of tricks won by this team this round
+	 * 
+	 * @return the number of tricks won by this team this round
+	 */
+	public int getTricksWon()
+	{
+		return subPlayer.getTricksWon();
 	}
 	
 	/**
@@ -260,6 +281,7 @@ public class Player implements Serializable {
 	private class SubPlayer implements Serializable
 	{
 		private Hand hand;
+		private int tricksWon = 0;
 		private int score = 0;
 		private int gamesWon = 0;
 		private int team = 0;
@@ -279,7 +301,25 @@ public class Player implements Serializable {
 			hand = new Hand(5);
 		}
 
+		/**
+		 * Increments the number of tricks won by this team this round.
+		 */
+		public void winTrick() 
+		{
+			tricksWon++;
+		}
 		
+		/**
+		 * returns the number of tricks won by this team this round
+		 * 
+		 * @return the number of tricks won by this team this round
+		 */
+		public int getTricksWon()
+		{
+			return tricksWon;
+		}
+
+
 		public void setPID(int x)
 		{
 			team = x;
