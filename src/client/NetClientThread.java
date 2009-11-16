@@ -81,6 +81,8 @@ public class NetClientThread extends NetworkThread
 			onGoingAlone(packet);
 		else if(packet.getOpcode() == Opcode.throwCard)
 			onThrowCard(packet);
+		else if(packet.getOpcode() == Opcode.displayCard)
+			onDisplayCard(packet);
 		else
 			Trace.dprint("Received packet with unimplemented opcode '%s' - ignoring.", packet.getOpcode().toString());
 	}
@@ -348,4 +350,15 @@ public class NetClientThread extends NetworkThread
 	{
 		//TODO: implement this
 	}
+	
+	/**
+	 * Processes a displayCard packet.
+	 * 
+	 * @param packet Packet to process
+	 */
+	private void onDisplayCard(Packet packet)
+	{
+		//TODO: implement this
+	}
+	
 }
