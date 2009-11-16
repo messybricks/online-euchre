@@ -76,11 +76,13 @@ public class EuchreEngine
 
 		//deal this hand
 		cardDistributor.dealRound();
-		//trumpCard = cardDistributor.flipTrump();
+		trumpCard = cardDistributor.flipTrump();
+		displayCard(trumpCard);
+		
 
 		//player to the left of the dealer bids
-		//currentPlayerIndex = CardDistributor.LEFT;
-		//bid(currentPlayer());
+		currentPlayerIndex = CardDistributor.LEFT;
+		bid(currentPlayer());
 	}
 
 	/**
@@ -300,6 +302,14 @@ public class EuchreEngine
 		}
 		else
 			deal();
+	}
+	
+	private void displayCard(Card card)
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			cardDistributor.getPlayerOrder()[i].sendData(Opcode.displayCard, card);
+		}
 	}
 
 	/**
