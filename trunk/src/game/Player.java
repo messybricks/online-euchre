@@ -273,6 +273,17 @@ public class Player implements Serializable {
 	}
 	
 	/**
+	 * returns this team's score
+	 * 
+	 * @return this team's score
+	 */
+	public int getScore()
+	{
+		return subPlayer.getScore();
+	}
+	
+	
+	/**
 	 * Represents a serializable subset of intransient information passed back and forth between remote instances of the Player class.
 	 * 
 	 * @author bert

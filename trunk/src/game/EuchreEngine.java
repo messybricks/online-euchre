@@ -79,7 +79,7 @@ public class EuchreEngine
 		cardDistributor.dealRound();
 		trumpCard = cardDistributor.flipTrump();
 		displayCard(trumpCard);
-		
+
 
 		//player to the left of the dealer bids
 		currentPlayerIndex = CardDistributor.LEFT;
@@ -103,7 +103,9 @@ public class EuchreEngine
 
 		if(state == FIFTH_BID)
 		{
-			//TODO: flip down trump card
+			//send an opcode to each player to show that the trump card is flipped down
+			for(int i = 0; i<4; i++)
+				cardDistributor.getPlayerOrder()[i].sendOpcode(Opcode.flipDownTrump);
 		}
 
 		//send opcode to player to request a bid
@@ -274,9 +276,8 @@ public class EuchreEngine
 		//increment the score of tricks for the winning team
 		winner.winTrick();
 
-		//TODO: check to see if there are cards left, then play another trick or end the round
-		boolean cardsLeft = false;
-		if(cardsLeft)
+		//if there are cards left in the current player's hand
+		if(currentPlayer().getCards().length > 0)
 		{
 			state = FIRST_PLAYER_THROWS_CARD;
 			trick = new Card[4];
@@ -295,22 +296,57 @@ public class EuchreEngine
 		state = END_OF_ROUND;
 		Trace.dprint("new state: " + state);
 
-		//TODO: score points appropriately
-		if(currentPlayer().getPID() == trumpNamerPID)
-		{
-			
-		}
+		//change current player to one of the players on the team that named trump
+		if(currentPlayer().getPID() != trumpNamerPID)
+			currentPlayerIndex = (currentPlayerIndex + 1) % 4;
 		
-		//TODO: if a team has won the game, 
-		boolean gameIsOver = true;
-		if(gameIsOver)
+		//if current player's team lost the round
+		if(currentPlayer().getTricksWon() <= 2)
 		{
-			//TODO: display "You won!", options for playing a new game, etc.
+			//other team gets two points
+			cardDistributor.getPlayerOrder()[(currentPlayerIndex + 1) % 4].incrementScore(2);
+		}
+		else if(currentPlayer().getTricksWon() == 3 || currentPlayer().getTricksWon() == 4)
+		{
+			currentPlayer().incrementScore(1);
+		}
+		else if(currentPlayer().getTricksWon() == 5)
+		{
+			currentPlayer().incrementScore(2);
+		}
+
+
+		//determine if someone has won the game
+		if(currentPlayer().getScore() >= 10)
+		{
+			win(currentPlayerIndex);
+		}
+		else if(cardDistributor.getPlayerOrder()[(currentPlayerIndex + 1) % 4].getScore() >=10)
+		{
+			win((currentPlayerIndex + 1) % 4);
 		}
 		else
 			deal();
 	}
 	
+	/**
+	 * sends an opcode to each player indicating true if their team won, false otherwise
+	 * 
+	 * @param index the index of a player on the winning team
+	 */
+	private void win(int index)
+	{
+		cardDistributor.getPlayerOrder()[index].sendData(Opcode.endGame, new Boolean(true));
+		cardDistributor.getPlayerOrder()[(index + 2) % 4].sendData(Opcode.endGame, new Boolean(true));
+		cardDistributor.getPlayerOrder()[(index + 1) % 4].sendData(Opcode.endGame, new Boolean(false));
+		cardDistributor.getPlayerOrder()[(index + 3) % 4].sendData(Opcode.endGame, new Boolean(false));
+	}
+
+	/**
+	 * sends an opcode to each player to display a card on the screen
+	 * 
+	 * @param card the card to be displayed
+	 */
 	private void displayCard(Card card)
 	{
 		for (int i = 0; i < 4; i++)
