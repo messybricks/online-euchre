@@ -44,6 +44,7 @@ public class EuchreEngine
 	private Card trumpCard;
 	private Card[] trick;
 	private char trump;
+	private int trumpNamerPID;
 
 	public EuchreEngine(Player dealer, Player left, Player across, Player right)
 	{
@@ -125,6 +126,7 @@ public class EuchreEngine
 		if (t != "p")
 		{
 			trump = t.charAt(0);
+			trumpNamerPID = currentPlayer().getPID();
 			if(state <= FOURTH_BID)
 			{
 				dealerDiscard();				
@@ -269,7 +271,8 @@ public class EuchreEngine
 		Trace.dprint("new state: " + state);
 		Trace.dprint("player " + winner.toString() + "has won the trick.");
 
-		//TODO: increment the score of tricks for the winning team
+		//increment the score of tricks for the winning team
+		winner.winTrick();
 
 		//TODO: check to see if there are cards left, then play another trick or end the round
 		boolean cardsLeft = false;
@@ -293,7 +296,11 @@ public class EuchreEngine
 		Trace.dprint("new state: " + state);
 
 		//TODO: score points appropriately
-
+		if(currentPlayer().getPID() == trumpNamerPID)
+		{
+			
+		}
+		
 		//TODO: if a team has won the game, 
 		boolean gameIsOver = true;
 		if(gameIsOver)
