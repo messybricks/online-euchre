@@ -155,7 +155,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 			{
 				g.drawImage(i, msg.getX() + w, msg.getY(), null);
 				lastX = 18;
-				w = w + i.getWidth(getParent());
+				w = w + i.getWidth(this);
 				++x;
 			}			
 		}
@@ -170,7 +170,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 			{
 				g.drawImage(i, msg2.getX() + w, msg2.getY(), null);
 				lastX = 18;
-				w = w + i.getWidth(getParent());
+				w = w + i.getWidth(this);
 				++x;
 			}			
 		}
@@ -184,10 +184,17 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 			int w = 0;
 			for(Image i: images)
 			{
-				g.drawImage(i, msg3.getX() + w, msg3.getY(), null);
-				lastX = 18;
-				w = w + i.getWidth(getParent());
-				++x;
+				if(i != null)
+				{
+					g.drawImage(i, msg3.getX() + w, msg3.getY(), null);
+					lastX = 18;
+					w = w + i.getWidth(this);
+					++x;
+				}
+				else
+				{
+					Trace.dprint("Null Image at " + x + " in " + msg3.getWord());
+				}
 			}			
 		}
 		
@@ -201,7 +208,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 			{
 				g.drawImage(i, t.getX() + w, t.getY(), null);
 				lastX = 18;
-				w = w + i.getWidth(getParent());
+				w = w + i.getWidth(this);
 				++x;
 			}
 		}
@@ -213,7 +220,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 			int y = 0;
 			for(Image i: images)
 			{
-				g.drawImage(i, t.getX() + ((18 - i.getWidth(getParent()))/2), t.getY() + y * 18, null);
+				g.drawImage(i, t.getX() + ((18 - i.getWidth(this))/2), t.getY() + y * 18, null);
 				lastY = 18;
 				++y;
 			}
@@ -371,6 +378,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 	{
 		if((e.getX() > 320) && (e.getX() < 360) && ((e.getY() > 295) && (e.getY() < 313)))
 		{
+			owner.setResult(1);
 			Trace.dprint("YES!");
 			try {
 				displayMessage(this.owner, "","","",0);
@@ -382,6 +390,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 		
 		if((e.getX() > 364) && (e.getX() < 394) && ((e.getY() > 295) && (e.getY() < 313)))
 		{
+			owner.setResult(0);
 			Trace.dprint("NO!");
 			try {
 				displayMessage(this.owner, "","","",0);
@@ -679,13 +688,18 @@ class text
 	{
 		for(int x = 0; x < word.length(); x++)
 		{
-			if(x != ' ')
+		//	if(x != ' ')
 			{
 				char temp = word.charAt(x);
 				URL url2;
 				Image img;
-				try {
-					if(temp == ' ')
+				try 
+				{
+					if(temp == '?')
+					{
+						url2 = new URL(owner.getCodeBase(), "letters/qm.gif");
+					}
+					else if(temp == ' ')
 					{
 						url2 = new URL(owner.getCodeBase(), "letters/_.gif");
 					}

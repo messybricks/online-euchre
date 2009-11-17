@@ -17,7 +17,16 @@ public class NetClientThread extends NetworkThread
 {
 	private User associate;
 	private EuchreApplet euchreApplet;
+	private int state;
+	private String suit;
+	
 
+	public static final int GOING_ALONE = 0;
+	public static final int SET_TRUMP = 1;
+	public static final int NAMING_TRUMP = 2;
+	
+	
+	
 	/**
 	 * Creates a new instance of the NetClientThread class wrapping the given socket.
 	 * 
@@ -83,10 +92,6 @@ public class NetClientThread extends NetworkThread
 			onThrowCard(packet);
 		else if(packet.getOpcode() == Opcode.displayCard)
 			onDisplayCard(packet);
-		else if(packet.getOpcode() == Opcode.endGame)
-			onEndGame(packet);
-		else if(packet.getOpcode() == Opcode.flipDownTrump)
-			onFlipDownTrump(packet);
 		else
 			Trace.dprint("Received packet with unimplemented opcode '%s' - ignoring.", packet.getOpcode().toString());
 	}
@@ -222,22 +227,27 @@ public class NetClientThread extends NetworkThread
 	private void onRequestBid(Packet packet)
 	{
 		String suit = (String)packet.getData();
+		this.suit = suit;
+		String suit2 = "";
 		if(suit.toLowerCase().charAt(0) == 'h')
-			suit = "hearts";
+			suit2 = "hearts";
 		else if(suit.toLowerCase().charAt(0) == 'd')
-			suit = "diamonds";
+			suit2 = "diamonds";
 		else if(suit.toLowerCase().charAt(0) == 'c')
-			suit = "clubs";
+			suit2 = "clubs";
 		else if(suit.toLowerCase().charAt(0) == 's')
-			suit = "spades";
+			suit2 = "spades";
 	//	JOptionPane.showOptionDialog(euchreApplet, "Do you want " + suit + " to be trump?", "Bidding", JOptionPane.YES_NO_OPTION, 
 	//								 JOptionPane.QUESTION_MESSAGE, null, null, JOptionPane.NO_OPTION);	
 
-		int t = euchreApplet.displayYesNoMessage("Would you like " + suit + " to be trump?");
-		if(t == 1)
+		euchreApplet.displayYesNoMessage("Would you like " + suit2 + " to be trump?");
+		
+		state = SET_TRUMP;
+		
+/*		if(t == 1)
 			send(Opcode.requestBid, suit);
 		else
-			send(Opcode.requestBid, "p");
+			send(Opcode.requestBid, "p");*/
 	}
 	
 	/**
@@ -260,23 +270,25 @@ public class NetClientThread extends NetworkThread
 		if(suit.toLowerCase().charAt(0) != 's')
 			suits[i++] = "spades";
 		
-		int answer = euchreApplet.displayYesNoMessage("Would you like to name trump?");	
+		euchreApplet.displayYesNoMessage("Would you like to name trump?");	
+		
+		state = NAMING_TRUMP;
 //		JOptionPane.showOptionDialog(euchreApplet, "Would you like to name trump?", "Bidding", JOptionPane.YES_NO_OPTION, 
 //				 JOptionPane.QUESTION_MESSAGE, null,suits, JOptionPane.NO_OPTION);
 
-		int c, d, s, h;
+/*		int c, d, s, h;
 		if(answer == 1)
 		{
-			c = euchreApplet.displayYesNoMessage("Would you like Clubs to be trump?");	
+			euchreApplet.displayYesNoMessage("Would you like Clubs to be trump?");	
 			if(c == 0)
 			{
-				d = euchreApplet.displayYesNoMessage("Would you like to name Diamonds as trump?");	
+				euchreApplet.displayYesNoMessage("Would you like to name Diamonds as trump?");	
 				if(d ==  0)
 				{
-					s = euchreApplet.displayYesNoMessage("Would you like to name Spades as trump?");	
+					euchreApplet.displayYesNoMessage("Would you like to name Spades as trump?");	
 					if(s == 0)
 					{
-						h = euchreApplet.displayYesNoMessage("Naming Hearts as trump. Confirm?");
+						euchreApplet.displayYesNoMessage("Naming Hearts as trump. Confirm?");
 						if(h == 1)
 						{
 							send(Opcode.requestAlternateBid, "h");
@@ -307,6 +319,7 @@ public class NetClientThread extends NetworkThread
 		{
 			send(Opcode.requestAlternateBid, "p");
 		}
+		*/
 	}
 	
 	/**
@@ -318,7 +331,7 @@ public class NetClientThread extends NetworkThread
 	{
 		//TODO: prompt the dealer to discard a card from his/her hand	
 		
-		send(Opcode.dealerDiscard);
+		//send(Opcode.dealerDiscard);
 	}
 		
 	/**
@@ -332,11 +345,14 @@ public class NetClientThread extends NetworkThread
 //		option = JOptionPane.showOptionDialog(euchreApplet, "Would you like to go alone?", "Going Alone?", JOptionPane.YES_NO_OPTION, 
 //				 JOptionPane.QUESTION_MESSAGE, null,null, JOptionPane.NO_OPTION);
 		
-		option = euchreApplet.displayYesNoMessage("Would you like to go alone?");
-		
-		if(option == JOptionPane.YES_OPTION)
+		euchreApplet.displayYesNoMessage("Would you like to go alone?");
+		state=GOING_ALONE;
+	}
+	
+	private void goingAlone(int option){
+		if(option == 1)
 			send(Opcode.goingAlone, new Boolean(true));
-		else if(option == JOptionPane.NO_OPTION)
+		else if(option == 0)
 			send(Opcode.goingAlone, new Boolean(false));
 		else
 		{
@@ -352,42 +368,44 @@ public class NetClientThread extends NetworkThread
 	 */
 	private void onThrowCard(Packet packet)
 	{
-		//TODO: ask the player to choose and throw a card
-		//TODO: display the thrown card on everyone's screen
-		//TODO: pass the thrown card back to the EuchreEngine
+		//TODO: implement this
 	}
 	
 	/**
 	 * Processes a displayCard packet.
 	 * 
-	 * @param packet Packet to process
+	 * @param packet Packet to process//TODO seperate into another method
 	 */
 	private void onDisplayCard(Packet packet)
 	{
-		//this should receive a card
-		//TODO: display the card
+		//TODO: implement this
 	}
 	
-	/**
-	 * Processes an endGame packet.
+	/***
 	 * 
-	 * @param packet Packet to process
+	 * @param response
 	 */
-	private void onEndGame(Packet packet)
+	public void respond(int response)
 	{
-		//this should receive a Boolean, containing true if this player's team won, false if they lost.
-		//TODO: notify player
-		//TODO: offer options for playing a new game or exiting
-	}
-	
-	/**
-	 * Processes a flipDownTrump packet.
-	 * 
-	 * @param packet Packet to process
-	 */
-	private void onFlipDownTrump(Packet packet)
-	{
-		//TODO: flip down the trump card in the GUI
+		switch(state){
+			case GOING_ALONE:
+				goingAlone(response);
+				break;
+
+			case NAMING_TRUMP:
+				if(response == 1)
+					send(Opcode.requestBid, suit);
+				else
+					send(Opcode.requestBid, "p");
+				break;
+				
+			case SET_TRUMP:
+				if(response == 1)
+					send(Opcode.requestBid, suit);
+				else
+					send(Opcode.requestBid, "p");
+				break;
+		}
 	}
 	
 }

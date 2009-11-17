@@ -54,6 +54,8 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	public HashMap<String,Image> cardImages;
 	private Player player;
 	int curPlayer = 0;
+	public int result;
+	public boolean signal=false;
 	
 	// this list contains the players currently playing
 	private ArrayList<Player> playerList;
@@ -834,16 +836,16 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		return playerList;
 	}
 	
-	public int displayYesNoMessage(String txt)
+	public void displayYesNoMessage(String txt)
 	{
 		try 
 		{
 			if(txt.length() < 10)
-				return gameCanvas.displayMessage(this, txt, "", "", 1);
+				gameCanvas.displayMessage(this, txt, "", "", 1);
 			else if(txt.length() < 19)
-				return gameCanvas.displayMessage(this, txt.substring(0, 9), txt.substring(9, txt.length()), "", 1);
+				gameCanvas.displayMessage(this, txt.substring(0, 9), txt.substring(9, txt.length()), "", 1);
 			else
-				return gameCanvas.displayMessage(this, txt.substring(0, 9), txt.substring(9, 18), txt.substring(18, txt.length()), 1);
+				gameCanvas.displayMessage(this, txt.substring(0, 9), txt.substring(9, 18), txt.substring(18, txt.length()), 1);
 				
 				
 		} 
@@ -852,7 +854,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return 0;
+		
 	}
 
 	public void setUp() 
@@ -973,5 +975,13 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 				return player;
 		return null;
 	}
-
+	
+	/**
+	 * method that passes the result of a question to euchrenetclient
+	 * @param r
+	 */
+	public void setResult(int r)
+	{
+		client.sendResult(r);
+	}
 }
