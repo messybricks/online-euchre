@@ -60,40 +60,43 @@ public class NetClientThread extends NetworkThread
 	 */
 	protected void processPacket(Packet packet)
 	{
-		if(packet.getOpcode() == Opcode.Ping)
-			onPing(packet);
-		else if(packet.getOpcode() == Opcode.Quit)
-			onQuit(packet);
-		else if(packet.getOpcode() == Opcode.SendMessage)
-			onSendMessage(packet);
-		else if(packet.getOpcode() == Opcode.Auth)
-			onAuth(packet);
-		else if(packet.getOpcode() == Opcode.UpdateUsers)
-			onUpdateUsers(packet);
-		else if(packet.getOpcode() == Opcode.Rename)
-			onRename(packet);
-		else if(packet.getOpcode() == Opcode.CreatePlayer)
-			onCreatePlayer(packet);
-		else if(packet.getOpcode() == Opcode.UpdatePlayer)
-			onUpdatePlayer(packet);
-		else if(packet.getOpcode() == Opcode.RemovePlayer)
-			onRemovePlayer(packet);
-		else if(packet.getOpcode() == Opcode.GameStarting)
-			onGameStarting(packet);
-		else if(packet.getOpcode() == Opcode.requestBid)
-			onRequestBid(packet);
-		else if(packet.getOpcode() == Opcode.requestAlternateBid)
-			onRequestAlternateBid(packet);
-		else if(packet.getOpcode() == Opcode.dealerDiscard)
-			onDealerDiscard(packet);
-		else if(packet.getOpcode() == Opcode.goingAlone)
-			onGoingAlone(packet);
-		else if(packet.getOpcode() == Opcode.throwCard)
-			onThrowCard(packet);
-		else if(packet.getOpcode() == Opcode.displayCard)
-			onDisplayCard(packet);
-		else
-			Trace.dprint("Received packet with unimplemented opcode '%s' - ignoring.", packet.getOpcode().toString());
+		if(packet.getTargetGUID() == -1 || (euchreApplet.getPlayer() != null && packet.getTargetGUID() == euchreApplet.getPlayer().getGuid()))
+		{
+			if(packet.getOpcode() == Opcode.Ping)
+				onPing(packet);
+			else if(packet.getOpcode() == Opcode.Quit)
+				onQuit(packet);
+			else if(packet.getOpcode() == Opcode.SendMessage)
+				onSendMessage(packet);
+			else if(packet.getOpcode() == Opcode.Auth)
+				onAuth(packet);
+			else if(packet.getOpcode() == Opcode.UpdateUsers)
+				onUpdateUsers(packet);
+			else if(packet.getOpcode() == Opcode.Rename)
+				onRename(packet);
+			else if(packet.getOpcode() == Opcode.CreatePlayer)
+				onCreatePlayer(packet);
+			else if(packet.getOpcode() == Opcode.UpdatePlayer)
+				onUpdatePlayer(packet);
+			else if(packet.getOpcode() == Opcode.RemovePlayer)
+				onRemovePlayer(packet);
+			else if(packet.getOpcode() == Opcode.GameStarting)
+				onGameStarting(packet);
+			else if(packet.getOpcode() == Opcode.requestBid)
+				onRequestBid(packet);
+			else if(packet.getOpcode() == Opcode.requestAlternateBid)
+				onRequestAlternateBid(packet);
+			else if(packet.getOpcode() == Opcode.dealerDiscard)
+				onDealerDiscard(packet);
+			else if(packet.getOpcode() == Opcode.goingAlone)
+				onGoingAlone(packet);
+			else if(packet.getOpcode() == Opcode.throwCard)
+				onThrowCard(packet);
+			else if(packet.getOpcode() == Opcode.displayCard)
+				onDisplayCard(packet);
+			else
+				Trace.dprint("Received packet with unimplemented opcode '%s' - ignoring.", packet.getOpcode().toString());
+		}
 	}
 
 	/**
