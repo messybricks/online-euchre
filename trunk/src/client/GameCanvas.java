@@ -143,6 +143,13 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 				else
 					g.drawImage(button.get(0), 364, 295, null);
 			}
+			else if(button.size() == 5)
+			{
+				g.drawImage(button.get(0), 320, 295, null);
+				g.drawImage(button.get(1), 320, 270, null);
+				g.drawImage(button.get(2), 345, 270, null);
+				g.drawImage(button.get(3), 345, 295, null);
+			}
 		}
 		
 		if(msg != null)
@@ -550,12 +557,15 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 		
 		if(opt == 0)
 		{
+			button = new ArrayList<Image>();
+			
 			msg = null;
 			msg2 = null;
 			msg3 = null;
 		}
 		if(opt == 1)
 		{
+			button = new ArrayList<Image>();
 			
 			URL tempURL = new URL(owner.getCodeBase(), "no.gif");
 			URL tempURL2 = new URL(owner.getCodeBase(), "noo.gif");
@@ -566,6 +576,21 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 			button.add(ImageIO.read(tempURL3));
 			button.add(ImageIO.read(tempURL4));
 
+		}
+		else if(opt == 2)
+		{
+			button = new ArrayList<Image>();
+
+			URL tempURL5 = new URL(owner.getCodeBase(), "hs.gif");
+			URL tempURL6 = new URL(owner.getCodeBase(), "cs.gif");
+			URL tempURL7 = new URL(owner.getCodeBase(), "ds.gif");
+			URL tempURL8 = new URL(owner.getCodeBase(), "ss.gif");
+			
+			button.add(ImageIO.read(tempURL5));
+			button.add(ImageIO.read(tempURL6));
+			button.add(ImageIO.read(tempURL7));
+			button.add(ImageIO.read(tempURL8));
+			button.add(ImageIO.read(tempURL8));
 		}
 		
 		return opt;
