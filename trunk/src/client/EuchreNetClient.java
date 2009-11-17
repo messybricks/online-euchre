@@ -156,6 +156,13 @@ public class EuchreNetClient
 	{
 		return thread.getUser();
 	}
-
+	
+	/**
+	 * 
+	 * @param r
+	 */
+	public void sendResult(int r){
+		thread.respond(r);
+	}
 
 }
