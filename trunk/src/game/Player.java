@@ -2,10 +2,7 @@ package game;
 
 import java.io.Serializable;
 
-import utility.Opcode;
-import utility.Packet;
-import utility.Trace;
-import utility.TransactionThread;
+import utility.*;
 import chat.User;
 
 /**
@@ -184,7 +181,7 @@ public class Player implements Serializable {
 	 */
 	public void sendOpcode(Opcode opcode)
 	{
-		thread.send(opcode);
+		thread.send(opcode, new TargetedPackage(subPlayer.getGuid(), null));
 	}
 
 	
@@ -207,7 +204,7 @@ public class Player implements Serializable {
 	 */
 	public void sendData(Opcode opcode, Serializable datum)
 	{
-		thread.send(opcode, datum);
+		thread.send(opcode, new TargetedPackage(subPlayer.getGuid(), datum));
 	}
 	
 	/**

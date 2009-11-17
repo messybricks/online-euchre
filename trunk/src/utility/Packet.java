@@ -47,13 +47,29 @@ public class Packet
 	}
 
 	/**
-	 * Returns this packet's datum.
+	 * Returns this packet's datum. If the data associated with this packet is a TargetedPackage, this call will unwrap the data contained in that TargetedPackage.
 	 * 
 	 * @return this packet's datum
 	 */
 	public Serializable getData()
 	{
-		return data;
+		if(data instanceof TargetedPackage)
+			return ((TargetedPackage)data).getData();
+		else
+			return data;
+	}
+	
+	/**
+	 * Returns the GUID of the target of this packet. -1 indicates global (targeted to everybody)
+	 * 
+	 * @return the GUID of the target of this packet. -1 indicates global (targeted to everybody)
+	 */
+	public int getTargetGUID()
+	{
+		if(data instanceof TargetedPackage)
+			return ((TargetedPackage)data).getTarget();
+		else
+			return -1;
 	}
 
 	/**
