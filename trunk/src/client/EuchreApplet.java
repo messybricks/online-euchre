@@ -390,6 +390,16 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		//inputText.select(0, inputText.getText().length());
 		this.doLayout();
 		
+		try 
+		{
+			gameCanvas.displayMessage(this, "Hi!", "", "", 2);
+		} 
+		catch (IOException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 
 
 	}
