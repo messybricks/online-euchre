@@ -56,6 +56,15 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 	card playPos;
 	int openX, openY;
 	private boolean gameStarted = false;
+	private int buttons = 0;
+	boolean aOver = false;
+	boolean bOver = false;
+	boolean cOver = false;
+	boolean dOver = false;
+	boolean h = true;
+	boolean c = true;
+	boolean d = true;
+	boolean s = true;
 	
 	public void setOwner(EuchreApplet apl)
 	{		
@@ -143,12 +152,35 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 				else
 					g.drawImage(button.get(0), 364, 295, null);
 			}
-			else if(button.size() == 5)
+			else if(button.size() == 12)
 			{
-				g.drawImage(button.get(0), 320, 295, null);
-				g.drawImage(button.get(1), 320, 270, null);
-				g.drawImage(button.get(2), 345, 270, null);
-				g.drawImage(button.get(3), 345, 295, null);
+				if(!h)
+					g.drawImage(button.get(8), 320, 270, null);
+				else if(!aOver)
+					g.drawImage(button.get(0), 320, 270, null);
+				else
+					g.drawImage(button.get(4), 320, 270, null);
+				
+				if(!c)
+					g.drawImage(button.get(9), 345, 270, null);
+				else if(!bOver)
+					g.drawImage(button.get(1), 345, 270, null);
+				else
+					g.drawImage(button.get(5), 345, 270, null);
+				
+				if(!d)
+					g.drawImage(button.get(10), 320, 295, null);
+				else if(!cOver)
+					g.drawImage(button.get(2), 320, 295, null);
+				else
+					g.drawImage(button.get(6), 320, 295, null);
+				
+				if(!s)
+					g.drawImage(button.get(11), 345, 295, null);
+				else if(!dOver)
+					g.drawImage(button.get(3), 345, 295, null);
+				else
+					g.drawImage(button.get(7), 345, 295, null);
 			}
 		}
 		
@@ -362,53 +394,159 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 //		g.drawImage(button.get(1), 364, 295, null);
 //		g.drawImage(button.get(3), 320, 295, null);
 		
-		if((e.getX() > 320) && (e.getX() < 360) && ((e.getY() > 295) && (e.getY() < 313)))
+		if(buttons == 1)
 		{
-			onOver = true;
+			if((e.getX() > 320) && (e.getX() < 360) && ((e.getY() > 295) && (e.getY() < 313)))
+			{
+				onOver = true;
+			}
+			else
+				onOver = false;		
+			
+			if((e.getX() > 364) && (e.getX() < 394) && ((e.getY() > 295) && (e.getY() < 313)))
+			{
+				offOver = true;
+			}
+			else
+				offOver = false;
+			repaint();
 		}
-		else
-			onOver = false;		
-		
-		if((e.getX() > 364) && (e.getX() < 394) && ((e.getY() > 295) && (e.getY() < 313)))
+		else if(buttons == 2)
 		{
-			offOver = true;
+			if((e.getX() > 320) && (e.getX() < 340) && ((e.getY() > 270) && (e.getY() < 290)))
+			{
+				aOver = true;
+			}
+			else
+				aOver = false;
+			
+			if((e.getX() > 345) && (e.getX() < 365) && ((e.getY() > 270) && (e.getY() < 290)))
+			{
+				bOver = true;
+			}
+			else
+				bOver = false;
+			
+			if((e.getX() > 320) && (e.getX() < 340) && ((e.getY() > 295) && (e.getY() < 315)))
+			{
+				cOver = true;
+			}
+			else
+				cOver = false;
+			
+			if((e.getX() > 345) && (e.getX() < 365) && ((e.getY() > 295) && (e.getY() < 315)))
+			{
+				dOver = true;
+			}
+			else
+				dOver = false;
+			repaint();
 		}
-		else
-			offOver = false;
 
-		repaint();
 		
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) 
 	{
-		if((e.getX() > 320) && (e.getX() < 360) && ((e.getY() > 295) && (e.getY() < 313)))
+		if(buttons == 1)
 		{
-			owner.setResult(1);
-			Trace.dprint("YES!");
-			try {
-				displayMessage(this.owner, "","","",0);
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		}	
-		
-		if((e.getX() > 364) && (e.getX() < 394) && ((e.getY() > 295) && (e.getY() < 313)))
-		{
-			owner.setResult(0);
-			Trace.dprint("NO!");
-			try {
-				displayMessage(this.owner, "","","",0);
-				if(playPos != null)
+			if((e.getX() > 320) && (e.getX() < 360) && ((e.getY() > 295) && (e.getY() < 313)))
+			{
+				owner.setResult(1);
+				Trace.dprint("YES!");
+				try 
 				{
-					playPos.setX(openX);
-					playPos.setY(openY);
+					displayMessage(this.owner, "","","",0,0);
+				} 
+				catch (IOException e1) 
+				{
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+			}	
+			
+			if((e.getX() > 364) && (e.getX() < 394) && ((e.getY() > 295) && (e.getY() < 313)))
+			{
+				owner.setResult(0);
+				Trace.dprint("NO!");
+				try 
+				{
+					displayMessage(this.owner, "","","",0,0);
+					if(playPos != null)
+					{
+						playPos.setX(openX);
+						playPos.setY(openY);
+					}
+				} 
+				catch (IOException e1) 
+				{
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		}
+		else if(buttons == 2)
+		{
+			if(((e.getX() > 320) && (e.getX() < 340) && ((e.getY() > 270) && (e.getY() < 290))) && (h))
+			{
+				//owner.setResult(1);
+				Trace.dprint("Hearts");
+				try 
+				{
+					displayMessage(this.owner, "","","",0,0);
+				} 
+				catch (IOException e1) 
+				{
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+			
+			if(((e.getX() > 345) && (e.getX() < 365) && ((e.getY() > 270) && (e.getY() < 290))) && (c))
+			{
+				//owner.setResult(2);
+				Trace.dprint("Clubs");
+				try 
+				{
+					displayMessage(this.owner, "","","",0,0);
+				} 
+				catch (IOException e1) 
+				{
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+			
+			if(((e.getX() > 320) && (e.getX() < 340) && ((e.getY() > 295) && (e.getY() < 315))) && (d))
+			{
+				//owner.setResult(3);
+				Trace.dprint("Diamonds");
+				try 
+				{
+					displayMessage(this.owner, "","","",0,0);
+				} 
+				catch (IOException e1) 
+				{
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+			
+			if(((e.getX() > 345) && (e.getX() < 365) && ((e.getY() > 295) && (e.getY() < 315))) && (s))
+			{
+
+				//owner.setResult(4);
+				Trace.dprint("Spades");
+				try 
+				{
+					displayMessage(this.owner, "","","",0,0);
+				} 
+				catch (IOException e1) 
+				{
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		}
 
@@ -484,7 +622,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 							openY = origY;
 							try 
 							{
-								displayMessage(this.owner, "Play this", "card?","",1);
+								displayMessage(this.owner, "Play this", "card?","",1,0);
 							} 
 							catch (IOException e1) 
 							{
@@ -499,7 +637,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 								playPos = null;
 								try 
 								{
-									displayMessage(this.owner, "","","",0);
+									displayMessage(this.owner, "","","",0,0);
 								} catch (IOException e1) 
 								{
 									// TODO Auto-generated catch block
@@ -545,13 +683,24 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 	{
 		player = p;
 	}
-
-	public int displayMessage(EuchreApplet euchreApplet, String txt, String txt2, String txt3, int opt) throws IOException 
+	
+	/**
+	 * Displays a message on canvas
+	 * 
+	 * @param euchreApplet The euchreApplet calling this.
+	 * @param txt First line of text
+	 * @param txt2 Second line of text
+	 * @param txt3 Third line of text
+	 * @param opt 1 = Yes/No, 2 = Choose a suit
+	 * @param opt2 If opt = 1, used to determine what suit cannot be chosen. 1 = h, 2 = c, 3 = d, 4 = s
+	 */
+	public int displayMessage(EuchreApplet euchreApplet, String txt, String txt2, String txt3, int opt, int opt2) throws IOException 
 	{
 
 		msg = new text(txt, 320, 220, owner);
 		msg2 = new text(txt2, 320, 240, owner);
 		msg3 = new text(txt3, 320, 260, owner);
+		buttons = opt;
 		
 		button = new ArrayList<Image>();
 		
@@ -579,18 +728,62 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 		}
 		else if(opt == 2)
 		{
+			//1 = h, 2 = c, 3 = d, 4 = s
+			if(opt2 == 1)
+			{
+				h = false;
+				c = true;
+				d = true;
+				s = true;
+			}
+			else if(opt2 == 2)
+			{
+				c = false;
+				h = true;
+				d = true;
+				s = true;
+			}
+			else if(opt2 == 3)
+			{
+				d = false;
+				c = true;
+				h = true;
+				s = true;
+			}
+			else
+			{
+				s = false;
+				c = true;
+				d = true;
+				h = true;
+			}
 			button = new ArrayList<Image>();
 
-			URL tempURL5 = new URL(owner.getCodeBase(), "hs.gif");
-			URL tempURL6 = new URL(owner.getCodeBase(), "cs.gif");
-			URL tempURL7 = new URL(owner.getCodeBase(), "ds.gif");
-			URL tempURL8 = new URL(owner.getCodeBase(), "ss.gif");
-			
+			URL tempURL1 = new URL(owner.getCodeBase(), "hs.gif");
+			URL tempURL2 = new URL(owner.getCodeBase(), "cs.gif");
+			URL tempURL3 = new URL(owner.getCodeBase(), "ds.gif");
+			URL tempURL4 = new URL(owner.getCodeBase(), "ss.gif");
+			URL tempURL5 = new URL(owner.getCodeBase(), "hso.gif");
+			URL tempURL6 = new URL(owner.getCodeBase(), "cso.gif");
+			URL tempURL7 = new URL(owner.getCodeBase(), "dso.gif");
+			URL tempURL8 = new URL(owner.getCodeBase(), "sso.gif");
+			URL tempURL9 = new URL(owner.getCodeBase(), "hsb.gif");
+			URL tempURLa = new URL(owner.getCodeBase(), "csb.gif");
+			URL tempURLb = new URL(owner.getCodeBase(), "dsb.gif");
+			URL tempURLc = new URL(owner.getCodeBase(), "ssb.gif");
+
+			button.add(ImageIO.read(tempURL1));
+			button.add(ImageIO.read(tempURL2));
+			button.add(ImageIO.read(tempURL3));
+			button.add(ImageIO.read(tempURL4));
 			button.add(ImageIO.read(tempURL5));
 			button.add(ImageIO.read(tempURL6));
 			button.add(ImageIO.read(tempURL7));
 			button.add(ImageIO.read(tempURL8));
-			button.add(ImageIO.read(tempURL8));
+			button.add(ImageIO.read(tempURL9));
+			button.add(ImageIO.read(tempURLa));
+			button.add(ImageIO.read(tempURLb));
+			button.add(ImageIO.read(tempURLc));
 		}
 		
 		return opt;

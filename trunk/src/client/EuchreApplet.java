@@ -392,7 +392,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		
 		try 
 		{
-			gameCanvas.displayMessage(this, "Hi!", "", "", 2);
+			gameCanvas.displayMessage(this, "Choose", "a suit.", "", 2,2);
 		} 
 		catch (IOException e) 
 		{
@@ -851,11 +851,11 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		try 
 		{
 			if(txt.length() < 10)
-				gameCanvas.displayMessage(this, txt, "", "", 1);
+				gameCanvas.displayMessage(this, txt, "", "", 1,0);
 			else if(txt.length() < 19)
-				gameCanvas.displayMessage(this, txt.substring(0, 9), txt.substring(9, txt.length()), "", 1);
+				gameCanvas.displayMessage(this, txt.substring(0, 9), txt.substring(9, txt.length()), "", 1,0);
 			else
-				gameCanvas.displayMessage(this, txt.substring(0, 9), txt.substring(9, 18), txt.substring(18, txt.length()), 1);
+				gameCanvas.displayMessage(this, txt.substring(0, 9), txt.substring(9, 18), txt.substring(18, txt.length()), 1,0);
 				
 				
 		} 
