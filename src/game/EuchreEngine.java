@@ -125,7 +125,7 @@ public class EuchreEngine
 	public void receiveBid(String t)
 	{
 		//if (player accepted/named trump)
-		if (t != "p")
+		if (!t.equals("p"))
 		{
 			trump = t.charAt(0);
 			trumpNamerPID = currentPlayer().getPID();
