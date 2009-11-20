@@ -786,6 +786,8 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 			button.add(ImageIO.read(tempURLc));
 		}
 		
+		repaint();
+		
 		return opt;
 	}
 
