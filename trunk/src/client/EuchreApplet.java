@@ -390,6 +390,8 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		//inputText.select(0, inputText.getText().length());
 		this.doLayout();
 		
+		
+		/*  COMMENTED OUT BY MIKE - NOT NECESSARY
 		try 
 		{
 			gameCanvas.displayMessage(this, "Choose", "a suit.", "", 2,2);
@@ -399,7 +401,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+		*/
 
 
 	}
