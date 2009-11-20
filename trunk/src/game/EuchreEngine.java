@@ -109,7 +109,10 @@ public class EuchreEngine
 		}
 
 		//send opcode to player to request a bid
-		currentPlayer().sendData(Opcode.requestBid, "" + trumpCard.getSuit());
+		if(state >= FIFTH_BID)
+			currentPlayer().sendData(Opcode.requestAlternateBid, "" + trumpCard.getSuit());
+		else
+			currentPlayer().sendData(Opcode.requestBid, "" + trumpCard.getSuit());
 	}
 
 	/**

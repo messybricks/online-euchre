@@ -868,6 +868,27 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		}
 		
 	}
+	
+	public void displayTrumpMessage(String txt, int trumpThatCannotBe)
+	{
+		try 
+		{
+			if(txt.length() < 10)
+				gameCanvas.displayMessage(this, txt, "", "", 2,trumpThatCannotBe);
+			else if(txt.length() < 19)
+				gameCanvas.displayMessage(this, txt.substring(0, 9), txt.substring(9, txt.length()), "", 2,trumpThatCannotBe);
+			else
+				gameCanvas.displayMessage(this, txt.substring(0, 9), txt.substring(9, 18), txt.substring(18, txt.length()), 2,trumpThatCannotBe);
+				
+				
+		} 
+		catch (IOException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 
 	public void setUp() 
 	{

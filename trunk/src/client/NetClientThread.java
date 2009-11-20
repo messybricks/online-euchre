@@ -260,7 +260,7 @@ public class NetClientThread extends NetworkThread
 	 */
 	private void onRequestAlternateBid(Packet packet)
 	{
-		String suit = (String)packet.getData();
+		/*String suit = (String)packet.getData();
 		
 		String[] suits = new String[3];
 		int i = 0;
@@ -271,9 +271,27 @@ public class NetClientThread extends NetworkThread
 		if(suit.toLowerCase().charAt(0) != 'c')
 			suits[i++] = "clubs";
 		if(suit.toLowerCase().charAt(0) != 's')
-			suits[i++] = "spades";
+			suits[i++] = "spades";*/
 		
-		euchreApplet.displayYesNoMessage("Would you like to name trump?");	
+		int trumpThatCannotBe = -1;
+		
+		switch (suit.toLowerCase().charAt(0))
+		{
+		case 'h':
+			trumpThatCannotBe = 1;
+			break;
+		case 'c':
+			trumpThatCannotBe = 2;
+			break;
+		case 'd':
+			trumpThatCannotBe = 3;
+			break;
+		case 's':
+			trumpThatCannotBe = 4;
+			break;
+		}
+		
+		euchreApplet.displayTrumpMessage("Would you like to name trump?", trumpThatCannotBe);
 		
 		state = NAMING_TRUMP;
 //		JOptionPane.showOptionDialog(euchreApplet, "Would you like to name trump?", "Bidding", JOptionPane.YES_NO_OPTION, 
