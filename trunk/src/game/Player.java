@@ -154,6 +154,17 @@ public class Player implements Serializable {
 	{
 		return subPlayer.getHand().getCards();
 	}
+	
+	/**
+	 * Returns an integer representing the number of cards in this hand.
+	 * 
+	 * @return an integer representing the number of cards in this hand.
+	 * @see Hand.getNumberOfCards
+	 */
+	public int getCardCount()
+	{
+		return subPlayer.getHand().getNumberOfCards();
+	}
 		
 	/**
 	 * Gets this Player's globally unique identifier.

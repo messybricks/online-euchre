@@ -26,7 +26,7 @@ public class ServerSocketThread extends Thread implements TransactionThread
 	// ping clients every this many milliseconds to ensure connection validity
 	private static final int PING_FREQUENCY = 15000;
 	// client times out and is disconnected if a pong takes this many milliseconds
-	private static final int PING_TIMEOUT = 3000;
+	private static final int PING_TIMEOUT = 8000;
 	// wait this many milliseconds to kill a client thread peacefully
 	private static final int THREAD_KILL_TIMEOUT = 600;
 
