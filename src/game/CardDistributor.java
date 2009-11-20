@@ -40,6 +40,14 @@ public class CardDistributor {
 	 */
 	public void dealRound()
 	{
+		// must discard all cards from any previous hands. happens if no trump is chosen. - bert
+		for(byte i = 0; i < 4; ++i)
+		{
+			int cardCount = player[i].getCardCount();
+			for(byte j = 0; j < cardCount; ++j)
+				deck.add(player[i].playCard(0));
+		}
+		
 		//first way around the table.
 		for (int i = 0; i < 2; ++i)
 			player[1].pickupCard(deck.draw());
