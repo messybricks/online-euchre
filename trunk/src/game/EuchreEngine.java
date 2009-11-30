@@ -239,7 +239,9 @@ public class EuchreEngine
 		//add the card to the current trick
 		int numberOfCardsThrown = state - FIRST_PLAYER_THROWS_CARD;
 		trick[numberOfCardsThrown] = thrown;
-
+		
+		displayCard(thrown,cardDistributor.getPlayerOrder()[currentPlayerIndex].getPID());
+		
 		//throw another card
 		throwCard();
 	}
