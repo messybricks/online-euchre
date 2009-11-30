@@ -251,7 +251,8 @@ public class PacketQueueThread extends NetworkThread
 	 */
 	private void onRequestBid(Packet packet)
 	{
-		//TODO: implement this
+		stateMachine.receiveBid((String)packet.getData());
+
 	}
 	
 	/**
@@ -261,7 +262,7 @@ public class PacketQueueThread extends NetworkThread
 	 */
 	private void onRequestAlternateBid(Packet packet)
 	{
-		//TODO: implement this
+		stateMachine.receiveBid((String)packet.getData());
 	}
 	
 	/**
@@ -271,7 +272,7 @@ public class PacketQueueThread extends NetworkThread
 	 */
 	private void onDealerDiscard(Packet packet)
 	{
-		//TODO: implement this		
+		stateMachine.goingAlone();
 	}
 		
 	/**
@@ -283,7 +284,7 @@ public class PacketQueueThread extends NetworkThread
 	{
 		Boolean answer = (Boolean)packet.getData();
 		
-		//TODO: send answer to the setGoingAlone() method in EuchreEngine
+		stateMachine.setGoingAlone(answer);
 	}
 	
 	/**
@@ -294,7 +295,6 @@ public class PacketQueueThread extends NetworkThread
 	private void onThrowCard(Packet packet)
 	{
 		Card thrown = (Card)packet.getData();
-		
-		//TODO: send thrown to the receiveCard() method in EuchreEngine
+		stateMachine.receiveCard(thrown);
 	}
 }
