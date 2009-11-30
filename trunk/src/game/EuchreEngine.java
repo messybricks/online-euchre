@@ -44,7 +44,7 @@ public class EuchreEngine
 	private Card trumpCard;
 	private Card[] trick;
 	private char trump;
-	private int trumpNamerPID;
+	private int teamThatNamedTrump;
 
 	public EuchreEngine(Player dealer, Player left, Player across, Player right)
 	{
@@ -78,7 +78,7 @@ public class EuchreEngine
 		//deal this hand
 		cardDistributor.dealRound();
 		trumpCard = cardDistributor.flipTrump();
-		displayCard(trumpCard,-1);
+		displayCard(trumpCard,cardDistributor.getPlayerOrder()[CardDistributor.DEALER].getPID());
 
 
 		//player to the left of the dealer bids
@@ -131,7 +131,7 @@ public class EuchreEngine
 		if (!t.equals("p"))
 		{
 			trump = t.charAt(0);
-			trumpNamerPID = currentPlayer().getPID();
+			teamThatNamedTrump = currentPlayer().getPID() % 2;
 			if(state <= FOURTH_BID)
 			{
 				dealerDiscard();				
@@ -277,6 +277,7 @@ public class EuchreEngine
 		state = END_OF_TRICK;
 		Trace.dprint("new state: " + state);
 		Trace.dprint("player " + winner.toString() + "has won the trick.");
+		displayCard(null,0);//tell clients to clear the screen
 
 		//increment the score of tricks for the winning team
 		winner.winTrick();
@@ -302,7 +303,7 @@ public class EuchreEngine
 		Trace.dprint("new state: " + state);
 
 		//change current player to one of the players on the team that named trump
-		if(currentPlayer().getPID() != trumpNamerPID)
+		if(currentPlayer().getPID() % 2 != teamThatNamedTrump)
 			currentPlayerIndex = (currentPlayerIndex + 1) % 4;
 		
 		//if current player's team lost the round
