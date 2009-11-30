@@ -39,6 +39,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 	Image offImage;
 	Graphics offGraphics;
 	ArrayList<card> Cards;
+	ArrayList<card> CardsH;
 	ArrayList<text> words = new ArrayList<text>();
 	ArrayList<text> wordsVertical = new ArrayList<text>();
 	ArrayList<Image> button = new ArrayList<Image>();
@@ -75,8 +76,9 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 		validLocations.put(401, PLAYER_CARD_Y);
 		validLocations.put(245, 215);
 		
-		
+
 		Cards = new ArrayList<card>();
+		CardsH = new ArrayList<card>();
 		owner = apl;
 		addMouseMotionListener(this);
 		addMouseListener(this);
@@ -103,12 +105,35 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 		for(card c:Cards)
 		{
 			if(c.getSuit() == theSuit && c.getVal() == val)
+			{
 				init = true;
 				//Cards.remove(c);
+				c.setX(xPos);
+				c.setY(yPos);
+			}
 		}
 	//	if(!Cards.contains(new card(theSuit, val, xPos, yPos, owner)))
 		if(!init)
 			Cards.add(new card(theSuit, val, xPos, yPos, owner));
+		repaint();
+	}
+	
+	public void addCardH(char theSuit, int val, int xPos, int yPos)
+	{
+		boolean init = false;
+		for(card c:CardsH)
+		{
+			if(c.getSuit() == theSuit && c.getVal() == val)
+			{
+				init = true;
+				//Cards.remove(c);
+				c.setX(xPos);
+				c.setY(yPos);
+			}
+		}
+	//	if(!Cards.contains(new card(theSuit, val, xPos, yPos, owner)))
+		if(!init)
+			CardsH.add(new card(theSuit, val, xPos, yPos, owner));
 		repaint();
 	}
 
@@ -271,9 +296,20 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 			drawOtherPlayers(g);
 			
 			drawSuit(g);	
-			
+
 			for(card c: Cards)
 				g.drawImage(c.getImage(), c.getX(), c.getY(), null);
+			for(card c: CardsH)
+			{
+				Image rotatedImage = new BufferedImage(c.getImage().getHeight(null), c.getImage().getWidth(null), BufferedImage.TYPE_INT_ARGB);
+
+			    Graphics2D g2d = (Graphics2D) rotatedImage.getGraphics();
+			    g2d.rotate(Math.toRadians(90.0));
+			    g2d.drawImage(c.getImage(), 0, -rotatedImage.getWidth(null), null);
+			    g2d.dispose();
+
+				g.drawImage(rotatedImage, c.getX(), c.getY(), null);
+			}
 		}
 		else
 		{
@@ -285,6 +321,17 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 			{
 				if(c != selectedCard)
 					g.drawImage(c.getImage(), c.getX(), c.getY(), null);
+			}
+			for(card c: CardsH)
+			{
+				Image rotatedImage = new BufferedImage(c.getImage().getHeight(null), c.getImage().getWidth(null), BufferedImage.TYPE_INT_ARGB);
+
+			    Graphics2D g2d = (Graphics2D) rotatedImage.getGraphics();
+			    g2d.rotate(Math.toRadians(90.0));
+			    g2d.drawImage(c.getImage(), 0, -rotatedImage.getWidth(null), null);
+			    g2d.dispose();
+
+				g.drawImage(rotatedImage, c.getX(), c.getY(), null);
 			}
 			g.drawImage(selectedCard.getImage(), selectedCard.getX(), selectedCard.getY(), null);
 		}		
@@ -802,7 +849,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 		{
 			int size = player2.getCards().length;
 			Card[] cards = player2.getCards();
-			cards[0].getSuit();
+			//cards[0].getSuit(); i don't think this belongs here - bert
 			
 			if(size > 0)
 			{
