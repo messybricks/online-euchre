@@ -60,6 +60,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	// this list contains the players currently playing
 	private ArrayList<Player> playerList;
 	private ArrayList<Player> otherTeam = new ArrayList<Player>();
+	Player p1, p2, p3;
 
 	
 	
@@ -294,7 +295,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 			if(username == null)
 				System.exit(ABORT);
 		}
-
+		
 		//initialize user
 		initializeUser(username);
 	}
@@ -889,6 +890,27 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		}
 		
 	}
+	
+	public void displayCard(int PID, Card c)
+	{
+		if(c == null)
+		{
+//			TODO: implement gameCanvas.clear()
+//			gameCanvas.clear();
+		}
+		else
+		{
+			Trace.dprint("P1: %d P2: %d P3: %d; PID: %d", p1.getPID(), p2.getPID(), p3.getPID(), PID);
+			if(p1.getPID() == PID)
+				gameCanvas.addCardH(c.getSuit(), c.getValue(), 148, 140);
+			else if(p2.getPID() == PID)
+				gameCanvas.addCard(c.getSuit(), c.getValue(), 245, 38);
+			else if(p3.getPID() == PID)
+				gameCanvas.addCardH(c.getSuit(), c.getValue(), 320, 140);
+			else
+				gameCanvas.addCard(c.getSuit(), c.getValue(), 245, 215);
+		}
+	}
 
 	public void setUp() 
 	{
@@ -992,10 +1014,13 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 			}*/
 			
 			int current = player.getPID() % 4 + 1;
+			p1 = getPlayerByPID(current);
 			gameCanvas.drawTextVertical(getPlayerByPID(current).getUsername(), 60, 110);
 			current = current % 4 + 1;
+			p2 = getPlayerByPID(current);
 			gameCanvas.drawText(getPlayerByPID(current).getUsername(), 85, 40);
 			current = current % 4 + 1;
+			p3 = getPlayerByPID(current);
 			gameCanvas.drawTextVertical(getPlayerByPID(current).getUsername(), 480, 302 - (18 * getPlayerByPID(current).getUsername().length()));
 		}
 	

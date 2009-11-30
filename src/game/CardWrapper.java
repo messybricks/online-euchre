@@ -4,11 +4,21 @@ import java.io.Serializable;
 
 public class CardWrapper implements Serializable 
 {
-	public Card card;
-	public int player;
+	private Card card;
+	private int player;
 	public CardWrapper(Card c,int p)
 	{
 		card=c;
 		player=p;
+	}
+	
+	public Card getCard()
+	{
+		return card;
+	}
+	
+	public int getPID()
+	{
+		return player;
 	}
 }

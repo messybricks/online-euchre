@@ -399,7 +399,8 @@ public class NetClientThread extends NetworkThread
 	 */
 	private void onDisplayCard(Packet packet)
 	{
-		//TODO: implement this
+		CardWrapper cw = (CardWrapper)packet.getData();
+		euchreApplet.displayCard(cw.getPID(), cw.getCard());
 	}
 	
 	/***
