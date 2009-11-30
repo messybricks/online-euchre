@@ -78,7 +78,7 @@ public class EuchreEngine
 		//deal this hand
 		cardDistributor.dealRound();
 		trumpCard = cardDistributor.flipTrump();
-		displayCard(trumpCard);
+		displayCard(trumpCard,-1);
 
 
 		//player to the left of the dealer bids
@@ -349,12 +349,13 @@ public class EuchreEngine
 	 * sends an opcode to each player to display a card on the screen
 	 * 
 	 * @param card the card to be displayed
+	 * @param player the player who threw the card, -1 if it is for the kitty
 	 */
-	private void displayCard(Card card)
+	private void displayCard(Card card,int player)
 	{
 		for (int i = 0; i < 4; i++)
 		{
-			cardDistributor.getPlayerOrder()[i].sendData(Opcode.displayCard, card);
+			cardDistributor.getPlayerOrder()[i].sendData(Opcode.displayCard, new CardWrapper(card,player));
 		}
 	}
 
