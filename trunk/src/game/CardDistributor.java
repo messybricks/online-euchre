@@ -92,11 +92,11 @@ public class CardDistributor {
 	public void nextRound()
 	{
 		//rotate the dealer and respective players.
-		Player temp = player[3];
-		
-		for (int i = 3; i > 0; --i)
-			player[i] = player[i-1];
-		player[0] = temp;
+		Player oldDealer = player[0];
+		player[0] = player[1];
+		player[1] = player[2];
+		player[2] = player[3];
+		player[3] = oldDealer;
 	}
 	
 	/**
