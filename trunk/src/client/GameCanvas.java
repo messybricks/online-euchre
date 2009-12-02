@@ -832,8 +832,8 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 	 * @param txt First line of text
 	 * @param txt2 Second line of text
 	 * @param txt3 Third line of text
-	 * @param opt 1 = Yes/No, 2 = Choose a suit
-	 * @param opt2 If opt = 1, used to determine what suit cannot be chosen. 1 = h, 2 = c, 3 = d, 4 = s
+	 * @param opt 1 = Yes/No, 2 = Choose a suit, 3 = No buttons
+	 * @param opt2 If opt = 2, used to determine what suit cannot be chosen. 1 = h, 2 = c, 3 = d, 4 = s
 	 */
 	public int displayMessage(EuchreApplet euchreApplet, String txt, String txt2, String txt3, int opt, int opt2) throws IOException 
 	{	

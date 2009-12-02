@@ -849,6 +849,48 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		return playerList;
 	}
 	
+	public void displayMessage(String txt)
+	{
+		int lineLimit = 12;
+		try 
+		{
+			if(txt.length() < lineLimit)
+				gameCanvas.displayMessage(this, txt, "", "", 1,3);
+			else if(txt.length() < lineLimit * 2)
+			{
+				int endLoc1 = lineLimit - 1;
+				while(!((txt.charAt(endLoc1) == ' ') || (txt.charAt(endLoc1 - 1) == ' ')))
+					endLoc1--;
+				int start = endLoc1;
+				while(txt.charAt(start) == ' ')
+					start++;
+				gameCanvas.displayMessage(this, txt.substring(0, endLoc1), txt.substring(start, txt.length()), "", 1,3);
+			}
+			else
+			{
+				int endLoc1 = lineLimit - 1;
+				int endLoc2 = (lineLimit * 2) - 1;
+				while(!((txt.charAt(endLoc1) == ' ') || (txt.charAt(endLoc1 - 1) == ' ')))
+					endLoc1--;
+				int start = endLoc1;
+				while(txt.charAt(start) == ' ')
+					start++;
+				while(!((txt.charAt(endLoc2) == ' ') || (txt.charAt(endLoc2 - 1) == ' ')))
+					endLoc2--;
+				int start2 = endLoc2;
+				while(txt.charAt(start2) == ' ')
+					start2++;
+				gameCanvas.displayMessage(this, txt.substring(0, endLoc1), txt.substring(start, endLoc2), txt.substring(start2, txt.length()), 3,0);
+			}
+				
+		} 
+		catch (IOException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public void displayYesNoMessage(String txt)
 	{
 		int lineLimit = 12;
