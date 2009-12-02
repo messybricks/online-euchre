@@ -1063,4 +1063,12 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	{
 		client.sendResult(r);
 	}
+	
+	/**
+	 * accessor method for the gamestate
+	 * @return the last known gamestate
+	 */
+	public int getState(){
+		return client.getState();
+	}
 }
