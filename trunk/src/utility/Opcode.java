@@ -34,7 +34,7 @@ public enum Opcode
 	goingAlone,
 	throwCard,
 	displayCard,
-	flipDownTrump,
+	//flipDownTrump, display card with a null card does the same thing
 	endGame;
 
 	/**
