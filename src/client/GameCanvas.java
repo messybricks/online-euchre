@@ -182,31 +182,52 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 				else
 					g.drawImage(button.get(0), 364, 295, null);
 			}
-			else if(button.size() == 12)
+			else if(button.size() == 10)
 			{
 				if(!h)
-					g.drawImage(button.get(8), 320, 270, null);
+				{
+					if(!aOver)
+						g.drawImage(button.get(8), 370, 295, null);
+					else
+						g.drawImage(button.get(9), 370, 295, null);
+				}
 				else if(!aOver)
-					g.drawImage(button.get(0), 320, 270, null);
+					g.drawImage(button.get(0), 370, 295, null);
 				else
-					g.drawImage(button.get(4), 320, 270, null);
+					g.drawImage(button.get(4), 370, 295, null);
+				
 				
 				if(!c)
-					g.drawImage(button.get(9), 345, 270, null);
+				{
+					if(!bOver)
+						g.drawImage(button.get(8), 395, 295, null);
+					else
+						g.drawImage(button.get(9), 395, 295, null);
+				}
 				else if(!bOver)
-					g.drawImage(button.get(1), 345, 270, null);
+					g.drawImage(button.get(1), 395, 295, null);
 				else
-					g.drawImage(button.get(5), 345, 270, null);
+					g.drawImage(button.get(5), 395, 295, null);
 				
 				if(!d)
-					g.drawImage(button.get(10), 320, 295, null);
+				{
+					if(!cOver)
+						g.drawImage(button.get(8), 320, 295, null);
+					else
+						g.drawImage(button.get(9), 320, 295, null);
+				}
 				else if(!cOver)
 					g.drawImage(button.get(2), 320, 295, null);
 				else
 					g.drawImage(button.get(6), 320, 295, null);
 				
 				if(!s)
-					g.drawImage(button.get(11), 345, 295, null);
+				{
+					if(!dOver)
+						g.drawImage(button.get(8), 345, 295, null);
+					else
+						g.drawImage(button.get(9), 345, 295, null);
+				}
 				else if(!dOver)
 					g.drawImage(button.get(3), 345, 295, null);
 				else
@@ -465,14 +486,14 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 		}
 		else if(buttons == 2)
 		{
-			if((e.getX() > 320) && (e.getX() < 340) && ((e.getY() > 270) && (e.getY() < 290)))
+			if((e.getX() > 370) && (e.getX() < 390) && ((e.getY() > 295) && (e.getY() < 315)))
 			{
 				aOver = true;
 			}
 			else
 				aOver = false;
 			
-			if((e.getX() > 345) && (e.getX() < 365) && ((e.getY() > 270) && (e.getY() < 290)))
+			if((e.getX() > 395) && (e.getX() < 415) && ((e.getY() > 295) && (e.getY() < 315)))
 			{
 				bOver = true;
 			}
@@ -540,64 +561,131 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 		}
 		else if(buttons == 2)
 		{
-			if(((e.getX() > 320) && (e.getX() < 340) && ((e.getY() > 270) && (e.getY() < 290))) && (h))
+			if(((e.getX() > 370) && (e.getX() < 390) && ((e.getY() > 295) && (e.getY() < 315))))
 			{
-				owner.setResult(1);
-				Trace.dprint("Hearts");
-				try 
+				if(h)
 				{
-					displayMessage(this.owner, "","","",0,0);
-				} 
-				catch (IOException e1) 
+					owner.setResult(1);
+					Trace.dprint("Hearts");
+					try 
+					{
+						displayMessage(this.owner, "","","",0,0);
+					} 
+					catch (IOException e1) 
+					{
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				else
 				{
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					owner.setResult(0);
+					Trace.dprint("Pass");
+					try 
+					{
+						displayMessage(this.owner, "","","",0,0);
+					} 
+					catch (IOException e1) 
+					{
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
 			}
 			
-			if(((e.getX() > 345) && (e.getX() < 365) && ((e.getY() > 270) && (e.getY() < 290))) && (c))
+			if(((e.getX() > 395) && (e.getX() < 415) && ((e.getY() > 295) && (e.getY() < 315))))
 			{
-				owner.setResult(2);
-				Trace.dprint("Clubs");
-				try 
+				if(c)
 				{
-					displayMessage(this.owner, "","","",0,0);
-				} 
-				catch (IOException e1) 
+					owner.setResult(2);
+					Trace.dprint("Clubs");
+					try 
+					{
+						displayMessage(this.owner, "","","",0,0);
+					} 
+					catch (IOException e1) 
+					{
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				else
 				{
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					owner.setResult(0);
+					Trace.dprint("Pass");
+					try 
+					{
+						displayMessage(this.owner, "","","",0,0);
+					} 
+					catch (IOException e1) 
+					{
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
 			}
 			
-			if(((e.getX() > 320) && (e.getX() < 340) && ((e.getY() > 295) && (e.getY() < 315))) && (d))
+			if(((e.getX() > 320) && (e.getX() < 340) && ((e.getY() > 295) && (e.getY() < 315))))
 			{
-				owner.setResult(3);
-				Trace.dprint("Diamonds");
-				try 
+				if(d)
 				{
-					displayMessage(this.owner, "","","",0,0);
-				} 
-				catch (IOException e1) 
+					owner.setResult(3);
+					Trace.dprint("Diamonds");
+					try 
+					{
+						displayMessage(this.owner, "","","",0,0);
+					} 
+					catch (IOException e1) 
+					{
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				else
 				{
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					owner.setResult(0);
+					Trace.dprint("Pass");
+					try 
+					{
+						displayMessage(this.owner, "","","",0,0);
+					} 
+					catch (IOException e1) 
+					{
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
 			}
 			
-			if(((e.getX() > 345) && (e.getX() < 365) && ((e.getY() > 295) && (e.getY() < 315))) && (s))
+			if(((e.getX() > 345) && (e.getX() < 365) && ((e.getY() > 295) && (e.getY() < 315))))
 			{
-
-				owner.setResult(4);
-				Trace.dprint("Spades");
-				try 
+				if(s)
 				{
-					displayMessage(this.owner, "","","",0,0);
-				} 
-				catch (IOException e1) 
+					owner.setResult(4);
+					Trace.dprint("Spades");
+					try 
+					{
+						displayMessage(this.owner, "","","",0,0);
+					} 
+					catch (IOException e1) 
+					{
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				else
 				{
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					owner.setResult(0);
+					Trace.dprint("Pass");
+					try 
+					{
+						displayMessage(this.owner, "","","",0,0);
+					} 
+					catch (IOException e1) 
+					{
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
 			}
 		}
@@ -821,10 +909,8 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 				URL tempURL6 = new URL(owner.getCodeBase(), "cso.gif");
 				URL tempURL7 = new URL(owner.getCodeBase(), "dso.gif");
 				URL tempURL8 = new URL(owner.getCodeBase(), "sso.gif");
-				URL tempURL9 = new URL(owner.getCodeBase(), "hsb.gif");
-				URL tempURLa = new URL(owner.getCodeBase(), "csb.gif");
-				URL tempURLb = new URL(owner.getCodeBase(), "dsb.gif");
-				URL tempURLc = new URL(owner.getCodeBase(), "ssb.gif");
+				URL tempURLd = new URL(owner.getCodeBase(), "p.gif");
+				URL tempURLe = new URL(owner.getCodeBase(), "po.gif");
 	
 				button.add(ImageIO.read(tempURL1));
 				button.add(ImageIO.read(tempURL2));
@@ -834,10 +920,8 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 				button.add(ImageIO.read(tempURL6));
 				button.add(ImageIO.read(tempURL7));
 				button.add(ImageIO.read(tempURL8));
-				button.add(ImageIO.read(tempURL9));
-				button.add(ImageIO.read(tempURLa));
-				button.add(ImageIO.read(tempURLb));
-				button.add(ImageIO.read(tempURLc));
+				button.add(ImageIO.read(tempURLd));
+				button.add(ImageIO.read(tempURLe));
 			}
 		}
 		
