@@ -851,15 +851,37 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	
 	public void displayYesNoMessage(String txt)
 	{
+		int lineLimit = 12;
 		try 
 		{
-			if(txt.length() < 10)
+			if(txt.length() < lineLimit)
 				gameCanvas.displayMessage(this, txt, "", "", 1,0);
-			else if(txt.length() < 19)
-				gameCanvas.displayMessage(this, txt.substring(0, 9), txt.substring(9, txt.length()), "", 1,0);
+			else if(txt.length() < lineLimit * 2)
+			{
+				int endLoc1 = lineLimit - 1;
+				while(!((txt.charAt(endLoc1) == ' ') || (txt.charAt(endLoc1 - 1) == ' ')))
+					endLoc1--;
+				int start = endLoc1;
+				while(txt.charAt(start) == ' ')
+					start++;
+				gameCanvas.displayMessage(this, txt.substring(0, endLoc1), txt.substring(start, txt.length()), "", 1,0);
+			}
 			else
-				gameCanvas.displayMessage(this, txt.substring(0, 9), txt.substring(9, 18), txt.substring(18, txt.length()), 1,0);
-				
+			{
+				int endLoc1 = lineLimit - 1;
+				int endLoc2 = (lineLimit * 2) - 1;
+				while(!((txt.charAt(endLoc1) == ' ') || (txt.charAt(endLoc1 - 1) == ' ')))
+					endLoc1--;
+				int start = endLoc1;
+				while(txt.charAt(start) == ' ')
+					start++;
+				while(!((txt.charAt(endLoc2) == ' ') || (txt.charAt(endLoc2 - 1) == ' ')))
+					endLoc2--;
+				int start2 = endLoc2;
+				while(txt.charAt(start2) == ' ')
+					start2++;
+				gameCanvas.displayMessage(this, txt.substring(0, endLoc1), txt.substring(start, endLoc2), txt.substring(start2, txt.length()), 1,0);
+			}
 				
 		} 
 		catch (IOException e) 
@@ -893,10 +915,9 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	
 	public void displayCard(int PID, Card c)
 	{
-		if(c == null)
+		if(Card.ifNull(c))
 		{
-//			TODO: implement gameCanvas.clear()
-//			gameCanvas.clear();
+			gameCanvas.clear();
 		}
 		else
 		{

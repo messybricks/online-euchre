@@ -26,6 +26,11 @@ import utility.Trace;
 public class GameCanvas extends Canvas implements MouseMotionListener, MouseListener
 {
 	final int PLAYER_CARD_Y = 320;
+	final int PLAYER_X1 = 85;
+	final int PLAYER_X2 = 164;
+	final int PLAYER_X3 = 244;
+	final int PLAYER_X4 = 322;
+	final int PLAYER_X5 = 401;
 	EuchreApplet owner;
 	int ex = 10;
 	int why = 10;
@@ -625,6 +630,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 			{
 				if((e.getY() > c.getY()) && (e.getY() < c.getY() + 96))
 				{
+//					TODO: implement gameCanvas.clear()
 					xCon = e.getX() - c.getX();
 					yCon = e.getY() - c.getY();
 					cardSelected = true;
@@ -742,15 +748,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 	 * @param opt2 If opt = 1, used to determine what suit cannot be chosen. 1 = h, 2 = c, 3 = d, 4 = s
 	 */
 	public int displayMessage(EuchreApplet euchreApplet, String txt, String txt2, String txt3, int opt, int opt2) throws IOException 
-	{
-
-		msg = new text(txt, 320, 220, owner);
-		msg2 = new text(txt2, 320, 240, owner);
-		msg3 = new text(txt3, 320, 260, owner);
-		buttons = opt;
-		
-		button = new ArrayList<Image>();
-		
+	{	
 		if(opt == 0)
 		{
 			button = new ArrayList<Image>();
@@ -759,78 +757,88 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 			msg2 = null;
 			msg3 = null;
 		}
-		if(opt == 1)
+		else
 		{
+			msg = new text(txt, 320, 220, owner);
+			msg2 = new text(txt2, 320, 240, owner);
+			msg3 = new text(txt3, 320, 260, owner);
+			buttons = opt;
+			
 			button = new ArrayList<Image>();
 			
-			URL tempURL = new URL(owner.getCodeBase(), "no.gif");
-			URL tempURL2 = new URL(owner.getCodeBase(), "noo.gif");
-			URL tempURL3 = new URL(owner.getCodeBase(), "yes.gif");
-			URL tempURL4 = new URL(owner.getCodeBase(), "yeso.gif");
-			button.add(ImageIO.read(tempURL));
-			button.add(ImageIO.read(tempURL2));
-			button.add(ImageIO.read(tempURL3));
-			button.add(ImageIO.read(tempURL4));
-
-		}
-		else if(opt == 2)
-		{
-			//1 = h, 2 = c, 3 = d, 4 = s
-			if(opt2 == 1)
+			if(opt == 1)
 			{
-				h = false;
-				c = true;
-				d = true;
-				s = true;
+				button = new ArrayList<Image>();
+				
+				URL tempURL = new URL(owner.getCodeBase(), "no.gif");
+				URL tempURL2 = new URL(owner.getCodeBase(), "noo.gif");
+				URL tempURL3 = new URL(owner.getCodeBase(), "yes.gif");
+				URL tempURL4 = new URL(owner.getCodeBase(), "yeso.gif");
+				button.add(ImageIO.read(tempURL));
+				button.add(ImageIO.read(tempURL2));
+				button.add(ImageIO.read(tempURL3));
+				button.add(ImageIO.read(tempURL4));
+	
 			}
-			else if(opt2 == 2)
+			else if(opt == 2)
 			{
-				c = false;
-				h = true;
-				d = true;
-				s = true;
+				//1 = h, 2 = c, 3 = d, 4 = s
+				if(opt2 == 1)
+				{
+					h = false;
+					c = true;
+					d = true;
+					s = true;
+				}
+				else if(opt2 == 2)
+				{
+					c = false;
+					h = true;
+					d = true;
+					s = true;
+				}
+				else if(opt2 == 3)
+				{
+					d = false;
+					c = true;
+					h = true;
+					s = true;
+				}
+				else
+				{
+					s = false;
+					c = true;
+					d = true;
+					h = true;
+				}
+				button = new ArrayList<Image>();
+	
+				URL tempURL1 = new URL(owner.getCodeBase(), "hs.gif");
+				URL tempURL2 = new URL(owner.getCodeBase(), "cs.gif");
+				URL tempURL3 = new URL(owner.getCodeBase(), "ds.gif");
+				URL tempURL4 = new URL(owner.getCodeBase(), "ss.gif");
+				URL tempURL5 = new URL(owner.getCodeBase(), "hso.gif");
+				URL tempURL6 = new URL(owner.getCodeBase(), "cso.gif");
+				URL tempURL7 = new URL(owner.getCodeBase(), "dso.gif");
+				URL tempURL8 = new URL(owner.getCodeBase(), "sso.gif");
+				URL tempURL9 = new URL(owner.getCodeBase(), "hsb.gif");
+				URL tempURLa = new URL(owner.getCodeBase(), "csb.gif");
+				URL tempURLb = new URL(owner.getCodeBase(), "dsb.gif");
+				URL tempURLc = new URL(owner.getCodeBase(), "ssb.gif");
+	
+				button.add(ImageIO.read(tempURL1));
+				button.add(ImageIO.read(tempURL2));
+				button.add(ImageIO.read(tempURL3));
+				button.add(ImageIO.read(tempURL4));
+				button.add(ImageIO.read(tempURL5));
+				button.add(ImageIO.read(tempURL6));
+				button.add(ImageIO.read(tempURL7));
+				button.add(ImageIO.read(tempURL8));
+				button.add(ImageIO.read(tempURL9));
+				button.add(ImageIO.read(tempURLa));
+				button.add(ImageIO.read(tempURLb));
+				button.add(ImageIO.read(tempURLc));
 			}
-			else if(opt2 == 3)
-			{
-				d = false;
-				c = true;
-				h = true;
-				s = true;
-			}
-			else
-			{
-				s = false;
-				c = true;
-				d = true;
-				h = true;
-			}
-			button = new ArrayList<Image>();
-
-			URL tempURL1 = new URL(owner.getCodeBase(), "hs.gif");
-			URL tempURL2 = new URL(owner.getCodeBase(), "cs.gif");
-			URL tempURL3 = new URL(owner.getCodeBase(), "ds.gif");
-			URL tempURL4 = new URL(owner.getCodeBase(), "ss.gif");
-			URL tempURL5 = new URL(owner.getCodeBase(), "hso.gif");
-			URL tempURL6 = new URL(owner.getCodeBase(), "cso.gif");
-			URL tempURL7 = new URL(owner.getCodeBase(), "dso.gif");
-			URL tempURL8 = new URL(owner.getCodeBase(), "sso.gif");
-			URL tempURL9 = new URL(owner.getCodeBase(), "hsb.gif");
-			URL tempURLa = new URL(owner.getCodeBase(), "csb.gif");
-			URL tempURLb = new URL(owner.getCodeBase(), "dsb.gif");
-			URL tempURLc = new URL(owner.getCodeBase(), "ssb.gif");
-
-			button.add(ImageIO.read(tempURL1));
-			button.add(ImageIO.read(tempURL2));
-			button.add(ImageIO.read(tempURL3));
-			button.add(ImageIO.read(tempURL4));
-			button.add(ImageIO.read(tempURL5));
-			button.add(ImageIO.read(tempURL6));
-			button.add(ImageIO.read(tempURL7));
-			button.add(ImageIO.read(tempURL8));
-			button.add(ImageIO.read(tempURL9));
-			button.add(ImageIO.read(tempURLa));
-			button.add(ImageIO.read(tempURLb));
-			button.add(ImageIO.read(tempURLc));
 		}
 		
 		repaint();
@@ -876,6 +884,34 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 	public void setGameStarted(boolean start)
 	{
 		gameStarted = start;
+	}
+
+	public void clear() 
+	{
+		try 
+		{
+			displayMessage(null, null, null, null, 0, 0);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Cards.clear();
+		CardsH.clear();
+		Card[] tempCards = player.getCards();
+		int x2 = PLAYER_X1;
+		for(int x = 0; x < tempCards.length; x++)
+		{
+			Cards.add(new card(tempCards[x].getSuit(), tempCards[x].getValue(), x2, PLAYER_CARD_Y, owner));
+			if(x2 == PLAYER_X1)
+				x2 = PLAYER_X2;
+			else if(x2 == PLAYER_X2)
+				x2 = PLAYER_X3;
+			else if(x2 == PLAYER_X3)
+				x2 = PLAYER_X4;
+			else if(x2 == PLAYER_X4)
+				x2 = PLAYER_X5;
+		}
+		repaint();
 	}
 
 }
