@@ -52,7 +52,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	private String userName;
 	boolean drawn = false;
 	public HashMap<String,Image> cardImages;
-	private Player player;
+	public Player player;
 	int curPlayer = 0;
 	public int result;
 	public boolean signal=false;

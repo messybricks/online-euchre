@@ -526,7 +526,33 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 		{
 			if((e.getX() > 320) && (e.getX() < 360) && ((e.getY() > 295) && (e.getY() < 313)))
 			{
-				owner.setResult(1);
+				
+				
+				if(owner.getState()==NetClientThread.Dealer_Discard)
+				{
+					card temp =null;
+					for(card c:Cards)
+					{
+						if((c.getX() == 245) && (c.getY() == 215))
+						{
+							temp = c;
+							break;
+						}
+					}
+					int t=-1;
+					for(int x =0;x < player.getCards().length;x++)
+						if(player.getCards()[x].getSuit()==temp.getSuit() && player.getCards()[x].getValue()==temp.getVal())
+						{
+							t=x;
+							break;
+						}
+					
+					player.playCard(t);
+					//TODO check if t is the card that was picked up
+					owner.setResult(1);
+				}
+				else
+					owner.setResult(1);
 				Trace.dprint("YES!");
 				try 
 				{
@@ -763,7 +789,10 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 							openY = origY;
 							try 
 							{
-								displayMessage(this.owner, "Play this", "card?","",1,0);
+								if(owner.getState()==NetClientThread.Dealer_Discard)
+									displayMessage(this.owner, "Discard this", "card?","",1,0);
+								else
+									displayMessage(this.owner, "Play this", "card?","",1,0);
 							} 
 							catch (IOException e1) 
 							{

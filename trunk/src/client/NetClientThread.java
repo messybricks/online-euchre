@@ -352,7 +352,7 @@ public class NetClientThread extends NetworkThread
 	 */
 	private void onDealerDiscard(Packet packet)
 	{
-		//prompt user to discard a card
+		euchreApplet.displayMessage("discard a card");
 		state=Dealer_Discard;
 	}
 		
@@ -413,6 +413,7 @@ public class NetClientThread extends NetworkThread
 		switch(state){
 			case GOING_ALONE:
 				goingAlone(response);
+				state=-1;
 				break;
 
 			case NAMING_TRUMP:
@@ -426,6 +427,7 @@ public class NetClientThread extends NetworkThread
 					send(Opcode.requestBid, "s");
 				else
 					send(Opcode.requestBid, "p");
+				state=-1;
 				break;
 				
 			case SET_TRUMP:
@@ -433,10 +435,15 @@ public class NetClientThread extends NetworkThread
 					send(Opcode.requestBid, suit);
 				else
 					send(Opcode.requestBid, "p");
+				state=-1;
 				break;
+				
 			case Dealer_Discard:
 				if(response ==1)
+				{
 					send(Opcode.dealerDiscard);
+					state=-1;
+				}
 				break;
 		}
 	}
