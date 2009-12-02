@@ -542,7 +542,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 		{
 			if(((e.getX() > 320) && (e.getX() < 340) && ((e.getY() > 270) && (e.getY() < 290))) && (h))
 			{
-				//owner.setResult(1);
+				owner.setResult(1);
 				Trace.dprint("Hearts");
 				try 
 				{
@@ -557,7 +557,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 			
 			if(((e.getX() > 345) && (e.getX() < 365) && ((e.getY() > 270) && (e.getY() < 290))) && (c))
 			{
-				//owner.setResult(2);
+				owner.setResult(2);
 				Trace.dprint("Clubs");
 				try 
 				{
@@ -572,7 +572,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 			
 			if(((e.getX() > 320) && (e.getX() < 340) && ((e.getY() > 295) && (e.getY() < 315))) && (d))
 			{
-				//owner.setResult(3);
+				owner.setResult(3);
 				Trace.dprint("Diamonds");
 				try 
 				{
@@ -588,7 +588,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 			if(((e.getX() > 345) && (e.getX() < 365) && ((e.getY() > 295) && (e.getY() < 315))) && (s))
 			{
 
-				//owner.setResult(4);
+				owner.setResult(4);
 				Trace.dprint("Spades");
 				try 
 				{

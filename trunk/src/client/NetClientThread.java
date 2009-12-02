@@ -416,7 +416,13 @@ public class NetClientThread extends NetworkThread
 
 			case NAMING_TRUMP:
 				if(response == 1)
-					send(Opcode.requestBid, suit);
+					send(Opcode.requestBid, "h");
+				else if(response==2)
+					send(Opcode.requestBid, "c");
+				else if(response==3)
+					send(Opcode.requestBid, "d");
+				else if(response==4)
+					send(Opcode.requestBid, "s");
 				else
 					send(Opcode.requestBid, "p");
 				break;
