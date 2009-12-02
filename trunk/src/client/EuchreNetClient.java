@@ -165,4 +165,8 @@ public class EuchreNetClient
 		thread.respond(r);
 	}
 
+	public int getState()
+	{
+		return thread.getGameState();
+	}
 }

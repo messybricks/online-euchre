@@ -24,6 +24,8 @@ public class NetClientThread extends NetworkThread
 	public static final int GOING_ALONE = 0;
 	public static final int SET_TRUMP = 1;
 	public static final int NAMING_TRUMP = 2;
+	public static final int Dealer_Discard = 3;
+
 	
 	
 	
@@ -350,9 +352,8 @@ public class NetClientThread extends NetworkThread
 	 */
 	private void onDealerDiscard(Packet packet)
 	{
-		//TODO: prompt the dealer to discard a card from his/her hand	
-		
-		//send(Opcode.dealerDiscard);
+		//prompt user to discard a card
+		state=Dealer_Discard;
 	}
 		
 	/**
@@ -395,7 +396,7 @@ public class NetClientThread extends NetworkThread
 	/**
 	 * Processes a displayCard packet.
 	 * 
-	 * @param packet Packet to process//TODO seperate into another method
+	 * @param packet Packet to process
 	 */
 	private void onDisplayCard(Packet packet)
 	{
@@ -433,7 +434,19 @@ public class NetClientThread extends NetworkThread
 				else
 					send(Opcode.requestBid, "p");
 				break;
+			case Dealer_Discard:
+				if(response ==1)
+					send(Opcode.dealerDiscard);
+				break;
 		}
 	}
 	
+	/**
+	 * accessor method for state 
+	 * @return the last known gamestate
+	 */
+	public int getGameState()
+	{
+		return state;
+	}
 }
