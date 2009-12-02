@@ -105,7 +105,7 @@ public class EuchreEngine
 		{
 			//send an opcode to each player to show that the trump card is flipped down
 			for(int i = 0; i<4; i++)
-				cardDistributor.getPlayerOrder()[i].sendOpcode(Opcode.flipDownTrump);
+				cardDistributor.getPlayerOrder()[i].sendData(Opcode.displayCard, Card.nullCard());
 		}
 
 		//send opcode to player to request a bid
