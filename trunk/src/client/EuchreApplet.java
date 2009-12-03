@@ -814,6 +814,21 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	}
 	
 	/**
+	 * This method gets called to close the applet gracefully when the game finishes.
+	 * 
+	 * @param win True if the player has won; false if he has lost
+	 */
+	public void onGameOver(Boolean win)
+	{
+		if(win)
+			JOptionPane.showMessageDialog(this, "Congratulations, you've won the game!", "Game Over", JOptionPane.INFORMATION_MESSAGE);
+		else
+			JOptionPane.showMessageDialog(this, "You lost.", "Game Over", JOptionPane.INFORMATION_MESSAGE);
+		
+		System.exit(0);
+	}
+	
+	/**
 	 * Adds a player to this UI's player list.
 	 * 
 	 * @param player Player to add
