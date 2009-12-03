@@ -157,6 +157,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 	public void setSuit(char theSuit)
 	{
 		suit = theSuit;
+		repaint();
 	}
 	
 	public void removeSuit()
