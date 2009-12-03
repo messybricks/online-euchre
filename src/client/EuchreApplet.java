@@ -351,7 +351,6 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		gameArea.setSize(200, 200);
 		gameCanvas.setSize(554, 432);
 
-		gameCanvas.setSuit('d');
 		//gameCanvas.setBackground(new Color())
 		gameArea.add(gameCanvas);
 		userArea.setLayout(new BoxLayout(userArea,BoxLayout.Y_AXIS));
@@ -1132,5 +1131,10 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	public void pickupTrump()
 	{
 		player.pickupCard(gameCanvas.getNewCard());
+	}
+	
+	public void setTrump(char t)
+	{
+		gameCanvas.setSuit(t);
 	}
 }
