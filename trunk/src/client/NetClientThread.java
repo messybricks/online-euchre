@@ -384,7 +384,8 @@ public class NetClientThread extends NetworkThread
 		state=GOING_ALONE;
 	}
 	
-	private void goingAlone(int option){
+	private void goingAlone(int option)
+	{
 		if(option == 1)
 			send(Opcode.goingAlone, new Boolean(true));
 		else if(option == 0)
