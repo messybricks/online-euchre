@@ -206,6 +206,12 @@ public class EuchreEngine
 		{
 			state++;
 			Trace.dprint("new state: player " + (state - FIRST_PLAYER_THROWS_CARD) + " throws card");
+			
+			// clear each player's screen
+			for (int i = 0; i < 4; i++)
+			{
+				displayCard(Card.nullCard(), i);
+			}
 
 			//decide whose turn it is to throw a card
 			if(state == FIRST_PLAYER_THROWS_CARD)
