@@ -96,6 +96,8 @@ public class NetClientThread extends NetworkThread
 				onThrowCard(packet);
 			else if(packet.getOpcode() == Opcode.displayCard)
 				onDisplayCard(packet);
+			else if(packet.getOpcode() == Opcode.displayTrump)
+				onDisplayTrump(packet);
 			else if(packet.getOpcode() == Opcode.endGame)
 				onEndGame(packet);
 			else
@@ -416,6 +418,16 @@ public class NetClientThread extends NetworkThread
 	{
 		CardWrapper cw = (CardWrapper)packet.getData();
 		euchreApplet.displayCard(cw.getPID(), cw.getCard());
+	}
+	
+	/**
+	 * Processes a displayTrump packet.
+	 * 
+	 * @param packet Packet to process
+	 */
+	private void onDisplayTrump(Packet packet)
+	{
+		euchreApplet.setTrump((Character)packet.getData());
 	}
 	
 	/***

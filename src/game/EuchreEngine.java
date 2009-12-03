@@ -170,6 +170,10 @@ public class EuchreEngine
 		state = GOING_ALONE;
 		Trace.dprint("new state: " + state);
 
+		// display the new trump icon in the middle of each client's screen
+		for (int i = 0; i < 4; i++)
+			cardDistributor.getPlayerOrder()[i].sendData(Opcode.displayTrump, new Character(trump));
+
 		//ask currentPlayer if he/she is going alone
 		currentPlayer().sendOpcode(Opcode.goingAlone);
 	}
