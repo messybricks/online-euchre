@@ -96,6 +96,8 @@ public class NetClientThread extends NetworkThread
 				onThrowCard(packet);
 			else if(packet.getOpcode() == Opcode.displayCard)
 				onDisplayCard(packet);
+			else if(packet.getOpcode() == Opcode.endGame)
+				onEndGame(packet);
 			else
 				Trace.dprint("Received packet with unimplemented opcode '%s' - ignoring.", packet.getOpcode().toString());
 		}
@@ -119,6 +121,16 @@ public class NetClientThread extends NetworkThread
 	private void onQuit(Packet packet)
 	{
 		euchreApplet.onServerExit((String)packet.getData());
+	}
+
+	/**
+	 * Informs the user that the game has ended, tells him if he has won, and closes the program.
+	 * 
+	 * @param packet Packet to process
+	 */
+	private void onEndGame(Packet packet)
+	{
+		euchreApplet.onGameOver((Boolean)packet.getData());
 	}
 
 	/**
