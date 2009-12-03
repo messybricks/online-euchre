@@ -364,7 +364,8 @@ public class NetClientThread extends NetworkThread
 	 */
 	private void onDealerDiscard(Packet packet)
 	{
-		euchreApplet.displayMessage("discard a card");
+		euchreApplet.displayYesNoMessage("Discard this card?");
+		euchreApplet.pickupTrump();
 		state=Dealer_Discard;
 	}
 		

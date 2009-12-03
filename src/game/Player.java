@@ -317,7 +317,8 @@ public class Player implements Serializable {
 		public SubPlayer(int guid)
 		{
 			uid = guid;
-			hand = new Hand(5);
+			// Changed size of hand to six, because the dealer will momentarily have 6 cards.
+			hand = new Hand(6);
 		}
 
 		/**
