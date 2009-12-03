@@ -540,14 +540,17 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 						}
 					}
 					int t=-1;
-					for(int x =0;x < player.getCards().length;x++)
-						if(player.getCards()[x].getSuit()==temp.getSuit() && player.getCards()[x].getValue()==temp.getVal())
-						{
-							t=x;
-							break;
-						}
-					
-					player.playCard(t);
+					if(temp != null)
+					{
+						for(int x =0;x < player.getCards().length;x++)
+							if(player.getCards()[x].getSuit()==temp.getSuit() && player.getCards()[x].getValue()==temp.getVal())
+							{
+								t=x;
+								break;
+							}
+						Cards.remove(temp);
+						player.playCard(t);
+					}
 					//TODO check if t is the card that was picked up
 					owner.setResult(1);
 				}
@@ -831,7 +834,8 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 						int i1 = player.getIndex(new Card(c.getSuit(), c.getVal()));
 						int i2 = player.getIndex(new Card(selectedCard.getSuit(), selectedCard.getVal()));
 						Trace.dprint("Swapping " + i1 + " and " + i2);
-						player.swapCards(i1 , i2);
+						if(i1 != -1 && i2 != -1)
+							player.swapCards(i1 , i2);
 					}
 				}
 			}
@@ -1025,6 +1029,19 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 				x2 = PLAYER_X5;
 		}
 		repaint();
+	}
+
+	public Card getNewCard() 
+	{
+		for(card c:Cards)
+		{
+			if(c.getX() == 245 && c.getY() == 215)
+			{
+				return new Card(c.getSuit(), c.getVal());
+			}
+		}
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
