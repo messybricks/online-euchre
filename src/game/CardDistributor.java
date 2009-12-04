@@ -21,7 +21,7 @@ public class CardDistributor {
 	public CardDistributor(Player dealer, Player left, Player across, Player right)
 	{
 		//create the euchre deck.
-		deck = new Deck();
+		//deck = new Deck();
 		//set up the references to each player.
 		player = new Player[4];
 		player[0] = dealer;
@@ -40,7 +40,8 @@ public class CardDistributor {
 	 */
 	public void dealRound()
 	{
-		// must discard all cards from any previous hands. happens if no trump is chosen. - bert
+		
+		deck=new Deck();
 		for(byte i = 0; i < 4; ++i)
 		{
 			int cardCount = player[i].getCardCount();
