@@ -105,7 +105,7 @@ public class EuchreEngine
 		{
 			//send an opcode to each player to show that the trump card is flipped down
 			for(int i = 0; i<4; i++)
-				cardDistributor.getPlayerOrder()[i].sendData(Opcode.displayCard, new CardWrapper(Card.nullCard(),0));
+				cardDistributor.getPlayerOrder()[i].sendData(Opcode.displayCard, new CardWrapper(Card.nullCard(), cardDistributor.getPlayerOrder()[CardDistributor.DEALER].getPID()));
 		}
 
 		//send opcode to player to request a bid
@@ -173,6 +173,9 @@ public class EuchreEngine
 		// display the new trump icon in the middle of each client's screen
 		for (int i = 0; i < 4; i++)
 			cardDistributor.getPlayerOrder()[i].sendData(Opcode.displayTrump, new Character(trump));
+		
+		// clear bid card if it's there
+		displayCard(Card.nullCard(), cardDistributor.getPlayerOrder()[CardDistributor.DEALER].getPID());
 
 		//ask currentPlayer if he/she is going alone
 		currentPlayer().sendOpcode(Opcode.goingAlone);
@@ -210,12 +213,6 @@ public class EuchreEngine
 		{
 			state++;
 			Trace.dprint("new state: player " + (state - FIRST_PLAYER_THROWS_CARD) + " throws card");
-			
-			// clear each player's screen
-			for (int i = 0; i < 4; i++)
-			{
-				displayCard(Card.nullCard(), i);
-			}
 
 			//decide whose turn it is to throw a card
 			if(state == FIRST_PLAYER_THROWS_CARD)
@@ -287,7 +284,7 @@ public class EuchreEngine
 		state = END_OF_TRICK;
 		Trace.dprint("new state: " + state);
 		Trace.dprint("player " + winner.toString() + "has won the trick.");
-		displayCard(null,0);//tell clients to clear the screen
+		displayCard(Card.nullCard(),0);//tell clients to clear the screen
 
 		//increment the score of tricks for the winning team
 		winner.winTrick();
@@ -295,7 +292,7 @@ public class EuchreEngine
 		//if there are cards left in the current player's hand
 		if(currentPlayer().getCards().length > 0)
 		{
-			state = FIRST_PLAYER_THROWS_CARD;
+			state = GOING_ALONE; // not actually asking if going alone, but throwCard requires the machine to start in this state to work properly.
 			trick = new Card[4];
 			throwCard();
 		}

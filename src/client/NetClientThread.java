@@ -407,7 +407,7 @@ public class NetClientThread extends NetworkThread
 	 */
 	private void onThrowCard(Packet packet)
 	{
-		//TODO: tell user to throw card
+		euchreApplet.displayMessage("throw a card");
 		state = Throw_Card;
 	}
 	
