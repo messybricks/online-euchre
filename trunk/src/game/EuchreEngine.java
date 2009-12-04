@@ -197,7 +197,7 @@ public class EuchreEngine
 		else
 			notPlaying = -1;
 
-		trick = new Card[3];
+		trick = new Card[4];
 	}
 
 
@@ -289,10 +289,13 @@ public class EuchreEngine
 		//increment the score of tricks for the winning team
 		winner.winTrick();
 
-		Trace.dprintArray(currentPlayer().getCards());
+		boolean cardsLeft = false;
+		for(int i = 0; i < currentPlayer().getCards().length; i++)
+			if(!currentPlayer().getCards()[i].equals(Card.nullCard()))
+				cardsLeft = true;
 		
 		//if there are cards left in the current player's hand
-		if(currentPlayer().getCards().length > 0)
+		if(cardsLeft)
 		{
 			state = GOING_ALONE; // not actually asking if going alone, but throwCard requires the machine to start in this state to work properly.
 			trick = new Card[4];
