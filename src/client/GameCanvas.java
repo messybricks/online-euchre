@@ -25,12 +25,15 @@ import utility.Trace;
 
 public class GameCanvas extends Canvas implements MouseMotionListener, MouseListener
 {
+	// Locations that cards are able to go.
 	final int PLAYER_CARD_Y = 320;
 	final int PLAYER_X1 = 85;
 	final int PLAYER_X2 = 164;
 	final int PLAYER_X3 = 244;
 	final int PLAYER_X4 = 322;
 	final int PLAYER_X5 = 401;
+	
+	// The EuchreApplet that created this.
 	EuchreApplet owner;
 	int ex = 10;
 	int why = 10;
@@ -72,8 +75,14 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 	boolean d = true;
 	boolean s = true;
 	
+	/**
+	 * Set owner of this.
+	 * 
+	 * @param apl The EuchreApplet that created this.
+	 */
 	public void setOwner(EuchreApplet apl)
-	{		
+	{	
+		// Add valid locations for this players card.
 		validLocations.put(85, PLAYER_CARD_Y);
 		validLocations.put(164, PLAYER_CARD_Y);
 		validLocations.put(244, PLAYER_CARD_Y);
@@ -81,29 +90,46 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 		validLocations.put(401, PLAYER_CARD_Y);
 		validLocations.put(245, 215);
 		
-
+		// Stores all vertical cards that are on this screen.
 		Cards = new ArrayList<card>();
+		
+		// Stores all horizontal cards that are on this screen.
 		CardsH = new ArrayList<card>();
+		
 		owner = apl;
+		
 		addMouseMotionListener(this);
 		addMouseListener(this);
+		
+		// Set background image.
 		try 
 		{
 			URL url = new URL(owner.getCodeBase(), "background.jpg");
 			img = ImageIO.read(url);
-
-
     	} 
 		catch (IOException e) 
 		{
 		}
 	}
 	
+	/**
+	 * Add a card to the screen.
+	 * 
+	 * @param c Card to add.
+	 */
 	public void addCard(card c)
 	{
 		Cards.add(c);
 	}
 	
+	/**
+	 * Add a card to the screen.
+	 * 
+	 * @param theSuit Suit of new card.
+	 * @param val Value of new card.
+	 * @param xPos X position of new card.
+	 * @param yPos Y position of new card.
+	 */
 	public void addCard(char theSuit, int val, int xPos, int yPos)
 	{
 		boolean init = false;
@@ -123,6 +149,14 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 		repaint();
 	}
 	
+	/**
+	 * Add a horizontal card to the screen.
+	 * 
+	 * @param theSuit Suit of new card.
+	 * @param val Value of new card.
+	 * @param xPos X position of new card.
+	 * @param yPos Y position of new card.
+	 */
 	public void addCardH(char theSuit, int val, int xPos, int yPos)
 	{
 		boolean init = false;
@@ -142,29 +176,55 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 		repaint();
 	}
 
+	/**
+	 * Draw text on the screen.
+	 * 
+	 * @param txt The text
+	 * @param x X location
+	 * @param y Y location
+	 */
 	public void drawText(String txt, int x, int y)
 	{
 		words.add(new text(txt, x, y, owner));
 		repaint();
 	}
 
+	/**
+	 * Draw text on the screen vertically.
+	 * 
+	 * @param txt
+	 * @param x
+	 * @param y
+	 */
 	public void drawTextVertical(String txt, int x, int y)
 	{
 		wordsVertical.add(new text(txt, x, y, owner));
 		repaint();
 	}
 	
+	/**
+	 * Set trump suit. The suit that shows up on the middle of the canvas.
+	 * 
+	 * @param theSuit
+	 */
 	public void setSuit(char theSuit)
 	{
 		suit = theSuit;
 		repaint();
 	}
 	
+	/**
+	 * Remove trump suit
+	 */
 	public void removeSuit()
 	{
 		suit = 'n';
 	}
 	
+	/**
+	 * Repaint the screen.
+	 * 
+	 */
 	public void paint(Graphics g)
 	{
 		//Draw background
@@ -382,6 +442,11 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 
 	}
 	
+	/**
+	 * Draws the suit on the screen.
+	 * 
+	 * @param g
+	 */
 	public void drawSuit(Graphics g)
 	{
 		if(suit != 'n')
@@ -405,6 +470,11 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 		}
 	}
 	
+	/**
+	 * Draws the back of the other players cards.
+	 * 
+	 * @param g
+	 */
 	public void drawOtherPlayers(Graphics g)
 	{
 		if(gameStarted)
@@ -444,10 +514,6 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 		}
 	}
 
-	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	@Override
@@ -854,6 +920,11 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 		cardSelected = false;
 	}
 
+	/**
+	 * Set the player of this screen.
+	 * 
+	 * @param p The player
+	 */
 	public void setPlayer(Player p) 
 	{
 		player = p;
@@ -964,6 +1035,11 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 		return opt;
 	}
 
+	/**
+	 * Updates a player.
+	 * 
+	 * @param player2 The player
+	 */
 	public void updatePlayer(Player player2) 
 	{
 		if(!players.contains(player2))
@@ -999,11 +1075,19 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 		}
 	}
 	
+	/**
+	 * Tells the screen if the game is started.
+	 * 
+	 * @param start True if the game is started.
+	 */
 	public void setGameStarted(boolean start)
 	{
 		gameStarted = start;
 	}
 
+	/**
+	 * Clears all cards except for this players cards.
+	 */
 	public void clear() 
 	{
 		try 
@@ -1032,6 +1116,11 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 		repaint();
 	}
 
+	/**
+	 * Get the sixth card that has been added to this players hand.
+	 * 
+	 * @return
+	 */
 	public Card getNewCard() 
 	{
 		for(card c:Cards)
@@ -1047,12 +1136,25 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 
 }
 
+/**
+ * A card class that holds suit, value, location, and the image.
+ * 
+ * @author jpking
+ *
+ */
 class card
 {
 	char suit;
 	int value, x, y;
 	Image img;
 
+	/**
+	 * card constructor.
+	 * 
+	 * @param theSuit
+	 * @param val
+	 * @param owner
+	 */
 	public card(char theSuit, int val, EuchreApplet owner)
 	{
 		suit = theSuit;
@@ -1063,34 +1165,68 @@ class card
 			Trace.dprint(suit + ", " + value);
 	}
 	
+	/**
+	 * Get the value of this card.
+	 * 
+	 * @return The value of this card.
+	 */
 	public int getVal() 
 	{
 		return value;
 	}
 
+	/**
+	 * Get the suit of this card.
+	 * 
+	 * @return The suit of this card.
+	 */
 	public char getSuit() 
 	{
 		// TODO Auto-generated method stub
 		return suit;
 	}
 
+	/**
+	 * Set the y location
+	 * 
+	 * @param y2
+	 */
 	public void setY(int y2) 
 	{
 		y = y2;
 		
 	}
 
+	/**
+	 * Set the x location
+	 * 
+	 * @param x2
+	 */
 	public void setX(int x2) 
 	{
 		x = x2;
 		
 	}
 
+	/** 
+	 * Get the image associated with this card.
+	 * 
+	 * @return
+	 */
 	public Image getImage() 
 	{
 		return img;
 	}
 
+	/**
+	 * Card constructor
+	 * 
+	 * @param theSuit
+	 * @param val
+	 * @param xPos
+	 * @param yPos
+	 * @param owner
+	 */
 	public card(char theSuit, int val, int xPos, int yPos, EuchreApplet owner)
 	{
 		suit = theSuit;
@@ -1102,22 +1238,48 @@ class card
 		if(img == null)
 			Trace.dprint(suit + ", " + value);
 	}
+	
+	/**
+	 * Get x location
+	 * 
+	 * @return X location
+	 */
 	public int getX()
 	{
 		return x;
 	}
+	
+	/**
+	 * Get y location
+	 * 
+	 * @return Y location
+	 */
 	public int getY()
 	{
 		return y;
 	}
 }
 
+/**
+ * Class to store text that is displayed on this screen.
+ * 
+ * @author jpking
+ *
+ */
 class text
 {
 	String txt;
 	int x, y;
 	ArrayList<Image> letters = new ArrayList<Image>();
 	
+	/**
+	 * Text constructor.
+	 * 
+	 * @param word The text do add.
+	 * @param ex The x location.
+	 * @param why The y location.
+	 * @param owner The applet that called this.
+	 */
 	public text(String word, int ex, int why, EuchreApplet owner)
 	{
 		for(int x = 0; x < word.length(); x++)
@@ -1158,21 +1320,41 @@ class text
 		y = why;
 	}
 	
+	/**
+	 * Get the array of images of the letters.
+	 * 
+	 * @return The letters that make up this text.
+	 */
 	public ArrayList<Image> getImages()
 	{
 		return letters;
 	}
 	
+	/**
+	 * Get the text as a string.
+	 * 
+	 * @return The text as a string.
+	 */
 	public String getWord()
 	{
 		return txt;
 	}
 	
+	/**
+	 * Get the x location.
+	 * 
+	 * @return the x location.
+	 */
 	public int getX()
 	{
 		return x;
 	}
 	
+	/**
+	 * Get the y location.
+	 * 
+	 * @return the y location.
+	 */
 	public int getY()
 	{
 		return y;
