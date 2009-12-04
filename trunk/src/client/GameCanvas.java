@@ -892,7 +892,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 							{
 								if(owner.getState()==NetClientThread.Dealer_Discard)
 									displayMessage(this.owner, "Discard this", "card?","",1,0);
-								else
+								else if(owner.getState()==NetClientThread.Throw_Card)
 									displayMessage(this.owner, "Play this", "card?","",1,0);
 							} 
 							catch (IOException e1) 

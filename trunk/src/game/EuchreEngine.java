@@ -197,7 +197,7 @@ public class EuchreEngine
 		else
 			notPlaying = -1;
 
-		trick = new Card[4];
+		trick = new Card[3];
 	}
 
 
