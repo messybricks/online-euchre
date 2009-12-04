@@ -21,6 +21,7 @@ import java.util.HashMap;
 
 import javax.imageio.ImageIO;
 
+import utility.Opcode;
 import utility.Trace;
 
 public class GameCanvas extends Canvas implements MouseMotionListener, MouseListener
@@ -621,6 +622,36 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 					//TODO check if t is the card that was picked up
 					owner.setResult(1);
 				}
+				else if(owner.getState()==NetClientThread.Throw_Card)
+				{
+					card temp =null;
+					for(card c:Cards)
+					{
+						if((c.getX() == 245) && (c.getY() == 215))
+						{
+							temp = c;
+							break;
+						}
+					}
+					int t=-1;
+					if(temp != null)
+					{
+						for(int x =0;x < player.getCards().length;x++)
+							if(player.getCards()[x].getSuit()==temp.getSuit() && player.getCards()[x].getValue()==temp.getVal())
+							{
+								t=x;
+								break;
+							}
+						if(true)//TODO change to check if the card is valid
+						{
+							Cards.remove(temp);
+							player.sendData(Opcode.throwCard, player.playCard(t));
+							owner.setResult(1);
+						}
+					}
+					
+					
+				}
 				else
 					owner.setResult(1);
 				Trace.dprint("YES!");
@@ -1103,15 +1134,18 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 		int x2 = PLAYER_X1;
 		for(int x = 0; x < tempCards.length; x++)
 		{
-			Cards.add(new card(tempCards[x].getSuit(), tempCards[x].getValue(), x2, PLAYER_CARD_Y, owner));
-			if(x2 == PLAYER_X1)
-				x2 = PLAYER_X2;
-			else if(x2 == PLAYER_X2)
-				x2 = PLAYER_X3;
-			else if(x2 == PLAYER_X3)
-				x2 = PLAYER_X4;
-			else if(x2 == PLAYER_X4)
-				x2 = PLAYER_X5;
+			if(tempCards[x]!= null)
+			{
+				Cards.add(new card(tempCards[x].getSuit(), tempCards[x].getValue(), x2, PLAYER_CARD_Y, owner));
+				if(x2 == PLAYER_X1)
+					x2 = PLAYER_X2;
+				else if(x2 == PLAYER_X2)
+					x2 = PLAYER_X3;
+				else if(x2 == PLAYER_X3)
+					x2 = PLAYER_X4;
+				else if(x2 == PLAYER_X4)
+					x2 = PLAYER_X5;
+			}
 		}
 		repaint();
 	}

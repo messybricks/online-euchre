@@ -25,6 +25,7 @@ public class NetClientThread extends NetworkThread
 	public static final int SET_TRUMP = 1;
 	public static final int NAMING_TRUMP = 2;
 	public static final int Dealer_Discard = 3;
+	public static final int Throw_Card =4;
 
 	
 	
@@ -406,7 +407,8 @@ public class NetClientThread extends NetworkThread
 	 */
 	private void onThrowCard(Packet packet)
 	{
-		//TODO: implement this
+		//TODO: tell user to throw card
+		state = Throw_Card;
 	}
 	
 	/**
@@ -436,6 +438,7 @@ public class NetClientThread extends NetworkThread
 	 */
 	public void respond(int response)
 	{
+		Trace.dprint("The current state is: "+state+"\n");
 		switch(state){
 			case GOING_ALONE:
 				goingAlone(response);
@@ -470,6 +473,10 @@ public class NetClientThread extends NetworkThread
 					send(Opcode.dealerDiscard);
 					state=-1;
 				}
+				break;
+			case Throw_Card:
+				if(response ==1)
+					state=-1;
 				break;
 		}
 	}

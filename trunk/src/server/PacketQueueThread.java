@@ -155,7 +155,7 @@ public class PacketQueueThread extends NetworkThread
 			onSendMessage(packet);
 		else if(packet.getOpcode() == Opcode.UpdatePlayer)
 			onUpdatePlayer(packet);
-		/*else if(packet.getOpcode() == Opcode.requestBid)
+		else if(packet.getOpcode() == Opcode.requestBid)
 			onRequestBid(packet);
 		else if(packet.getOpcode() == Opcode.requestAlternateBid)
 			onRequestAlternateBid(packet);
@@ -164,7 +164,7 @@ public class PacketQueueThread extends NetworkThread
 		else if(packet.getOpcode() == Opcode.goingAlone)
 			onGoingAlone(packet);
 		else if(packet.getOpcode() == Opcode.throwCard)
-			onThrowCard(packet);*/
+			onThrowCard(packet);
 		else if(stateMachine != null)
 			stateMachine.forwardPacket(myPlayer, packet.getOpcode(), packet.getData());
 		else
