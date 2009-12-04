@@ -283,12 +283,14 @@ public class EuchreEngine
 	{
 		state = END_OF_TRICK;
 		Trace.dprint("new state: " + state);
-		Trace.dprint("player " + winner.toString() + "has won the trick.");
+		Trace.dprint("player " + winner.getPID() + "has won the trick.");
 		displayCard(Card.nullCard(),0);//tell clients to clear the screen
 
 		//increment the score of tricks for the winning team
 		winner.winTrick();
 
+		Trace.dprintArray(currentPlayer().getCards());
+		
 		//if there are cards left in the current player's hand
 		if(currentPlayer().getCards().length > 0)
 		{
