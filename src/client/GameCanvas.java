@@ -592,36 +592,42 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 	}
 	
 	/**
-	 * determine if the Card c is valid to be played, only called if c does not match the suit lead
+	 * determine if the Card c is valid to be played
 	 * @return
 	 */
 	public boolean notARenege(Card c)
 	{
-		//if trump led, check for left
-		if(suit == leadSuit)
-		{
-			//turmp was clubs
-			if(suit == 'c' && c.getSuit()=='s' && c.getValue()==11)
-				return true;
-			//spades was trump
-			if(suit == 's' && c.getSuit()=='c' && c.getValue()==11)
-				return true;
-			//hearts was trump
-			if(suit == 'h' && c.getSuit()=='d' && c.getValue()==11)
-				return true;
-			//diamonds was trump
-			if(suit == 'd' && c.getSuit()=='h' && c.getValue()==11)
-				return true;
-		}
+		int value;
+		char s =getRealSuit(c);
+		
+		if(s==leadSuit)
+			return true;
 		//check if out of suit
 		for(int i =0;i < player.getCardCount();i++)
 		{
-			if(player.getCards()[i].getSuit()==leadSuit)
+			if(getRealSuit(player.getCards()[i])==leadSuit)
 				return false;
 			
 		}
-		
 		return true;
+	}
+	
+	public char getRealSuit(Card c){
+		
+		
+			//turmp was clubs
+			if(suit == 'c' && c.getSuit()=='s' && c.getValue()==11)
+				return 'c';
+			//spades was trump
+			if(suit == 's' && c.getSuit()=='c' && c.getValue()==11)
+				return 's';
+			//hearts was trump
+			if(suit == 'h' && c.getSuit()=='d' && c.getValue()==11)
+				return 'h';
+			//diamonds was trump
+			if(suit == 'd' && c.getSuit()=='h' && c.getValue()==11)
+				return 'd';
+			return c.getSuit();
 	}
 	
 	@Override
@@ -679,12 +685,13 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 								t=x;
 								break;
 							}
-						if(player.getCards()[t].getSuit()==leadSuit || notARenege(player.getCards()[t]))
+						if(notARenege(player.getCards()[t]))
 						{
 							Cards.remove(temp);
 							player.sendData(Opcode.throwCard, player.playCard(t));
 							owner.setResult(1);
 						}
+						
 					}
 					
 					
