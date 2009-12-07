@@ -691,6 +691,8 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 							player.sendData(Opcode.throwCard, player.playCard(t));
 							owner.setResult(1);
 						}
+						else
+							owner.displayMessage("you have to follow suit!");//TODO make this message display
 						
 					}
 					
