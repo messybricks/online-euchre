@@ -419,7 +419,7 @@ public class NetClientThread extends NetworkThread
 	private void onDisplayCard(Packet packet)
 	{
 		CardWrapper cw = (CardWrapper)packet.getData();
-		euchreApplet.displayCard(cw.getPID(), cw.getCard());
+		euchreApplet.displayCard(cw.getPID(), cw.getCard(),cw.isLeading());
 	}
 	
 	/**

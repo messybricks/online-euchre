@@ -76,6 +76,10 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 	boolean d = true;
 	boolean s = true;
 	
+	//used to handle reneges
+	public char leadSuit;
+	
+	
 	/**
 	 * Set owner of this.
 	 * 
@@ -586,7 +590,40 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 
 		
 	}
-
+	
+	/**
+	 * determine if the Card c is valid to be played, only called if c does not match the suit lead
+	 * @return
+	 */
+	public boolean notARenege(Card c)
+	{
+		//if trump led, check for left
+		if(suit == leadSuit)
+		{
+			//turmp was clubs
+			if(suit == 'c' && c.getSuit()=='s' && c.getValue()==11)
+				return true;
+			//spades was trump
+			if(suit == 's' && c.getSuit()=='c' && c.getValue()==11)
+				return true;
+			//hearts was trump
+			if(suit == 'h' && c.getSuit()=='d' && c.getValue()==11)
+				return true;
+			//diamonds was trump
+			if(suit == 'd' && c.getSuit()=='h' && c.getValue()==11)
+				return true;
+		}
+		//check if out of suit
+		for(int i =0;i < player.getCardCount();i++)
+		{
+			if(player.getCards()[i].getSuit()==leadSuit)
+				return false;
+			
+		}
+		
+		return true;
+	}
+	
 	@Override
 	public void mouseClicked(MouseEvent e) 
 	{
@@ -642,7 +679,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 								t=x;
 								break;
 							}
-						if(true)//TODO change to check if the card is valid
+						if(player.getCards()[t].getSuit()==leadSuit || notARenege(player.getCards()[t]))
 						{
 							Cards.remove(temp);
 							player.sendData(Opcode.throwCard, player.playCard(t));

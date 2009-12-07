@@ -930,7 +930,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	 * @param PID the player that the card will be in front of
 	 * @param c the card to be displayed
 	 */
-	public void displayCard(int PID, Card c)
+	public void displayCard(int PID, Card c,boolean l)
 	{
 		if(Card.ifNull(c))
 		{
@@ -947,7 +947,10 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 				gameCanvas.addCardH(c.getSuit(), c.getValue(), 320, 140);
 			else
 				gameCanvas.addCard(c.getSuit(), c.getValue(), 245, 215);
+			if(l)
+				gameCanvas.leadSuit=c.getSuit();
 		}
+		
 	}
 
 	/**
