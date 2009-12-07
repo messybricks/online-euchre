@@ -6,10 +6,12 @@ public class CardWrapper implements Serializable
 {
 	private Card card;
 	private int player;
-	public CardWrapper(Card c,int p)
+	private boolean leading;
+	public CardWrapper(Card c,int p,boolean l)
 	{
 		card=c;
 		player=p;
+		leading=l;
 	}
 	
 	public Card getCard()
@@ -20,5 +22,10 @@ public class CardWrapper implements Serializable
 	public int getPID()
 	{
 		return player;
+	}
+	
+	public boolean isLeading()
+	{
+		return leading;
 	}
 }
