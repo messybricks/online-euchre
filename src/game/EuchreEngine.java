@@ -249,8 +249,8 @@ public class EuchreEngine
 		Trace.dprint("received card: " + thrown.toString());
 
 		//add the card to the current trick
-		int numberOfCardsThrown = state - FIRST_PLAYER_THROWS_CARD;
-		trick[numberOfCardsThrown] = thrown;
+		//int numberOfCardsThrown = state - FIRST_PLAYER_THROWS_CARD;
+		trick[currentPlayerIndex] = thrown;
 		if(state==FIRST_PLAYER_THROWS_CARD)
 			displayCard(thrown,cardDistributor.getPlayerOrder()[currentPlayerIndex].getPID(),true);
 		else
