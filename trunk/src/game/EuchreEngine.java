@@ -78,7 +78,7 @@ public class EuchreEngine
 		//deal this hand
 		cardDistributor.dealRound();
 		trumpCard = cardDistributor.flipTrump();
-		displayCard(trumpCard,cardDistributor.getPlayerOrder()[CardDistributor.DEALER].getPID());
+		displayCard(trumpCard,cardDistributor.getPlayerOrder()[CardDistributor.DEALER].getPID(),false);
 
 
 		//player to the left of the dealer bids
@@ -105,7 +105,7 @@ public class EuchreEngine
 		{
 			//send an opcode to each player to show that the trump card is flipped down
 			for(int i = 0; i<4; i++)
-				cardDistributor.getPlayerOrder()[i].sendData(Opcode.displayCard, new CardWrapper(Card.nullCard(), cardDistributor.getPlayerOrder()[CardDistributor.DEALER].getPID()));
+				cardDistributor.getPlayerOrder()[i].sendData(Opcode.displayCard, new CardWrapper(Card.nullCard(), cardDistributor.getPlayerOrder()[CardDistributor.DEALER].getPID(),false));
 		}
 
 		//send opcode to player to request a bid
@@ -175,7 +175,7 @@ public class EuchreEngine
 			cardDistributor.getPlayerOrder()[i].sendData(Opcode.displayTrump, new Character(trump));
 
 		// clear bid card if it's there
-		displayCard(Card.nullCard(), cardDistributor.getPlayerOrder()[CardDistributor.DEALER].getPID());
+		displayCard(Card.nullCard(), cardDistributor.getPlayerOrder()[CardDistributor.DEALER].getPID(),false);
 
 		//ask currentPlayer if he/she is going alone
 		currentPlayer().sendOpcode(Opcode.goingAlone);
@@ -251,8 +251,10 @@ public class EuchreEngine
 		//add the card to the current trick
 		int numberOfCardsThrown = state - FIRST_PLAYER_THROWS_CARD;
 		trick[numberOfCardsThrown] = thrown;
-
-		displayCard(thrown,cardDistributor.getPlayerOrder()[currentPlayerIndex].getPID());
+		if(state==FIRST_PLAYER_THROWS_CARD)
+			displayCard(thrown,cardDistributor.getPlayerOrder()[currentPlayerIndex].getPID(),true);
+		else
+			displayCard(thrown,cardDistributor.getPlayerOrder()[currentPlayerIndex].getPID(),false);
 
 		//throw another card
 		currentPlayerIndex = (currentPlayerIndex + 1) % 4;
@@ -325,7 +327,7 @@ public class EuchreEngine
 		state = END_OF_TRICK;
 		Trace.dprint("new state: " + state);
 		Trace.dprint("player " + winner.getPID() + " has won the trick.");
-		displayCard(Card.nullCard(),0);//tell clients to clear the screen
+		displayCard(Card.nullCard(),0,false);//tell clients to clear the screen
 
 		//increment the score of tricks for the winning team
 		winner.winTrick();
@@ -411,11 +413,11 @@ public class EuchreEngine
 	 * @param card the card to be displayed
 	 * @param player the player who threw the card, -1 if it is for the kitty
 	 */
-	private void displayCard(Card card,int player)
+	private void displayCard(Card card,int player,boolean first)
 	{
 		for (int i = 0; i < 4; i++)
 		{
-			cardDistributor.getPlayerOrder()[i].sendData(Opcode.displayCard, new CardWrapper(card,player));
+			cardDistributor.getPlayerOrder()[i].sendData(Opcode.displayCard, new CardWrapper(card,player,first));
 		}
 	}
 
