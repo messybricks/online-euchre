@@ -190,7 +190,7 @@ public class EuchreEngine
 	public void setGoingAlone(boolean alone)
 	{
 		goingAlone = alone;
-		currentPlayerIndex = CardDistributor.DEALER;
+		currentPlayerIndex = CardDistributor.LEFT;
 		throwCard();
 
 		if(alone)
@@ -216,8 +216,8 @@ public class EuchreEngine
 			Trace.dprint("new state: player " + (state - FIRST_PLAYER_THROWS_CARD) + " throws card");
 
 			//TODO: find out if this works!
-			if(state == FIRST_PLAYER_THROWS_CARD)
-				currentPlayerIndex = (currentPlayerIndex + 1) % 4;
+			//if(state == FIRST_PLAYER_THROWS_CARD)
+				//currentPlayerIndex = (currentPlayerIndex + 1) % 4;
 			
 			//decide whose turn it is to throw a card
 			//if(state == FIRST_PLAYER_THROWS_CARD)
@@ -225,6 +225,9 @@ public class EuchreEngine
 			//else
 				//currentPlayerIndex = (currentPlayerIndex + 1) % 4;
 
+			Trace.dprint("current player index: " + currentPlayerIndex);
+			
+			
 			//if this player's partner is going alone, skip them
 			if(currentPlayerIndex == notPlaying)
 				receiveCard(Card.nullCard());
