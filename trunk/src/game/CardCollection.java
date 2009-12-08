@@ -35,8 +35,8 @@ public class CardCollection implements Serializable
 	
 	public int getIndex(Card c) 
 	{
-		Trace.dprint("Cards: ");
-		Trace.dprintArray(cards);
+		//Trace.dprint("Cards: ");
+		//Trace.dprintArray(cards); was causing a null pointer exception 
 		for(int x = 0; x < cards.length; x++)
 		{
 			if(c.equals(cards[x]))
