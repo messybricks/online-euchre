@@ -210,7 +210,8 @@ public class EuchreEngine
 	private void throwCard()
 	{
 		//if someone still needs to throw a card
-		if(state < THIRD_PLAYER_THROWS_CARD || (state < FOURTH_PLAYER_THROWS_CARD && !goingAlone))
+		//old if condition: state < THIRD_PLAYER_THROWS_CARD || (state < FOURTH_PLAYER_THROWS_CARD && !goingAlone)
+		if(state < FOURTH_PLAYER_THROWS_CARD)
 		{
 			state++;
 			Trace.dprint("new state: player " + (state - FIRST_PLAYER_THROWS_CARD) + " throws card");
@@ -254,10 +255,11 @@ public class EuchreEngine
 		//add the card to the current trick
 		//int numberOfCardsThrown = state - FIRST_PLAYER_THROWS_CARD;
 		trick[currentPlayerIndex] = thrown;
-		if(state==FIRST_PLAYER_THROWS_CARD)
-			displayCard(thrown,cardDistributor.getPlayerOrder()[currentPlayerIndex].getPID(),true);
-		else
-			displayCard(thrown,cardDistributor.getPlayerOrder()[currentPlayerIndex].getPID(),false);
+		if(!thrown.equals(Card.nullCard()))//this skips anyone not playing
+			if(state==FIRST_PLAYER_THROWS_CARD)
+				displayCard(thrown,cardDistributor.getPlayerOrder()[currentPlayerIndex].getPID(),true);
+			else
+				displayCard(thrown,cardDistributor.getPlayerOrder()[currentPlayerIndex].getPID(),false);
 
 		//throw another card
 		currentPlayerIndex = (currentPlayerIndex + 1) % 4;
@@ -336,9 +338,9 @@ public class EuchreEngine
 		winner.winTrick();
 
 		boolean cardsLeft = false;
-		for(int i = 0; i < currentPlayer().getCards().length; i++)
+		for(int i = 0; i < winner.getCards().length; i++)
 		{
-			if(currentPlayer().getCards()[i] != null && !currentPlayer().getCards()[i].equals(Card.nullCard()))
+			if(winner.getCards()[i] != null && !winner.getCards()[i].equals(Card.nullCard()))
 				cardsLeft = true;
 		}
 

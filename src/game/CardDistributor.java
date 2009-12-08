@@ -40,6 +40,12 @@ public class CardDistributor {
 	 */
 	public void dealRound()
 	{
+		//This will remove any cards left in any hands (should happen when someone went alone, or if there's a redeal)
+		for(int i=0;i< 4;i++)
+		{			
+			while(player[i].getCardCount() > 0)
+				player[i].playCard(0);
+		}
 		
 		deck=new Deck();
 		for(byte i = 0; i < 4; ++i)
