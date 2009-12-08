@@ -1126,7 +1126,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 	
 		if(player2.getGuid() == (owner.getPlayer()).getGuid())
 		{
-			int size = player2.getCards().length;
+			int size = player2.getCardCount();
 			Card[] cards = player2.getCards();
 			//cards[0].getSuit(); i don't think this belongs here - bert
 			
