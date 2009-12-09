@@ -142,7 +142,7 @@ public class NetClientThread extends NetworkThread
 	 * @param packet Packet to process
 	 */
 	private void onSendMessage(Packet packet)
-	{
+	{		
 		ChatObject chat = (ChatObject)packet.getData();
 		euchreApplet.receiveMessage(chat);
 	}

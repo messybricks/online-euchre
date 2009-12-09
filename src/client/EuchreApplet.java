@@ -56,15 +56,15 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	int curPlayer = 0;
 	public int result;
 	public boolean signal=false;
-	
+
 	// this list contains the players currently playing
 	private ArrayList<Player> playerList;
 	private ArrayList<Player> otherTeam = new ArrayList<Player>();
 	Player p1, p2, p3;
 
-	
-	
-	
+
+
+
 	/**
 	 * Initializes the client and applet, calls helper methods setUpClient and setUpApplet
 	 */
@@ -80,12 +80,12 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 
 		playerList = new ArrayList<Player>(4);
 	}
-	
+
 	public void loadCards()
 	{
 		Trace.dprint("loading cards...");
 		cardImages = new HashMap<String, Image>();
-		
+
 		for(int x = 1; x <= 14; x++)
 		{		
 			char theSuit = 'c';
@@ -107,9 +107,9 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 				e.printStackTrace();
 			}
 			cardImages.put(theSuit + "" + x, img);
-			
+
 			theSuit = 'd';
-			
+
 			try 
 			{
 				url2 = new URL(getCodeBase(), "cards/" + theSuit + (x) + ".gif");
@@ -126,9 +126,9 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 				e.printStackTrace();
 			}
 			cardImages.put(theSuit + "" + x, img);
-			
+
 			theSuit = 'h';
-			
+
 			try 
 			{
 				url2 = new URL(getCodeBase(), "cards/" + theSuit + (x) + ".gif");
@@ -145,9 +145,9 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 				e.printStackTrace();
 			}
 			cardImages.put(theSuit + "" + x, img);
-			
+
 			theSuit = 's';
-			
+
 			try 
 			{
 				url2 = new URL(getCodeBase(), "cards/" + theSuit + (x) + ".gif");
@@ -174,7 +174,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	 */
 	private void setUpClient()
 	{
-	/*	//prompt user to choose between hosting and joining a game
+		/*	//prompt user to choose between hosting and joining a game
 		Object[] options = {"Host","Join" };
 		int n = JOptionPane.showOptionDialog(this,
 				"Would you like to host or join a game?",
@@ -216,12 +216,12 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 				//if the cancel button is pressed, exit the system
 				if(port == null)
 					System.exit(ABORT);
-				
+
 				//TODO deal with improper port values
 				//String [] args= {port};
 				serverIP="127.0.0.1";
 				server = Runtime.getRuntime().exec("java server/EuchreServer " + port);
-				
+
 			}
 			catch(IOException e)
 			{
@@ -235,13 +235,13 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 			catch (InterruptedException e) 
 			{
 				// TODO Auto-generated catch block
-				
+
 			}
 
 		}
 		else
 		{
-			
+
 			boolean validport=false;
 			//keep asking for IP and port until input is valid
 			while(!validport)
@@ -267,7 +267,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 					//TODO message saying input format is wrong
 				}
 			}
-			
+
 			Trace.dprint("the server ip is: %s and the port is %s", serverIP,port);
 		}
 		client = new EuchreNetClient(serverIP, new Integer(port).intValue(), this);
@@ -295,7 +295,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 			if(username == null)
 				System.exit(ABORT);
 		}
-		
+
 		//initialize user
 		initializeUser(username);
 	}
@@ -344,7 +344,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		userArea = new JPanel ();
 		chatArea = new JPanel ();
 		gameArea = new JPanel ();
-		
+
 
 		gameCanvas = new GameCanvas();
 		gameCanvas.setOwner(this);
@@ -358,7 +358,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		JScrollPane messageScroll = new JScrollPane(messageWindow);
 		inputArea.setLayout(new BoxLayout (inputArea,BoxLayout.LINE_AXIS));
 
-		userWindow.setText("Users currently in chat:");
+		userWindow.setText("Users currently in game:");
 		//userArea.add(userWindow);
 		//add the fields to the panels
 		messageArea.add(messageScroll);
@@ -389,8 +389,8 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		inputTextDeleted = false;
 		//inputText.select(0, inputText.getText().length());
 		this.doLayout();
-		
-		
+
+
 		/*  COMMENTED OUT BY MIKE - NOT NECESSARY
 		try 
 		{
@@ -401,7 +401,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		*/
+		 */
 
 
 	}
@@ -415,8 +415,8 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	{
 		userName = username;
 		client.authenticate(new User(username));
-		
-		
+
+
 	}
 
 	/**
@@ -428,14 +428,14 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	{
 		users = newUsers;
 		userArea.removeAll();
-		userWindow.setText("Users currently in chat:");
+		userWindow.setText("Users currently in game:");
 		userArea.add(userWindow);
 		userNames = new ArrayList<JTextArea>();
-//		for(int x = 0; x < userNames.size(); x++)
-//		{
-//			//userArea.remove(userNames.get(x));
-//			userNames.remove(0);
-//		}
+		//		for(int x = 0; x < userNames.size(); x++)
+		//		{
+		//			//userArea.remove(userNames.get(x));
+		//			userNames.remove(0);
+		//		}
 		for(User x : users)
 		{
 			JTextArea temp = new JTextArea(1,1);
@@ -461,7 +461,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		userArea.add(Box.createRigidArea(new Dimension(5,500)));
 		userArea.doLayout();
 		doLayout();
-		
+
 	}
 
 	/**
@@ -497,6 +497,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	}
 	 */
 
+
 	/**
 	 * Receives a message from another user and appends it to the chat window
 	 * 
@@ -504,22 +505,32 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	 */
 	public void receiveMessage(ChatObject message) 
 	{
-		String incomingName = message.getSource().getUsername();
-
-		//check to see if the message is from a blocked user
-		boolean ignore = false;
-		for(String blockName:ignoreList)
+		//if the message's source is null, it's a system message.
+		if(message.getSource() == null)
 		{
-			if(incomingName.compareTo(blockName) == 0)
-				ignore = true;
-		}
-
-		//if user is allowed, append the message
-		if(!ignore)
-		{
-			messageWindow.append(message.getSource() + ": " + message.getMessage() + "\n");
+			messageWindow.append(message.getMessage() + "\n");
 			messageWindow.setCaretPosition(messageWindow.getDocument().getLength());
 		}
+		else
+		{
+			String incomingName = message.getSource().getUsername();
+
+			//check to see if the message is from a blocked user
+			boolean ignore = false;
+			for(String blockName:ignoreList)
+			{
+				if(incomingName.compareTo(blockName) == 0)
+					ignore = true;
+			}
+			
+			//if user is allowed, append the message
+			if(!ignore)
+			{
+				messageWindow.append(message.getSource() + ": " + message.getMessage() + "\n");
+				messageWindow.setCaretPosition(messageWindow.getDocument().getLength());
+			}
+		}
+
 	}
 
 	/* 
@@ -547,10 +558,10 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	public void destroy()
 	{
 		super.destroy();
-		
+
 		if(client != null)
 			client.dispose(client.getUser());
-		
+
 		if(madeserver){
 			try 
 			{
@@ -613,7 +624,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 
 
 					int index = userNames.indexOf(clicked);
-					userWindow.setText("Users currently in chat:");
+					userWindow.setText("Users currently in game:");
 					userArea.removeAll();
 					userArea.add(userWindow);
 					for(int x = 0; x < index + 1; x++)
@@ -690,7 +701,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 					clicked = null;
 
 
-					userWindow.setText("Users currently in chat:");
+					userWindow.setText("Users currently in game:");
 					userArea.removeAll();
 					userArea.add(userWindow);
 					for(int x = 0; x < userNames.size(); x++)
@@ -800,7 +811,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	{
 
 	}
-	
+
 	/**
 	 * This method gets called to close the applet gracefully when the server crashes or shuts down.
 	 * 
@@ -811,7 +822,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		JOptionPane.showMessageDialog(this, message, "Server Has Closed", 0);
 		System.exit(0);
 	}
-	
+
 	/**
 	 * This method gets called to close the applet gracefully when the game finishes.
 	 * 
@@ -823,10 +834,10 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 			JOptionPane.showMessageDialog(this, "Congratulations, you've won the game!", "Game Over", JOptionPane.INFORMATION_MESSAGE);
 		else
 			JOptionPane.showMessageDialog(this, "You lost.", "Game Over", JOptionPane.INFORMATION_MESSAGE);
-		
+
 		System.exit(0);
 	}
-	
+
 	/**
 	 * Adds a player to this UI's player list.
 	 * 
@@ -836,13 +847,13 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	{
 		player.setPlayerChangedCallback(this);
 		playerList.add(player);
-		
-/*
+
+		/*
 		gameCanvas.drawText("Mike", 85, 40, this);
 		gameCanvas.drawTextVertical("Bert", 60, 110, this);
 		gameCanvas.drawTextVertical("Player", 480, 302 - (18 * "Player".length()), this);*/
 	}
-	
+
 	/**
 	 * Removes a player from this UI's player list.
 	 * 
@@ -852,7 +863,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	{
 		playerList.remove(player);
 	}
-	
+
 	/**
 	 * Gets a list of players known to this client.
 	 * 
@@ -862,7 +873,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	{
 		return playerList;
 	}
-	
+
 	public void displayMessage(String txt)
 	{
 		int lineLimit = 12;
@@ -896,7 +907,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 					start2++;
 				gameCanvas.displayMessage(this, txt.substring(0, endLoc1), txt.substring(start, endLoc2), txt.substring(start2, txt.length()), 3,0);
 			}
-				
+
 		} 
 		catch (IOException e) 
 		{
@@ -904,7 +915,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void displayYesNoMessage(String txt)
 	{
 		int lineLimit = 12;
@@ -938,16 +949,16 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 					start2++;
 				gameCanvas.displayMessage(this, txt.substring(0, endLoc1), txt.substring(start, endLoc2), txt.substring(start2, txt.length()), 1,0);
 			}
-				
+
 		} 
 		catch (IOException e) 
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 	public void displayTrumpMessage(String txt, int trumpThatCannotBe)
 	{
 		try 
@@ -958,17 +969,17 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 				gameCanvas.displayMessage(this, txt.substring(0, 9), txt.substring(9, txt.length()), "", 2,trumpThatCannotBe);
 			else
 				gameCanvas.displayMessage(this, txt.substring(0, 9), txt.substring(9, 18), txt.substring(18, txt.length()), 2,trumpThatCannotBe);
-				
-				
+
+
 		} 
 		catch (IOException e) 
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 	public void displayCard(int PID, Card c,boolean l)
 	{
 		if(Card.ifNull(c))
@@ -989,12 +1000,12 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 			if(l)
 				gameCanvas.leadSuit=gameCanvas.getRealSuit(c);
 		}
-		
+
 	}
 
 	public void setUp() 
 	{
-		
+
 
 		setSize(701, 550);
 		setSize(700, 550);
@@ -1003,7 +1014,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		gameCanvas.drawText(client.getUser().getUsername(), 85, 300);
 		gameCanvas.repaint();
 		//int val = gameCanvas.displayMessage(this, "This is" , "a sample", "message" , 1);
-		
+
 		if(playerList != null)
 		{
 			for(Player p:playerList)
@@ -1011,43 +1022,43 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 				Trace.dprint(p.getUsername());
 				if(p.getUsername().equals(client.getUser().getUsername()))
 				{
-			/*		p.pickupCard(new Card('d', 2));
+					/*		p.pickupCard(new Card('d', 2));
 					p.pickupCard(new Card('s', 3));
 					p.pickupCard(new Card('h', 4));
 					p.pickupCard(new Card('c', 5));
 					p.pickupCard(new Card('d', 6));
-					
+
 					Trace.dprint("Index: " + p.getIndex(new Card('h', 4)));*/
-	
+
 					gameCanvas.setPlayer(p);
 					this.setPlayer(p);
-					
-				/*	gameCanvas.addCard('d', 2, 85, PLAYER_CARD_Y);
+
+					/*	gameCanvas.addCard('d', 2, 85, PLAYER_CARD_Y);
 					gameCanvas.addCard('s', 3, 164, PLAYER_CARD_Y);
 					gameCanvas.addCard('h', 4, 244, PLAYER_CARD_Y);
 					gameCanvas.addCard('c', 5, 322, PLAYER_CARD_Y);
 					gameCanvas.addCard('d', 6, 401, PLAYER_CARD_Y);*/
-					
+
 					repaint();
 					this.doLayout();
 					break;
 				}
 			}
 		}
-		
+
 	}
 
 	public Image getCardImg(char suit, int value) 
 	{
 		return cardImages.get(suit + "" + value);
 	}
-	
+
 	public void setPlayer(Player p) 
 	{
 		player = p;
-		
+
 	}
-	
+
 	public Player getPlayer()
 	{
 		return player;
@@ -1092,7 +1103,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 				gameCanvas.drawTextVertical(otherTeam.get(1).getUsername(), 480, 302 - (18 * otherTeam.get(1).getUsername().length()));
 				gameCanvas.drawTextVertical(otherTeam.get(0).getUsername(), 60, 110);
 			}*/
-			
+
 			int current = player.getPID() % 4 + 1;
 			p1 = getPlayerByPID(current);
 			gameCanvas.drawTextVertical(getPlayerByPID(current).getUsername(), 60, 110);
@@ -1103,9 +1114,9 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 			p3 = getPlayerByPID(current);
 			gameCanvas.drawTextVertical(getPlayerByPID(current).getUsername(), 480, 302 - (18 * getPlayerByPID(current).getUsername().length()));
 		}
-	
+
 	}
-	
+
 	private Player getPlayerByPID(int pid)
 	{
 		for(Player player : playerList)
@@ -1113,7 +1124,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 				return player;
 		return null;
 	}
-	
+
 	/**
 	 * method that passes the result of a question to euchrenetclient
 	 * @param r
@@ -1122,7 +1133,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	{
 		client.sendResult(r);
 	}
-	
+
 	/**
 	 * accessor method for the gamestate
 	 * @return the last known gamestate
@@ -1130,12 +1141,12 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	public int getState(){
 		return client.getState();
 	}
-	
+
 	public void pickupTrump()
 	{
 		player.pickupCard(gameCanvas.getNewCard());
 	}
-	
+
 	public void setTrump(char t)
 	{
 		gameCanvas.setSuit(t);
