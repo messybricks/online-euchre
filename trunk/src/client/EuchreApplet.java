@@ -508,8 +508,8 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		//if the message's source is null, it's a system message.
 		if(message.getSource() == null)
 		{
-			//TODO: change color here!
-			messageWindow.append(message.getMessage() + "\n");
+			// you can't ignore the system. it's in your head
+			messageWindow.append("* " + message.getMessage() + "\n");
 			messageWindow.setCaretPosition(messageWindow.getDocument().getLength());
 		}
 		else
@@ -531,7 +531,6 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 				messageWindow.setCaretPosition(messageWindow.getDocument().getLength());
 			}
 		}
-
 	}
 
 	/* 
