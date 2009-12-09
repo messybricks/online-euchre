@@ -318,7 +318,7 @@ public class EuchreEngine
 	{
 		state = END_OF_TRICK;
 		Trace.dprint("new state: " + state);
-		Trace.dprint("player " + winner.getUsername() + " has won the trick.");
+		displayGameMessage(null, winner.getUsername() + " has won the trick.");
 		displayCard(Card.nullCard(),0,false);//tell clients to clear the screen
 
 		//increment the score of tricks for the winning team
@@ -366,23 +366,30 @@ public class EuchreEngine
 			
 			//other team gets two points
 			cardDistributor.getPlayerOrder()[(currentPlayerIndex + 1) % 4].incrementScore(2);
+			cardDistributor.getPlayerOrder()[(currentPlayerIndex + 3) % 4].incrementScore(2);
 		}
 		else if(currentPlayer().getTricksWon() == 3 || currentPlayer().getTricksWon() == 4)
 		{
 			Trace.dprint(currentPlayer().getUsername() + "'s team won.  They get 1 point.");
 			currentPlayer().incrementScore(1);
+			cardDistributor.getPlayerOrder()[(currentPlayerIndex + 2) % 4].incrementScore(1);
 		}
 		else if(currentPlayer().getTricksWon() == 5)
 		{
 			Trace.dprint(currentPlayer().getUsername() + "'s team won 5 tricks.  They get 2 points.");
 			currentPlayer().incrementScore(2);
+			cardDistributor.getPlayerOrder()[(currentPlayerIndex + 2) % 4].incrementScore(2);
 		}
 
-		Trace.dprint(currentPlayer().getUsername() + "'s team's score: " + currentPlayer().getScore());
-		displayScores();
-		int otherPlayerIndex = (currentPlayerIndex + 1) % 4;
-		Trace.dprint(cardDistributor.getPlayerOrder()[otherPlayerIndex].getUsername() + "'s team's score: " + cardDistributor.getPlayerOrder()[otherPlayerIndex].getScore());
-		
+		//Send scores to all the players
+		for(int i = 0; i < 4; i++)
+		{
+			currentPlayerIndex = (currentPlayerIndex + 1) % 4;
+			displayGameMessage(currentPlayer(), "---------------------");
+			displayGameMessage(currentPlayer(), "Your team's score: " + currentPlayer().getScore());
+			displayGameMessage(currentPlayer(), "Other team's score: " + cardDistributor.getPlayerOrder()[(currentPlayerIndex + 1) % 4].getScore());
+			displayGameMessage(currentPlayer(), "---------------------");
+		}
 		//determine if someone has won the game
 		if(currentPlayer().getScore() >= 10)
 		{
@@ -396,14 +403,26 @@ public class EuchreEngine
 			deal();
 	}
 
-	private void displayGameMessage(String message)
+	/**
+	 * Displays a terminal message in the chat window of the given player (or to all players if player is null) 
+	 * 
+	 * @param player the player to which the message will be sent (null = all players)
+	 * @param message the message to be sent
+	 */
+	private void displayGameMessage(Player player, String message)
 	{
-		//send the scores to each player
-		for(int i = 0; i < 4; i++)
+		//send message to all players
+		if (player == null)
 		{
-			currentPlayerIndex = (currentPlayerIndex + 1) % 4;
-			currentPlayer().sendData(Opcode.SendMessage, new ChatObject(null, null, "your team's score: " + currentPlayer().getScore()));
-			currentPlayer().sendData(Opcode.SendMessage, new ChatObject(null, null, "your team's score: " + currentPlayer().getScore()));
+			for(int i = 0; i < 4; i++)
+			{
+				currentPlayerIndex = (currentPlayerIndex + 1) % 4;
+				currentPlayer().sendData(Opcode.SendMessage, new ChatObject(null, null, message));
+			}				
+		}
+		else
+		{
+			player.sendData(Opcode.SendMessage, new ChatObject(null, null, message));
 		}
 	}
 	
