@@ -985,6 +985,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		if(Card.ifNull(c))
 		{
 			gameCanvas.clear();
+			gameCanvas.leadSuit=' ';
 		}
 		else
 		{
