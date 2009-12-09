@@ -402,6 +402,7 @@ public class EuchreEngine
 		for(int i = 0; i < 4; i++)
 		{
 			currentPlayerIndex = (currentPlayerIndex + 1) % 4;
+			displayGameMessage(currentPlayer(), "You won " + currentPlayer().getTricksWon() + " tricks.");
 			currentPlayer().resetTricksWon();
 			displayGameMessage(currentPlayer(), "---------------------");
 			displayGameMessage(currentPlayer(), "Your team's score: " + currentPlayer().getScore());
