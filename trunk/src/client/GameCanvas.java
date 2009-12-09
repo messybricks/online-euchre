@@ -630,6 +630,8 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 	@Override
 	public void mouseClicked(MouseEvent e) 
 	{
+		boolean follow = true;
+		
 		if(buttons == 1)
 		{
 			if((e.getX() > 320) && (e.getX() < 360) && ((e.getY() > 295) && (e.getY() < 313)))
@@ -689,8 +691,10 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 							owner.setResult(1);
 						}
 						else
-							owner.displayMessage("you have to follow suit!");//TODO make this message display
-						
+						{
+							follow = false;
+							owner.displayMessage("You have to follow suit!");//TODO make this message display
+						}
 					}
 					
 					
@@ -700,7 +704,8 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 				Trace.dprint("YES!");
 				try 
 				{
-					displayMessage(this.owner, "","","",0,0);
+					if(follow)
+						displayMessage(this.owner, "","","",0,0);
 				} 
 				catch (IOException e1) 
 				{
