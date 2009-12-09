@@ -41,6 +41,7 @@ public class EuchreEngine
 	private boolean goingAlone = false;
 	private CardDistributor cardDistributor;
 	private int currentPlayerIndex;
+	private int leadingPlayerIndex = 0;
 	private int notPlaying;
 	private Card trumpCard;
 	private Card[] trick;
@@ -210,6 +211,9 @@ public class EuchreEngine
 	 */
 	private void throwCard()
 	{
+		if(state == FIRST_PLAYER_THROWS_CARD)
+			leadingPlayerIndex = currentPlayerIndex;
+		
 		//if someone still needs to throw a card
 		if(state < FOURTH_PLAYER_THROWS_CARD)
 		{
@@ -278,7 +282,7 @@ public class EuchreEngine
 		else if(trump == 'd')
 			leftSuit = 'h';
 		
-		int winningCardIndex = 0;		//initial index of "winning card" defaults to the leading card
+		int winningCardIndex = leadingPlayerIndex;		//initial index of "winning card" defaults to the leading card
 
 		//for each card in the trick
 		for(int i = 0; i < numberOfCards; i++)			 						
