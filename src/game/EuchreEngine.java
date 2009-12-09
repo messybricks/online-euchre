@@ -211,13 +211,12 @@ public class EuchreEngine
 	 */
 	private void throwCard()
 	{
-		if(state == FIRST_PLAYER_THROWS_CARD)
-			leadingPlayerIndex = currentPlayerIndex;
-		
 		//if someone still needs to throw a card
 		if(state < FOURTH_PLAYER_THROWS_CARD)
 		{
 			state++;
+			if(state == FIRST_PLAYER_THROWS_CARD)
+				leadingPlayerIndex = currentPlayerIndex;
 			Trace.dprint("new state: player " + (state - FIRST_PLAYER_THROWS_CARD) + " throws card");
 			Trace.dprint("current player index: " + currentPlayerIndex);
 			
@@ -375,7 +374,7 @@ public class EuchreEngine
 		//if current player's team lost the round
 		if(currentPlayer().getTricksWon() <= 2)
 		{
-			Trace.dprint(currentPlayer().getUsername() + "'s team lost, so the other team gets 2 points");
+			Trace.dprint(currentPlayer().getUsername() + "'s team won " + currentPlayer().getTricksWon() + " tricks, so the other team gets 2 points");
 			
 			//other team gets two points
 			cardDistributor.getPlayerOrder()[(currentPlayerIndex + 1) % 4].incrementScore(2);
@@ -383,7 +382,7 @@ public class EuchreEngine
 		}
 		else if(currentPlayer().getTricksWon() == 3 || currentPlayer().getTricksWon() == 4)
 		{
-			Trace.dprint(currentPlayer().getUsername() + "'s team won.  They get 1 point.");
+			Trace.dprint(currentPlayer().getUsername() + "'s team won " + currentPlayer().getTricksWon() + " tricks.  They get 1 point.");
 			currentPlayer().incrementScore(1);
 			cardDistributor.getPlayerOrder()[(currentPlayerIndex + 2) % 4].incrementScore(1);
 		}
