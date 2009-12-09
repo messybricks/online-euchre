@@ -98,12 +98,12 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 			} 
 			catch (MalformedURLException e) 
 			{
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			} 
 			catch (IOException e) 
 			{
-				// TODO Auto-generated catch block
+				 
 				e.printStackTrace();
 			}
 			cardImages.put(theSuit + "" + x, img);
@@ -117,12 +117,12 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 			} 
 			catch (MalformedURLException e) 
 			{
-				// TODO Auto-generated catch block
+				 
 				e.printStackTrace();
 			} 
 			catch (IOException e) 
 			{
-				// TODO Auto-generated catch block
+				 
 				e.printStackTrace();
 			}
 			cardImages.put(theSuit + "" + x, img);
@@ -136,12 +136,12 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 			} 
 			catch (MalformedURLException e) 
 			{
-				// TODO Auto-generated catch block
+				 
 				e.printStackTrace();
 			} 
 			catch (IOException e) 
 			{
-				// TODO Auto-generated catch block
+				 
 				e.printStackTrace();
 			}
 			cardImages.put(theSuit + "" + x, img);
@@ -155,12 +155,12 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 			} 
 			catch (MalformedURLException e) 
 			{
-				// TODO Auto-generated catch block
+				 
 				e.printStackTrace();
 			} 
 			catch (IOException e) 
 			{
-				// TODO Auto-generated catch block
+				 
 				e.printStackTrace();
 			}
 			cardImages.put(theSuit + "" + x, img);
@@ -234,7 +234,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 			} 
 			catch (InterruptedException e) 
 			{
-				// TODO Auto-generated catch block
+				 
 
 			}
 
@@ -398,7 +398,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		} 
 		catch (IOException e) 
 		{
-			// TODO Auto-generated catch block
+			 
 			e.printStackTrace();
 		}
 		 */
@@ -911,7 +911,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		} 
 		catch (IOException e) 
 		{
-			// TODO Auto-generated catch block
+			 
 			e.printStackTrace();
 		}
 	}
@@ -953,7 +953,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		} 
 		catch (IOException e) 
 		{
-			// TODO Auto-generated catch block
+			 
 			e.printStackTrace();
 		}
 
@@ -974,7 +974,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		} 
 		catch (IOException e) 
 		{
-			// TODO Auto-generated catch block
+			 
 			e.printStackTrace();
 		}
 
