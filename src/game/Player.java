@@ -279,6 +279,15 @@ public class Player implements Serializable {
 	{
 		return subPlayer.getTricksWon();
 	}
+
+	/**
+	 * reset the tricks won.
+	 */
+	public void resetTricksWon()
+	{
+		subPlayer.resetTricksWon();
+		transferData();
+	}
 	
 	/**
 	 * returns this team's score
@@ -319,6 +328,14 @@ public class Player implements Serializable {
 			uid = guid;
 			// Changed size of hand to six, because the dealer will momentarily have 6 cards.
 			hand = new Hand(6);
+		}
+
+		/**
+		 * reset the tricks won.
+		 */
+		public void resetTricksWon()
+		{
+			tricksWon = 0;			
 		}
 
 		/**
