@@ -999,7 +999,10 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 			else
 				gameCanvas.addCard(c.getSuit(), c.getValue(), 245, 215);
 			if(l)
+			{
 				gameCanvas.leadSuit=gameCanvas.getRealSuit(c);
+				Trace.dprint("lead suit is: %c", gameCanvas.getRealSuit(c));
+			}
 		}
 
 	}
