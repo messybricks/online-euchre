@@ -238,6 +238,10 @@ public class EuchreEngine
 	public void receiveCard(Card thrown)
 	{
 		Trace.dprint("received card: " + thrown.toString());
+		if(thrown.equals(Card.nullCard()))
+			displayGameMessage(null, currentPlayer().getUsername() + " was skipped.");
+		else
+			displayGameMessage(null, currentPlayer().getUsername() + " has played the " + thrown.toString());
 
 		//add the card to the current trick
 		//int numberOfCardsThrown = state - FIRST_PLAYER_THROWS_CARD;
@@ -279,8 +283,12 @@ public class EuchreEngine
 		//for each card in the trick
 		for(int i = 0; i < numberOfCards; i++)			 						
 		{
+			if(trick[winningCardIndex].getSuit() == leftSuit && trick[winningCardIndex].getValue() == 11)
+			{
+				//do nothing here if the winning card is the left
+			}
 			//if this card is trump and the winning card is not
-			if(trick[i].getSuit() == trump && trick[winningCardIndex].getSuit() != trump)
+			else if(trick[i].getSuit() == trump && trick[winningCardIndex].getSuit() != trump)
 				winningCardIndex = i;  			
 			//else if this card is the same suit as the current winning card and has a higher value
 			else if(trick[i].getSuit() == trick[winningCardIndex].getSuit() && trick[i].getValue() > trick[winningCardIndex].getValue())
@@ -298,6 +306,7 @@ public class EuchreEngine
 				winningCardIndex = i;
 		}
 
+		Trace.dprintArray(trick);
 		Trace.dprint("winning card: " + trick[winningCardIndex]);
 		Trace.dprint("trump: " + trump);
 
