@@ -75,7 +75,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 	boolean c = true;
 	boolean d = true;
 	boolean s = true;
-	
+	boolean dealtCardLocked = false;
 	//used to handle reneges
 	public char leadSuit;
 	
@@ -887,17 +887,26 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 
 		for(card c: Cards)
 		{
-			if((e.getX() > c.getX()) && (e.getX() < c.getX() + 71))
+			if(e.getY() >= 215)
 			{
-				if((e.getY() > c.getY()) && (e.getY() < c.getY() + 96))
+				if(dealtCardLocked)
 				{
-//					TODO: implement gameCanvas.clear()
-					xCon = e.getX() - c.getX();
-					yCon = e.getY() - c.getY();
-					cardSelected = true;
-					selectedCard = c;
-					origX = c.getX();
-					origY = c.getY();
+					if(e.getY() >= PLAYER_CARD_Y)
+					{
+						if((e.getX() > c.getX()) && (e.getX() < c.getX() + 71))
+						{
+							if((e.getY() > c.getY()) && (e.getY() < c.getY() + 96))
+							{
+			//					TODO: implement gameCanvas.clear()
+								xCon = e.getX() - c.getX();
+								yCon = e.getY() - c.getY();
+								cardSelected = true;
+								selectedCard = c;
+								origX = c.getX();
+								origY = c.getY();
+							}
+						}
+					}
 				}
 			}
 		}
