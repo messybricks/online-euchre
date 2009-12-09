@@ -37,7 +37,7 @@ public class Card implements Serializable
 			c = suit;
 		else
 		{
-			c = 'd';
+			c = ' ';
 			v = 0;
 		}
 	}
