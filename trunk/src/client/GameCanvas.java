@@ -597,7 +597,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 		int value;
 		char s =getRealSuit(c);
 		
-		if(s==leadSuit)
+		if(s==leadSuit || leadSuit==' ')
 			return true;
 		//check if out of suit
 		for(int i =0;i < player.getCardCount();i++)
