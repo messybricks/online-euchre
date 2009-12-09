@@ -463,11 +463,9 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 			} 
 			catch (MalformedURLException e) 
 			{
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) 
 			{
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
@@ -509,11 +507,10 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 			}
 			catch (MalformedURLException e) 
 			{
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) 
 			{
-				// TODO Auto-generated catch block
+				 
 				e.printStackTrace();
 			}
 		}
@@ -707,7 +704,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 				} 
 				catch (IOException e1) 
 				{
-					// TODO Auto-generated catch block
+					 
 					e1.printStackTrace();
 				}
 			}	
@@ -727,7 +724,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 				} 
 				catch (IOException e1) 
 				{
-					// TODO Auto-generated catch block
+					 
 					e1.printStackTrace();
 				}
 			}
@@ -746,7 +743,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 					} 
 					catch (IOException e1) 
 					{
-						// TODO Auto-generated catch block
+						 
 						e1.printStackTrace();
 					}
 				}
@@ -760,7 +757,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 					} 
 					catch (IOException e1) 
 					{
-						// TODO Auto-generated catch block
+						 
 						e1.printStackTrace();
 					}
 				}
@@ -778,7 +775,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 					} 
 					catch (IOException e1) 
 					{
-						// TODO Auto-generated catch block
+						 
 						e1.printStackTrace();
 					}
 				}
@@ -792,7 +789,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 					} 
 					catch (IOException e1) 
 					{
-						// TODO Auto-generated catch block
+						 
 						e1.printStackTrace();
 					}
 				}
@@ -810,7 +807,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 					} 
 					catch (IOException e1) 
 					{
-						// TODO Auto-generated catch block
+						 
 						e1.printStackTrace();
 					}
 				}
@@ -824,7 +821,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 					} 
 					catch (IOException e1) 
 					{
-						// TODO Auto-generated catch block
+						 
 						e1.printStackTrace();
 					}
 				}
@@ -842,7 +839,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 					} 
 					catch (IOException e1) 
 					{
-						// TODO Auto-generated catch block
+						 
 						e1.printStackTrace();
 					}
 				}
@@ -856,7 +853,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 					} 
 					catch (IOException e1) 
 					{
-						// TODO Auto-generated catch block
+						 
 						e1.printStackTrace();
 					}
 				}
@@ -870,14 +867,12 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 	@Override
 	public void mouseEntered(MouseEvent e) 
 	{
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) 
 	{
-		// TODO Auto-generated method stub
 		
 	}
 
@@ -943,7 +938,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 							} 
 							catch (IOException e1) 
 							{
-								// TODO Auto-generated catch block
+								 
 								e1.printStackTrace();
 							}
 						} 
@@ -957,7 +952,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 									displayMessage(this.owner, "","","",0,0);
 								} catch (IOException e1) 
 								{
-									// TODO Auto-generated catch block
+									 
 									e1.printStackTrace();
 								}
 							}
@@ -1171,7 +1166,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 		{
 			displayMessage(null, null, null, null, 0, 0);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			 
 			e.printStackTrace();
 		}
 		Cards.clear();
@@ -1210,7 +1205,6 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 				return new Card(c.getSuit(), c.getVal());
 			}
 		}
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -1262,7 +1256,6 @@ class card
 	 */
 	public char getSuit() 
 	{
-		// TODO Auto-generated method stub
 		return suit;
 	}
 
@@ -1383,13 +1376,13 @@ class text
 						url2 = new URL(owner.getCodeBase(), "letters/" + temp + "_.gif");
 					else
 						url2 = new URL(owner.getCodeBase(), "letters/" + temp + ".gif");
-					img = ImageIO.read(url2);
+					img = ImageIO.read(url2);    //TODO: this line gave a javax.imageio.IIOException on dealerDiscard
 					letters.add(img);
 				} catch (MalformedURLException e) {
-					// TODO Auto-generated catch block
+					 
 					e.printStackTrace();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
+					 
 					e.printStackTrace();
 				}
 			}

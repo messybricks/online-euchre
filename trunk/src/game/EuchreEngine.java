@@ -2,6 +2,7 @@ package game;
 
 import java.io.Serializable;
 
+import chat.ChatObject;
 import chat.User;
 import testing.FakeThread;
 import utility.Opcode;
@@ -210,24 +211,11 @@ public class EuchreEngine
 	private void throwCard()
 	{
 		//if someone still needs to throw a card
-		//old if condition: state < THIRD_PLAYER_THROWS_CARD || (state < FOURTH_PLAYER_THROWS_CARD && !goingAlone)
 		if(state < FOURTH_PLAYER_THROWS_CARD)
 		{
 			state++;
 			Trace.dprint("new state: player " + (state - FIRST_PLAYER_THROWS_CARD) + " throws card");
-
-			//TODO: find out if this works!
-			//if(state == FIRST_PLAYER_THROWS_CARD)
-				//currentPlayerIndex = (currentPlayerIndex + 1) % 4;
-			
-			//decide whose turn it is to throw a card
-			//if(state == FIRST_PLAYER_THROWS_CARD)
-				//currentPlayerIndex = CardDistributor.LEFT;
-			//else
-				//currentPlayerIndex = (currentPlayerIndex + 1) % 4;
-
 			Trace.dprint("current player index: " + currentPlayerIndex);
-			
 			
 			//if this player's partner is going alone, skip them
 			if(currentPlayerIndex == notPlaying)
@@ -235,7 +223,6 @@ public class EuchreEngine
 
 			//ask current player to choose and throw a card
 			currentPlayer().sendOpcode(Opcode.throwCard);
-
 		}
 		else //if the last player has thrown a card
 		{
@@ -331,7 +318,7 @@ public class EuchreEngine
 	{
 		state = END_OF_TRICK;
 		Trace.dprint("new state: " + state);
-		Trace.dprint("player " + winner.getPID() + " has won the trick.");
+		Trace.dprint("player " + winner.getUsername() + " has won the trick.");
 		displayCard(Card.nullCard(),0,false);//tell clients to clear the screen
 
 		//increment the score of tricks for the winning team
@@ -350,7 +337,7 @@ public class EuchreEngine
 			state = GOING_ALONE; // not actually asking if going alone, but throwCard requires the machine to start in this state to work properly.
 			trick = new Card[4];
 			
-			//currentPlayerIndex = (currentPlayerIndex + 1) % 4;	//TODO: this is a temporary fix
+			//currentPlayerIndex = (currentPlayerIndex + 1) % 4;	
 			throwCard();
 		}
 		else
@@ -365,27 +352,37 @@ public class EuchreEngine
 	{ 
 		state = END_OF_ROUND;
 		Trace.dprint("new state: " + state);
-
+			
 		//change current player to one of the players on the team that named trump
 		if(currentPlayer().getPID() % 2 != teamThatNamedTrump)
 			currentPlayerIndex = (currentPlayerIndex + 1) % 4;
 
+		Trace.dprint(currentPlayer().getUsername() + "'s team named trump.");
+		
 		//if current player's team lost the round
 		if(currentPlayer().getTricksWon() <= 2)
 		{
+			Trace.dprint(currentPlayer().getUsername() + "'s team lost, so the other team gets 2 points");
+			
 			//other team gets two points
 			cardDistributor.getPlayerOrder()[(currentPlayerIndex + 1) % 4].incrementScore(2);
 		}
 		else if(currentPlayer().getTricksWon() == 3 || currentPlayer().getTricksWon() == 4)
 		{
+			Trace.dprint(currentPlayer().getUsername() + "'s team won.  They get 1 point.");
 			currentPlayer().incrementScore(1);
 		}
 		else if(currentPlayer().getTricksWon() == 5)
 		{
+			Trace.dprint(currentPlayer().getUsername() + "'s team won 5 tricks.  They get 2 points.");
 			currentPlayer().incrementScore(2);
 		}
 
-
+		Trace.dprint(currentPlayer().getUsername() + "'s team's score: " + currentPlayer().getScore());
+		displayScores();
+		int otherPlayerIndex = (currentPlayerIndex + 1) % 4;
+		Trace.dprint(cardDistributor.getPlayerOrder()[otherPlayerIndex].getUsername() + "'s team's score: " + cardDistributor.getPlayerOrder()[otherPlayerIndex].getScore());
+		
 		//determine if someone has won the game
 		if(currentPlayer().getScore() >= 10)
 		{
@@ -399,6 +396,17 @@ public class EuchreEngine
 			deal();
 	}
 
+	private void displayGameMessage(String message)
+	{
+		//send the scores to each player
+		for(int i = 0; i < 4; i++)
+		{
+			currentPlayerIndex = (currentPlayerIndex + 1) % 4;
+			currentPlayer().sendData(Opcode.SendMessage, new ChatObject(null, null, "your team's score: " + currentPlayer().getScore()));
+			currentPlayer().sendData(Opcode.SendMessage, new ChatObject(null, null, "your team's score: " + currentPlayer().getScore()));
+		}
+	}
+	
 	/**
 	 * sends an opcode to each player indicating true if their team won, false otherwise
 	 * 
