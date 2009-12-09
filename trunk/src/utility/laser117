@@ -1,0 +1,1058 @@
+%!PS-Adobe-3.0
+%%BoundingBox: 38 24 574 768
+%%Title: Enscript Output
+%%For: Robert M. Spychalski
+%%Creator: GNU enscript 1.6.4
+%%CreationDate: Wed Dec  9 14:18:27 2009
+%%Orientation: Landscape
+%%Pages: (atend)
+%%DocumentMedia: Letter 612 792 0 () ()
+%%DocumentNeededResources: (atend)
+%%EndComments
+%%BeginProlog
+%%BeginResource: procset Enscript-Prolog 1.6 4
+%
+% Procedures.
+%
+
+/_S {	% save current state
+  /_s save def
+} def
+/_R {	% restore from saved state
+  _s restore
+} def
+
+/S {	% showpage protecting gstate
+  gsave
+  showpage
+  grestore
+} bind def
+
+/MF {	% fontname newfontname -> -	make a new encoded font
+  /newfontname exch def
+  /fontname exch def
+
+  /fontdict fontname findfont def
+  /newfont fontdict maxlength dict def
+
+  fontdict {
+    exch
+    dup /FID eq {
+      % skip FID pair
+      pop pop
+    } {
+      % copy to the new font dictionary
+      exch newfont 3 1 roll put
+    } ifelse
+  } forall
+
+  newfont /FontName newfontname put
+
+  % insert only valid encoding vectors
+  encoding_vector length 256 eq {
+    newfont /Encoding encoding_vector put
+  } if
+
+  newfontname newfont definefont pop
+} def
+
+/MF_PS { % fontname newfontname -> -	make a new font preserving its enc
+  /newfontname exch def
+  /fontname exch def
+
+  /fontdict fontname findfont def
+  /newfont fontdict maxlength dict def
+
+  fontdict {
+    exch
+    dup /FID eq {
+      % skip FID pair
+      pop pop
+    } {
+      % copy to the new font dictionary
+      exch newfont 3 1 roll put
+    } ifelse
+  } forall
+
+  newfont /FontName newfontname put
+
+  newfontname newfont definefont pop
+} def
+
+/SF { % fontname width height -> -	set a new font
+  /height exch def
+  /width exch def
+
+  findfont
+  [width 0 0 height 0 0] makefont setfont
+} def
+
+/SUF { % fontname width height -> -	set a new user font
+  /height exch def
+  /width exch def
+
+  /F-gs-user-font MF
+  /F-gs-user-font width height SF
+} def
+
+/SUF_PS { % fontname width height -> -	set a new user font preserving its enc
+  /height exch def
+  /width exch def
+
+  /F-gs-user-font MF_PS
+  /F-gs-user-font width height SF
+} def
+
+/M {moveto} bind def
+/s {show} bind def
+
+/Box {	% x y w h -> -			define box path
+  /d_h exch def /d_w exch def /d_y exch def /d_x exch def
+  d_x d_y  moveto
+  d_w 0 rlineto
+  0 d_h rlineto
+  d_w neg 0 rlineto
+  closepath
+} def
+
+/bgs {	% x y height blskip gray str -> -	show string with bg color
+  /str exch def
+  /gray exch def
+  /blskip exch def
+  /height exch def
+  /y exch def
+  /x exch def
+
+  gsave
+    x y blskip sub str stringwidth pop height Box
+    gray setgray
+    fill
+  grestore
+  x y M str s
+} def
+
+/bgcs { % x y height blskip red green blue str -> -  show string with bg color
+  /str exch def
+  /blue exch def
+  /green exch def
+  /red exch def
+  /blskip exch def
+  /height exch def
+  /y exch def
+  /x exch def
+
+  gsave
+    x y blskip sub str stringwidth pop height Box
+    red green blue setrgbcolor
+    fill
+  grestore
+  x y M str s
+} def
+
+% Highlight bars.
+/highlight_bars {	% nlines lineheight output_y_margin gray -> -
+  gsave
+    setgray
+    /ymarg exch def
+    /lineheight exch def
+    /nlines exch def
+
+    % This 2 is just a magic number to sync highlight lines to text.
+    0 d_header_y ymarg sub 2 sub translate
+
+    /cw d_output_w cols div def
+    /nrows d_output_h ymarg 2 mul sub lineheight div cvi def
+
+    % for each column
+    0 1 cols 1 sub {
+      cw mul /xp exch def
+
+      % for each rows
+      0 1 nrows 1 sub {
+        /rn exch def
+        rn lineheight mul neg /yp exch def
+        rn nlines idiv 2 mod 0 eq {
+	  % Draw highlight bar.  4 is just a magic indentation.
+	  xp 4 add yp cw 8 sub lineheight neg Box fill
+	} if
+      } for
+    } for
+
+  grestore
+} def
+
+% Line highlight bar.
+/line_highlight {	% x y width height gray -> -
+  gsave
+    /gray exch def
+    Box gray setgray fill
+  grestore
+} def
+
+% Column separator lines.
+/column_lines {
+  gsave
+    .1 setlinewidth
+    0 d_footer_h translate
+    /cw d_output_w cols div def
+    1 1 cols 1 sub {
+      cw mul 0 moveto
+      0 d_output_h rlineto stroke
+    } for
+  grestore
+} def
+
+% Column borders.
+/column_borders {
+  gsave
+    .1 setlinewidth
+    0 d_footer_h moveto
+    0 d_output_h rlineto
+    d_output_w 0 rlineto
+    0 d_output_h neg rlineto
+    closepath stroke
+  grestore
+} def
+
+% Do the actual underlay drawing
+/draw_underlay {
+  ul_style 0 eq {
+    ul_str true charpath stroke
+  } {
+    ul_str show
+  } ifelse
+} def
+
+% Underlay
+/underlay {	% - -> -
+  gsave
+    0 d_page_h translate
+    d_page_h neg d_page_w atan rotate
+
+    ul_gray setgray
+    ul_font setfont
+    /dw d_page_h dup mul d_page_w dup mul add sqrt def
+    ul_str stringwidth pop dw exch sub 2 div ul_h_ptsize -2 div moveto
+    draw_underlay
+  grestore
+} def
+
+/user_underlay {	% - -> -
+  gsave
+    ul_x ul_y translate
+    ul_angle rotate
+    ul_gray setgray
+    ul_font setfont
+    0 0 ul_h_ptsize 2 div sub moveto
+    draw_underlay
+  grestore
+} def
+
+% Page prefeed
+/page_prefeed {		% bool -> -
+  statusdict /prefeed known {
+    statusdict exch /prefeed exch put
+  } {
+    pop
+  } ifelse
+} def
+
+% Wrapped line markers
+/wrapped_line_mark {	% x y charwith charheight type -> -
+  /type exch def
+  /h exch def
+  /w exch def
+  /y exch def
+  /x exch def
+
+  type 2 eq {
+    % Black boxes (like TeX does)
+    gsave
+      0 setlinewidth
+      x w 4 div add y M
+      0 h rlineto w 2 div 0 rlineto 0 h neg rlineto
+      closepath fill
+    grestore
+  } {
+    type 3 eq {
+      % Small arrows
+      gsave
+        .2 setlinewidth
+        x w 2 div add y h 2 div add M
+        w 4 div 0 rlineto
+        x w 4 div add y lineto stroke
+
+        x w 4 div add w 8 div add y h 4 div add M
+        x w 4 div add y lineto
+	w 4 div h 8 div rlineto stroke
+      grestore
+    } {
+      % do nothing
+    } ifelse
+  } ifelse
+} def
+
+% EPSF import.
+
+/BeginEPSF {
+  /b4_Inc_state save def    		% Save state for cleanup
+  /dict_count countdictstack def	% Count objects on dict stack
+  /op_count count 1 sub def		% Count objects on operand stack
+  userdict begin
+  /showpage { } def
+  0 setgray 0 setlinecap
+  1 setlinewidth 0 setlinejoin
+  10 setmiterlimit [ ] 0 setdash newpath
+  /languagelevel where {
+    pop languagelevel
+    1 ne {
+      false setstrokeadjust false setoverprint
+    } if
+  } if
+} bind def
+
+/EndEPSF {
+  count op_count sub { pos } repeat	% Clean up stacks
+  countdictstack dict_count sub { end } repeat
+  b4_Inc_state restore
+} bind def
+
+% Check PostScript language level.
+/languagelevel where {
+  pop /gs_languagelevel languagelevel def
+} {
+  /gs_languagelevel 1 def
+} ifelse
+%%EndResource
+%%BeginResource: procset Enscript-Encoding-88591 1.6 4
+/encoding_vector [
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/space        	/exclam       	/quotedbl     	/numbersign   	
+/dollar       	/percent      	/ampersand    	/quoteright   	
+/parenleft    	/parenright   	/asterisk     	/plus         	
+/comma        	/hyphen       	/period       	/slash        	
+/zero         	/one          	/two          	/three        	
+/four         	/five         	/six          	/seven        	
+/eight        	/nine         	/colon        	/semicolon    	
+/less         	/equal        	/greater      	/question     	
+/at           	/A            	/B            	/C            	
+/D            	/E            	/F            	/G            	
+/H            	/I            	/J            	/K            	
+/L            	/M            	/N            	/O            	
+/P            	/Q            	/R            	/S            	
+/T            	/U            	/V            	/W            	
+/X            	/Y            	/Z            	/bracketleft  	
+/backslash    	/bracketright 	/asciicircum  	/underscore   	
+/quoteleft    	/a            	/b            	/c            	
+/d            	/e            	/f            	/g            	
+/h            	/i            	/j            	/k            	
+/l            	/m            	/n            	/o            	
+/p            	/q            	/r            	/s            	
+/t            	/u            	/v            	/w            	
+/x            	/y            	/z            	/braceleft    	
+/bar          	/braceright   	/tilde        	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/space        	/exclamdown   	/cent         	/sterling     	
+/currency     	/yen          	/brokenbar    	/section      	
+/dieresis     	/copyright    	/ordfeminine  	/guillemotleft	
+/logicalnot   	/hyphen       	/registered   	/macron       	
+/degree       	/plusminus    	/twosuperior  	/threesuperior	
+/acute        	/mu           	/paragraph    	/bullet       	
+/cedilla      	/onesuperior  	/ordmasculine 	/guillemotright	
+/onequarter   	/onehalf      	/threequarters	/questiondown 	
+/Agrave       	/Aacute       	/Acircumflex  	/Atilde       	
+/Adieresis    	/Aring        	/AE           	/Ccedilla     	
+/Egrave       	/Eacute       	/Ecircumflex  	/Edieresis    	
+/Igrave       	/Iacute       	/Icircumflex  	/Idieresis    	
+/Eth          	/Ntilde       	/Ograve       	/Oacute       	
+/Ocircumflex  	/Otilde       	/Odieresis    	/multiply     	
+/Oslash       	/Ugrave       	/Uacute       	/Ucircumflex  	
+/Udieresis    	/Yacute       	/Thorn        	/germandbls   	
+/agrave       	/aacute       	/acircumflex  	/atilde       	
+/adieresis    	/aring        	/ae           	/ccedilla     	
+/egrave       	/eacute       	/ecircumflex  	/edieresis    	
+/igrave       	/iacute       	/icircumflex  	/idieresis    	
+/eth          	/ntilde       	/ograve       	/oacute       	
+/ocircumflex  	/otilde       	/odieresis    	/divide       	
+/oslash       	/ugrave       	/uacute       	/ucircumflex  	
+/udieresis    	/yacute       	/thorn        	/ydieresis    	
+] def
+%%EndResource
+%%EndProlog
+%%BeginSetup
+%%IncludeResource: font Courier-Bold
+%%IncludeResource: font Courier
+/HFpt_w 10 def
+/HFpt_h 10 def
+/Courier-Bold /HF-gs-font MF
+/HF /HF-gs-font findfont [HFpt_w 0 0 HFpt_h 0 0] makefont def
+/Courier /F-gs-font MF
+/F-gs-font 7 7 SF
+/#copies 1 def
+% Pagedevice definitions:
+gs_languagelevel 1 gt {
+  <<
+    /PageSize [612 792] 
+  >> setpagedevice
+} if
+%%BeginResource: procset Enscript-Header-enscript 1.6 4
+%%IncludeResource: font Times-Bold
+%%IncludeResource: font Times-Roman
+
+% Fonts.
+/Times-Bold /HeaderFont-Bold MF
+/HeaderDateF /HeaderFont-Bold findfont 12 scalefont def
+
+/Times-Roman /HeaderFont-Times MF
+/HeaderHDRF /HeaderFont-Times findfont 14 scalefont def
+
+/HeaderPageNumF /Helvetica-Bold findfont 28.8 scalefont def
+
+/do_header {	% print enscript header
+  gsave
+    d_header_x d_header_y translate
+
+    % light bar
+    0 0 d_header_w d_header_h 2 div Box
+    .95 setgray fill
+
+    % dark gray boxes
+    /dbw d_header_h 2 mul def	% dark box width
+    /dbc .7 def			% dark box color
+
+    % left dark box.
+    0 0 dbw d_header_h Box
+    dbc setgray fill
+
+    0 setgray 
+    HeaderDateF setfont
+    moddatestr dup stringwidth pop dbw exch sub 2 div 
+    d_header_h 2 div 2 add moveto show
+    modtimestr dup stringwidth pop dbw exch sub 2 div 
+    d_header_h 5 div moveto show
+
+    % right dark box
+    d_header_w dbw sub 0 dbw d_header_h Box
+    dbc setgray fill
+
+    HeaderPageNumF setfont
+    1 setgray
+    pagenumstr dup
+    stringwidth pop dbw exch sub 2 div d_header_w dbw sub add
+    d_header_h .2 mul moveto show
+
+    % filename
+    0 setgray 
+    HeaderHDRF setfont
+    d_header_w fname stringwidth pop sub 2 div d_header_h 8 div moveto
+    fname show
+
+    % user supplied header string.
+    user_header_p {
+      /h d_header_h 8 div 5 mul def
+
+      % Implement strict enscript compatibility.
+      user_header_center_str () eq user_header_right_str () eq and {
+        d_header_w user_header_left_str stringwidth pop sub 2 div 
+        h moveto user_header_left_str show
+      } {
+        dbw 5 add h moveto user_header_left_str show
+
+        d_header_w user_header_center_str stringwidth pop sub 2 div 
+        h moveto user_header_center_str show
+
+	d_header_w dbw sub 5 sub user_header_right_str stringwidth pop
+	sub h moveto user_header_right_str show
+      } ifelse
+    } if
+
+  grestore
+} def
+%%EndResource
+/d_page_w 744 def
+/d_page_h 536 def
+/d_header_x 0 def
+/d_header_y 500 def
+/d_header_w 744 def
+/d_header_h 36 def
+/d_footer_x 0 def
+/d_footer_y 0 def
+/d_footer_w 744 def
+/d_footer_h 0 def
+/d_output_w 744 def
+/d_output_h 500 def
+/cols 2 def
+%%EndSetup
+%%Page: (1) 1
+%%BeginPageSetup
+_S
+90 rotate
+24 -574 translate
+/pagenum 1 def
+/fname (NetworkThread.java) def
+/fdir () def
+/ftail (NetworkThread.java) def
+% User defined strings:
+/pagenumstr (1) def
+/moddatestr (11/01/09) def
+/modtimestr (12:32:21) def
+/user_header_p false def
+/user_footer_p false def
+%%EndPageSetup
+column_lines
+do_header
+5 490 M
+(package utility;) s
+5 474 M
+(import java.io.*;) s
+5 466 M
+(import java.net.*;) s
+5 458 M
+(import java.util.*;) s
+5 442 M
+(/**) s
+5 434 M
+( * This thread implements a generic queue-based client/server communications system.) s
+5 426 M
+( */) s
+5 418 M
+(public abstract class NetworkThread extends Thread implements TransactionThread) s
+5 410 M
+({) s
+5 402 M
+(        private Socket socket = null;) s
+5 394 M
+(        private Queue<Packet> inbound = null;) s
+5 386 M
+(        private Queue<Packet> outbound = null;) s
+5 378 M
+(        private DataInputStream reader = null;) s
+5 370 M
+(        private DataOutputStream writer = null;) s
+5 354 M
+(        private volatile boolean exitThread = false;) s
+5 338 M
+(        // number of milliseconds to wait between management thread ticks) s
+5 330 M
+(        private static final int THREAD_TICK_MS = 100;) s
+5 314 M
+(        /**) s
+5 306 M
+(         * Creates a new instance of the PacketQueueThread using the given client conn) s
+5 298 M
+(ection.) s
+5 290 M
+(         * ) s
+5 282 M
+(         * @param client A socket bound to the client to communicate with.) s
+5 274 M
+(         */) s
+5 266 M
+(        public NetworkThread\(Socket client, String name\)) s
+5 258 M
+(        {) s
+5 250 M
+(                super\("NetworkThread_" + name\);) s
+5 242 M
+(                socket = client;) s
+5 226 M
+(                inbound = new LinkedList<Packet>\(\);) s
+5 218 M
+(                outbound = new LinkedList<Packet>\(\);) s
+5 202 M
+(                try) s
+5 194 M
+(                {) s
+5 186 M
+(                        reader = new DataInputStream\(socket.getInputStream\(\)\);) s
+5 178 M
+(                        writer = new DataOutputStream\(socket.getOutputStream\(\)\);) s
+5 170 M
+(                }) s
+5 162 M
+(                catch \(IOException ex\)) s
+5 154 M
+(                {) s
+5 146 M
+(                        Trace.dprint\("Unable to attach socket stream to NetworkThread.) s
+5 138 M
+( Message: %s", ex.getMessage\(\)\);) s
+5 130 M
+(                }) s
+5 122 M
+(        }) s
+5 106 M
+(        /**) s
+5 98 M
+(         * This event is raised by the thread managing the socket whenever there are n) s
+5 90 M
+(ew packets available to be processed.) s
+5 82 M
+(         */) s
+5 74 M
+(        protected abstract void processPacket\(Packet packet\);) s
+5 58 M
+(        public void run\(\)) s
+5 50 M
+(        {) s
+5 42 M
+(                while\(true\)) s
+5 34 M
+(                {) s
+5 26 M
+(                        try) s
+5 18 M
+(                        {) s
+5 10 M
+(                                try) s
+5 2 M
+(                                {) s
+377 490 M
+(                                        // if the reader has bytes available to be rea) s
+377 482 M
+(d, we can convert them to a packet and add to inbound) s
+377 474 M
+(                                        if\(reader.available\(\) >= Packet.HEADER_SIZE\)) s
+377 466 M
+(                                        {) s
+377 458 M
+(                                                //int byteIn = -1;) s
+377 450 M
+(                                                ByteArrayOutputStream dataStream = new) s
+377 442 M
+( ByteArrayOutputStream\(\);) s
+377 426 M
+(                                                /*while\(reader.available\(\) > 0\)) s
+377 418 M
+(                                                {) s
+377 410 M
+(                                                        byteIn = reader.read\(\);) s
+377 402 M
+(                                                        dataStream.write\(byteIn\);) s
+377 394 M
+(                                                }*/) s
+377 386 M
+(                                                ) s
+377 378 M
+(                                                for\(byte i = 0; i < Packet.HEADER_SIZE) s
+377 370 M
+(; ++i\)) s
+377 362 M
+(                                                        dataStream.write\(reader.read\(\)) s
+377 354 M
+(\);) s
+377 338 M
+(                                                int bytesRead = 0;) s
+377 330 M
+(                                                int dataSize = Packet.getDataSizeFromH) s
+377 322 M
+(eader\(dataStream.toByteArray\(\)\);) s
+377 314 M
+(                                                for\(; bytesRead < dataSize && reader.a) s
+377 306 M
+(vailable\(\) > 0; ++bytesRead\)) s
+377 298 M
+(                                                        dataStream.write\(reader.read\(\)) s
+377 290 M
+(\);) s
+377 282 M
+(                                                ) s
+377 274 M
+(                                                if\(bytesRead < dataSize\)) s
+377 266 M
+(                                                {) s
+377 258 M
+(                                                        Trace.dprint\("### WARNING: Rec) s
+377 250 M
+(eived a partial packet! Received %d bytes from a packet of size %d. Will wait 40ms for) s
+377 242 M
+( additional data...", dataSize + Packet.HEADER_SIZE, bytesRead + Packet.HEADER_SIZE\);) s
+377 234 M
+(                                                        sleep\(40\);) s
+377 226 M
+(                                                        for\(; bytesRead < dataSize && ) s
+377 218 M
+(reader.available\(\) > 0; ++bytesRead\)) s
+377 210 M
+(                                                                dataStream.write\(reade) s
+377 202 M
+(r.read\(\)\);) s
+377 194 M
+(                                                        if\(bytesRead < dataSize\)) s
+377 186 M
+(                                                                Trace.dprint\("### ERRO) s
+377 178 M
+(R: Unable to read packet from network stream. Received %d bytes of %d.", bytesRead + P) s
+377 170 M
+(acket.HEADER_SIZE, dataSize + Packet.HEADER_SIZE\);) s
+377 162 M
+(                                                }) s
+377 146 M
+(                                                Packet inPacket = new Packet\(dataStrea) s
+377 138 M
+(m.toByteArray\(\)\);) s
+377 130 M
+(                                                Trace.nprint\("NetworkThread << %s [%d]) s
+377 122 M
+(", inPacket.getOpcode\(\).toString\(\), dataStream.size\(\) - Packet.HEADER_SIZE\);) s
+377 114 M
+(                                                ) s
+377 106 M
+(                                                synchronized\(inbound\)) s
+377 98 M
+(                                                {) s
+377 90 M
+(                                                        inbound.add\(inPacket\);) s
+377 82 M
+(                                                }) s
+377 74 M
+(                                        }) s
+377 66 M
+(                                }) s
+377 58 M
+(                                catch \(IOException ex\)) s
+377 50 M
+(                                {) s
+377 42 M
+(                                        Trace.dprint\("Unable to read data from socket ) s
+377 34 M
+(input stream. Message: %s", ex.getMessage\(\)\);) s
+377 26 M
+(                                }) s
+377 18 M
+(                                catch \(InvalidPacketException ex\)) s
+377 10 M
+(                                {) s
+377 2 M
+(                                        Trace.dprint\("Received a corrupt packet from i) s
+_R
+S
+%%Page: (2) 2
+%%BeginPageSetup
+_S
+90 rotate
+24 -574 translate
+/pagenum 2 def
+/fname (NetworkThread.java) def
+/fdir () def
+/ftail (NetworkThread.java) def
+% User defined strings:
+/pagenumstr (2) def
+/moddatestr (11/01/09) def
+/modtimestr (12:32:21) def
+/user_header_p false def
+/user_footer_p false def
+%%EndPageSetup
+column_lines
+do_header
+5 490 M
+(nput stream on NetworkThread. Message: %s", ex.getMessage\(\)\);) s
+5 482 M
+(                                }) s
+5 466 M
+(                                // process packets on the queue) s
+5 458 M
+(                                synchronized\(inbound\)) s
+5 450 M
+(                                {) s
+5 442 M
+(                                        if\(!inbound.isEmpty\(\)\)) s
+5 434 M
+(                                                processPacket\(inbound.remove\(\)\);) s
+5 426 M
+(                                }) s
+5 410 M
+(                                try) s
+5 402 M
+(                                {) s
+5 394 M
+(                                        // if outbound is not empty, we can flatten a ) s
+5 386 M
+(packet and send it on its merry way) s
+5 378 M
+(                                        synchronized\(outbound\)) s
+5 370 M
+(                                        {) s
+5 362 M
+(                                                if\(!outbound.isEmpty\(\)\)) s
+5 354 M
+(                                                {) s
+5 346 M
+(                                                        Packet outPacket = outbound.re) s
+5 338 M
+(move\(\);) s
+5 330 M
+(                                                        byte[] flattened = outPacket.f) s
+5 322 M
+(latten\(\);) s
+5 314 M
+(        ) s
+5 306 M
+(                                                        Trace.nprint\("NetworkThread >>) s
+5 298 M
+( %s [%d]", outPacket.getOpcode\(\).toString\(\), flattened.length - Packet.HEADER_SIZE\);) s
+5 290 M
+(                                                        writer.write\(flattened\);) s
+5 282 M
+(                                                }) s
+5 274 M
+(                                        }) s
+5 266 M
+(                                }) s
+5 258 M
+(                                catch \(IOException ex\)) s
+5 250 M
+(                                {) s
+5 242 M
+(                                        Trace.dprint\("Unable to write packet to output) s
+5 234 M
+( stream in NetworkThread. Message: %s", ex.getMessage\(\)\);) s
+5 226 M
+(                                }) s
+5 218 M
+(                        }) s
+5 210 M
+(                        catch \(Exception uhoh\)) s
+5 202 M
+(                        {) s
+5 194 M
+(                                System.err.println\(String.format\("### ERROR in Network) s
+5 186 M
+(Thread; unhandled exception of type %s during processing loop execution. Message: %s\\n) s
+5 178 M
+(Stack trace:\\n", uhoh.getClass\(\).getName\(\), uhoh.getMessage\(\)\)\);) s
+5 170 M
+(                                uhoh.printStackTrace\(System.err\);) s
+5 162 M
+(                        }) s
+5 154 M
+(                        finally) s
+5 146 M
+(                        {) s
+5 138 M
+(                                // if exitThread is true, the parent thread has reques) s
+5 130 M
+(ted a soft termination of this thread) s
+5 122 M
+(                                if\(exitThread\)) s
+5 114 M
+(                                        break;) s
+5 98 M
+(                                sleep\(THREAD_TICK_MS\);) s
+5 90 M
+(                        }) s
+5 82 M
+(                }) s
+5 66 M
+(                try) s
+5 58 M
+(                {) s
+5 50 M
+(                        writer.close\(\);) s
+5 42 M
+(                        reader.close\(\);) s
+5 34 M
+(                        socket.close\(\);) s
+5 26 M
+(                }) s
+5 18 M
+(                catch \(IOException ex\)) s
+5 10 M
+(                {) s
+5 2 M
+(                        Trace.dprint\("Unable to close client socket in NetworkThread.") s
+377 490 M
+(\);) s
+377 482 M
+(                }) s
+377 474 M
+(        }) s
+377 458 M
+(        /**) s
+377 450 M
+(         * Enqueues a packet to be sent to the server.) s
+377 442 M
+(         * ) s
+377 434 M
+(         * @param packet Packet to send) s
+377 426 M
+(         */) s
+377 418 M
+(        public void send\(Packet packet\)) s
+377 410 M
+(        {) s
+377 402 M
+(                synchronized\(outbound\)) s
+377 394 M
+(                {) s
+377 386 M
+(                        outbound.add\(packet\);) s
+377 378 M
+(                }) s
+377 370 M
+(        }) s
+377 354 M
+(        /**) s
+377 346 M
+(         * Enqueues a new packet to be sent to the server.) s
+377 338 M
+(         * ) s
+377 330 M
+(         * @param opcode Opcode to assign to the new packet) s
+377 322 M
+(         */) s
+377 314 M
+(        public void send\(Opcode opcode\)) s
+377 306 M
+(        {) s
+377 298 M
+(                synchronized\(outbound\)) s
+377 290 M
+(                {) s
+377 282 M
+(                        outbound.add\(new Packet\(opcode\)\);) s
+377 274 M
+(                }) s
+377 266 M
+(        }) s
+377 250 M
+(        /**) s
+377 242 M
+(         * Enqueues a packet to be sent to the server.) s
+377 234 M
+(         * ) s
+377 226 M
+(         * @param opcode Opcode to assign to the new packet) s
+377 218 M
+(         * @param datum A serializable object to attach to the packet) s
+377 210 M
+(         */) s
+377 202 M
+(        public void send\(Opcode opcode, Serializable datum\)) s
+377 194 M
+(        {) s
+377 186 M
+(                synchronized\(outbound\)) s
+377 178 M
+(                {) s
+377 170 M
+(                        outbound.add\(new Packet\(opcode, datum\)\);) s
+377 162 M
+(                }) s
+377 154 M
+(        }) s
+377 138 M
+(        /**) s
+377 130 M
+(         * Causes this NetworkThread to pause execution for a specified amount of time) s
+377 122 M
+(.) s
+377 114 M
+(         * ) s
+377 106 M
+(         * @param milliseconds Number of milliseconds to sleep for) s
+377 98 M
+(         */) s
+377 90 M
+(        protected void sleep\(int milliseconds\)) s
+377 82 M
+(        {) s
+377 74 M
+(                try) s
+377 66 M
+(                {) s
+377 58 M
+(                        Thread.sleep\(milliseconds\);) s
+377 50 M
+(                }) s
+377 42 M
+(                catch \(InterruptedException ex\)) s
+377 34 M
+(                {) s
+377 26 M
+(                        Trace.dprint\("NetworkThread was interrupted while sleeping!"\);) s
+377 18 M
+(                }) s
+377 10 M
+(        }) s
+_R
+S
+%%Page: (3) 3
+%%BeginPageSetup
+_S
+90 rotate
+24 -574 translate
+/pagenum 3 def
+/fname (NetworkThread.java) def
+/fdir () def
+/ftail (NetworkThread.java) def
+% User defined strings:
+/pagenumstr (3) def
+/moddatestr (11/01/09) def
+/modtimestr (12:32:21) def
+/user_header_p false def
+/user_footer_p false def
+%%EndPageSetup
+column_lines
+do_header
+5 490 M
+(        /**) s
+5 482 M
+(         * Returns true if the server has sent a packet) s
+5 474 M
+(         * ) s
+5 466 M
+(         * @return True if the server has sent a packet) s
+5 458 M
+(         */) s
+5 450 M
+(        public boolean hasInbound\(\)) s
+5 442 M
+(        {) s
+5 434 M
+(                synchronized\(inbound\)) s
+5 426 M
+(                {) s
+5 418 M
+(                        return !inbound.isEmpty\(\);) s
+5 410 M
+(                }) s
+5 402 M
+(        }) s
+5 386 M
+(        /**) s
+5 378 M
+(         * Sets a flag which will attempt to safely terminate this thread.) s
+5 370 M
+(         */) s
+5 362 M
+(        public void stopThread\(\)) s
+5 354 M
+(        {) s
+5 346 M
+(                exitThread = true;) s
+5 338 M
+(        }) s
+5 330 M
+(}) s
+_R
+S
+%%Trailer
+%%Pages: 3
+%%DocumentNeededResources: font Times-Roman Courier-Bold Courier 
+%%+ font Times-Bold 
+%%EOF

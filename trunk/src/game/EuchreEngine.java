@@ -383,17 +383,26 @@ public class EuchreEngine
 			currentPlayer().incrementScore(1);
 			cardDistributor.getPlayerOrder()[(currentPlayerIndex + 2) % 4].incrementScore(1);
 		}
-		else if(currentPlayer().getTricksWon() == 5)
+		else if(currentPlayer().getTricksWon() == 5 && !goingAlone)
 		{
 			Trace.dprint(currentPlayer().getUsername() + "'s team won 5 tricks.  They get 2 points.");
 			currentPlayer().incrementScore(2);
 			cardDistributor.getPlayerOrder()[(currentPlayerIndex + 2) % 4].incrementScore(2);
 		}
+		else if(currentPlayer().getTricksWon() == 5 && goingAlone)
+		{
+			Trace.dprint(currentPlayer().getUsername() + "'s team won 5 tricks and went alone.  They get 4 points.");
+			currentPlayer().incrementScore(4);
+			cardDistributor.getPlayerOrder()[(currentPlayerIndex + 2) % 4].incrementScore(4);
+		}
 
+		
+		
 		//Send scores to all the players
 		for(int i = 0; i < 4; i++)
 		{
 			currentPlayerIndex = (currentPlayerIndex + 1) % 4;
+			currentPlayer().resetTricksWon();
 			displayGameMessage(currentPlayer(), "---------------------");
 			displayGameMessage(currentPlayer(), "Your team's score: " + currentPlayer().getScore());
 			displayGameMessage(currentPlayer(), "Other team's score: " + cardDistributor.getPlayerOrder()[(currentPlayerIndex + 1) % 4].getScore());
