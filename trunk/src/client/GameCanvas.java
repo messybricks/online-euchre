@@ -889,8 +889,6 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 		{
 			if(e.getY() >= 215)
 			{
-				if(dealtCardLocked)
-				{
 					if(e.getY() >= PLAYER_CARD_Y)
 					{
 						if((e.getX() > c.getX()) && (e.getX() < c.getX() + 71))
@@ -907,7 +905,6 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 							}
 						}
 					}
-				}
 			}
 		}
 		
