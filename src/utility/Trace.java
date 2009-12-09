@@ -50,6 +50,6 @@ public class Trace
 	 */
 	public static void nprint(String format, Object... args)
 	{
-		dprint(format, args);
+		//dprint(format, args);
 	}
 }
