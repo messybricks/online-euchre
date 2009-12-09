@@ -124,7 +124,10 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 	 */
 	public void addCard(card c)
 	{
-		Cards.add(c);
+		if(c.getSuit() != ' ')
+		{
+			Cards.add(c);
+		}
 	}
 	
 	/**
@@ -137,20 +140,23 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 	 */
 	public void addCard(char theSuit, int val, int xPos, int yPos)
 	{
-		boolean init = false;
-		for(card c:Cards)
+		if(theSuit != ' ')
 		{
-			if(c.getSuit() == theSuit && c.getVal() == val)
+			boolean init = false;
+			for(card c:Cards)
 			{
-				init = true;
-				//Cards.remove(c);
-				c.setX(xPos);
-				c.setY(yPos);
+				if(c.getSuit() == theSuit && c.getVal() == val)
+				{
+					init = true;
+					//Cards.remove(c);
+					c.setX(xPos);
+					c.setY(yPos);
+				}
 			}
+		//	if(!Cards.contains(new card(theSuit, val, xPos, yPos, owner)))
+			if(!init)
+				Cards.add(new card(theSuit, val, xPos, yPos, owner));
 		}
-	//	if(!Cards.contains(new card(theSuit, val, xPos, yPos, owner)))
-		if(!init)
-			Cards.add(new card(theSuit, val, xPos, yPos, owner));
 		repaint();
 	}
 	
