@@ -80,7 +80,7 @@ public class Card implements Serializable
 	 */
 	public static Card nullCard() 
 	{
-		return new Card('d',0);
+		return new Card(' ',0);
 	}
 
 	/**
