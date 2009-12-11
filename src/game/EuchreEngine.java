@@ -385,7 +385,7 @@ public class EuchreEngine
 			cardDistributor.getPlayerOrder()[(currentPlayerIndex + 1) % 4].incrementScore(2);
 			cardDistributor.getPlayerOrder()[(currentPlayerIndex + 3) % 4].incrementScore(2);
 		}
-		else if(teamTricksWon == 3 || currentPlayer().getTricksWon() == 4)
+		else if(teamTricksWon == 3 || teamTricksWon == 4)
 		{
 			Trace.dprint(currentPlayer().getUsername() + "'s team won " + teamTricksWon + " tricks.  They get 1 point.");
 			currentPlayer().incrementScore(1);
