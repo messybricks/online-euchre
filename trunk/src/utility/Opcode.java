@@ -35,6 +35,7 @@ public enum Opcode
 	throwCard,
 	displayCard,
 	displayTrump,
+	SendScore,
 	//flipDownTrump, display card with a null card does the same thing
 	endGame;
 
