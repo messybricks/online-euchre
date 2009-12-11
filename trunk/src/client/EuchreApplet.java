@@ -445,7 +445,10 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 			for(User x : users)
 			{
 				JTextArea temp = new JTextArea(1,1);
-				temp.setText("  " + x.getUsername() + " 0");
+				int score = 0;
+				if(Score.get(x.getUsername()) != null)
+					score = Score.get(x.getUsername());
+				temp.setText("  " + x.getUsername() + "(" + score + ")");
 				temp.setEditable(false);
 				temp.addMouseListener(this);
 				temp.setBackground(Color.LIGHT_GRAY);
@@ -1169,6 +1172,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		String name = message.substring(0, index);
 		String score = message.substring(index + 1);
 		int scr = Integer.parseInt(score);
+		Score.put(name, scr);
 		addUserToWindow(users);
 	}
 }
