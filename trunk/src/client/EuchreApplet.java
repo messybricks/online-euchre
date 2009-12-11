@@ -333,7 +333,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 
 
 		//TODO: initialize size of the applet <REMOVE LATER>
-		setSize(695, 550);
+		setSize(707, 550);
 
 		//set the layout manager to BorderLayout
 		setLayout(new BorderLayout());
@@ -1011,8 +1011,8 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	{
 
 
-		setSize(701, 550);
-		setSize(700, 550);
+		setSize(708, 550);
+		setSize(707, 550);
 		Trace.dprint("Entering GUI setup");
 
 		gameCanvas.drawText(client.getUser().getUsername(), 85, 300);
