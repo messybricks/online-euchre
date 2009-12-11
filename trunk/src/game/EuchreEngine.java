@@ -374,6 +374,8 @@ public class EuchreEngine
 		//the number of tricks won by current player's team
 		int teamTricksWon = currentPlayer().getTricksWon() + cardDistributor.getPlayerOrder()[(currentPlayerIndex + 2) % 4].getTricksWon();
 		
+		Trace.dprint(">>>>>>> " + currentPlayer().getUsername() + "'s team has " + teamTricksWon + " points.");
+		
 		//if current player's team lost the round
 		if(teamTricksWon <= 2)
 		{
