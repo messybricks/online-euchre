@@ -411,8 +411,10 @@ public class NetClientThread extends NetworkThread
 	{
 		Trace.dprint("state is: %d",state);
 		//if(state ==-1)
+		{
 			euchreApplet.displayMessage("throw a card");
 			state = Throw_Card;
+		}
 	}
 	
 	/**
