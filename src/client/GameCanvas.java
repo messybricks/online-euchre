@@ -53,6 +53,7 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 	ArrayList<text> wordsVertical = new ArrayList<text>();
 	ArrayList<Image> button = new ArrayList<Image>();
 	ArrayList<Player> players = new ArrayList<Player>();
+	ArrayList<Integer> handSize = new ArrayList<Integer>();
 	boolean cardSelected = false;
 	card selectedCard = null;
 	int xCon = 0;
@@ -87,6 +88,10 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 	 */
 	public void setOwner(EuchreApplet apl)
 	{	
+		handSize.add(5);
+		handSize.add(5);
+		handSize.add(5);
+		
 		// Add valid locations for this players card.
 		validLocations.put(85, PLAYER_CARD_Y);
 		validLocations.put(164, PLAYER_CARD_Y);
@@ -505,23 +510,17 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 			{
 				URL tempURL = new URL(owner.getCodeBase(), "cards/b2fh.gif");
 				URL tempURL2 = new URL(owner.getCodeBase(), "cards/b2fv.gif");
-				g.drawImage(ImageIO.read(tempURL), -40, 110, null);
-				g.drawImage(ImageIO.read(tempURL), -40, 140, null);
-				g.drawImage(ImageIO.read(tempURL), -40, 170, null);
-				g.drawImage(ImageIO.read(tempURL), -40, 200, null);
-				g.drawImage(ImageIO.read(tempURL), -40, 230, null);
 
-				g.drawImage(ImageIO.read(tempURL), 500, 110, null);
-				g.drawImage(ImageIO.read(tempURL), 500, 140, null);
-				g.drawImage(ImageIO.read(tempURL), 500, 170, null);
-				g.drawImage(ImageIO.read(tempURL), 500, 200, null);
-				g.drawImage(ImageIO.read(tempURL), 500, 230, null);
+				for(int x = 110; x < (30 * handSize.get(0)) + 110; x += 30)
+				{
+					g.drawImage(ImageIO.read(tempURL), -40, x, null);
+				}	
 
-				g.drawImage(ImageIO.read(tempURL2), 85, -60, null);
-				g.drawImage(ImageIO.read(tempURL2), 164, -60, null);
-				g.drawImage(ImageIO.read(tempURL2), 244, -60, null);
-				g.drawImage(ImageIO.read(tempURL2), 322, -60, null);
-				g.drawImage(ImageIO.read(tempURL2), 401, -60, null);
+				for(int x = 85; x < (79 * handSize.get(1)) + 85; x += 79)
+					g.drawImage(ImageIO.read(tempURL2), x, -60, null);
+
+				for(int x = 110; x < (30 * handSize.get(2) + 110); x += 30)
+					g.drawImage(ImageIO.read(tempURL), 500, x, null);
 
 			}
 			catch (MalformedURLException e) 
@@ -1176,6 +1175,33 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 				}
 			}
 		}
+		else
+		{
+			Player p2, p3;
+			int size = player2.getCardCount();
+			int current = player.getPID() % 4 + 1;
+			if(current == player2.getPID())
+			{
+				handSize.set(0, size);
+			}
+			else
+			{
+				current = current % 4 + 1;
+				if(current == player2.getPID())
+				{
+					handSize.set(1, size);
+				}
+				else
+				{
+					current = current % 4 + 1;
+					if(current == player2.getPID())
+					{
+						handSize.set(2, size);
+					}
+				}
+			}
+		}
+		repaint();
 	}
 
 	/**
