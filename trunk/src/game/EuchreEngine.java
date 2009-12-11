@@ -371,28 +371,31 @@ public class EuchreEngine
 
 		Trace.dprint(currentPlayer().getUsername() + "'s team named trump.");
 		
+		//the number of tricks won by current player's team
+		int teamTricksWon = currentPlayer().getTricksWon() + cardDistributor.getPlayerOrder()[(currentPlayerIndex + 2) % 4].getTricksWon();
+		
 		//if current player's team lost the round
-		if(currentPlayer().getTricksWon() <= 2)
+		if(teamTricksWon <= 2)
 		{
-			Trace.dprint(currentPlayer().getUsername() + "'s team won " + currentPlayer().getTricksWon() + " tricks, so the other team gets 2 points");
+			Trace.dprint(currentPlayer().getUsername() + "'s team won " + teamTricksWon + " tricks, so the other team gets 2 points");
 			
 			//other team gets two points
 			cardDistributor.getPlayerOrder()[(currentPlayerIndex + 1) % 4].incrementScore(2);
 			cardDistributor.getPlayerOrder()[(currentPlayerIndex + 3) % 4].incrementScore(2);
 		}
-		else if(currentPlayer().getTricksWon() == 3 || currentPlayer().getTricksWon() == 4)
+		else if(teamTricksWon == 3 || currentPlayer().getTricksWon() == 4)
 		{
-			Trace.dprint(currentPlayer().getUsername() + "'s team won " + currentPlayer().getTricksWon() + " tricks.  They get 1 point.");
+			Trace.dprint(currentPlayer().getUsername() + "'s team won " + teamTricksWon + " tricks.  They get 1 point.");
 			currentPlayer().incrementScore(1);
 			cardDistributor.getPlayerOrder()[(currentPlayerIndex + 2) % 4].incrementScore(1);
 		}
-		else if(currentPlayer().getTricksWon() == 5 && !goingAlone)
+		else if(teamTricksWon == 5 && !goingAlone)
 		{
 			Trace.dprint(currentPlayer().getUsername() + "'s team won 5 tricks.  They get 2 points.");
 			currentPlayer().incrementScore(2);
 			cardDistributor.getPlayerOrder()[(currentPlayerIndex + 2) % 4].incrementScore(2);
 		}
-		else if(currentPlayer().getTricksWon() == 5 && goingAlone)
+		else if(teamTricksWon == 5 && goingAlone)
 		{
 			Trace.dprint(currentPlayer().getUsername() + "'s team won 5 tricks and went alone.  They get 4 points.");
 			currentPlayer().incrementScore(4);
@@ -408,10 +411,18 @@ public class EuchreEngine
 			displayGameMessage(currentPlayer(), "You won " + currentPlayer().getTricksWon() + " tricks.");
 			currentPlayer().resetTricksWon();
 			displayGameMessage(currentPlayer(), "---------------------");
-			displayGameMessage(currentPlayer(), "Your team's score: " + currentPlayer().getScore());
-			displayGameMessage(currentPlayer(), "Other team's score: " + cardDistributor.getPlayerOrder()[(currentPlayerIndex + 1) % 4].getScore());
+			for(int j = 0; j < 4; j++)
+				displayGameMessage(currentPlayer(), "" + cardDistributor.getPlayerOrder()[j].getUsername() + "'s points: " + cardDistributor.getPlayerOrder()[i].getScore());
 			displayGameMessage(currentPlayer(), "---------------------");
 		}
+		
+		//CHEAT CODE: user name G0D wins the game after the first round.
+		for(int i = 0; i < 4; i++)
+		{
+			if(cardDistributor.getPlayerOrder()[i].getUsername().equals("G0D"))
+				cardDistributor.getPlayerOrder()[i].incrementScore(10);
+		}
+		
 		//determine if someone has won the game
 		if(currentPlayer().getScore() >= 10)
 		{
