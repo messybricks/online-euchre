@@ -58,7 +58,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	public boolean signal=false;
 
 	// this list contains the players currently playing
-	private ArrayList<Player> playerList;
+	private ArrayList<Player> playerList = new ArrayList<Player>(4);
 	private ArrayList<Player> otherTeam = new ArrayList<Player>();
 	Player p1, p2, p3;
 
@@ -77,8 +77,6 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 
 		//set up the applet
 		setUpApplet();
-
-		playerList = new ArrayList<Player>(4);
 	}
 
 	public void loadCards()
