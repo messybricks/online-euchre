@@ -388,7 +388,12 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		inputText.setText("Enter your messages here");
 		inputTextDeleted = false;
 		//inputText.select(0, inputText.getText().length());
-		this.doLayout();
+		
+		if(users != null)
+			addUserToWindow(users);
+		
+		//this.doLayout();
+		validate();
 
 
 		/*  COMMENTED OUT BY MIKE - NOT NECESSARY
@@ -427,40 +432,43 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	public void addUserToWindow(ArrayList<User> newUsers)
 	{
 		users = newUsers;
-		userArea.removeAll();
-		userWindow.setText("Users currently in game:");
-		userArea.add(userWindow);
-		userNames = new ArrayList<JTextArea>();
-		//		for(int x = 0; x < userNames.size(); x++)
-		//		{
-		//			//userArea.remove(userNames.get(x));
-		//			userNames.remove(0);
-		//		}
-		for(User x : users)
+		if(userArea != null)
 		{
-			JTextArea temp = new JTextArea(1,1);
-			temp.setText("  " + x.getUsername());
-			temp.setEditable(false);
-			temp.addMouseListener(this);
-			temp.setBackground(Color.LIGHT_GRAY);
-			temp.setFocusable(false);
-			if(client.getUser() != null)
+			userArea.removeAll();
+			userWindow.setText("Users currently in game:");
+			userArea.add(userWindow);
+			userNames = new ArrayList<JTextArea>();
+			//		for(int x = 0; x < userNames.size(); x++)
+			//		{
+			//			//userArea.remove(userNames.get(x));
+			//			userNames.remove(0);
+			//		}
+			for(User x : users)
 			{
-				if(x.getUsername().compareTo(client.getUser().getUsername()) == 0)
+				JTextArea temp = new JTextArea(1,1);
+				temp.setText("  " + x.getUsername());
+				temp.setEditable(false);
+				temp.addMouseListener(this);
+				temp.setBackground(Color.LIGHT_GRAY);
+				temp.setFocusable(false);
+				if(client.getUser() != null)
 				{
-					//gameCanvas.drawText(x.getUsername(), 85, 40, this);
-					temp.setToolTipText("This is me!");
+					if(x.getUsername().compareTo(client.getUser().getUsername()) == 0)
+					{
+						//gameCanvas.drawText(x.getUsername(), 85, 40, this);
+						temp.setToolTipText("This is me!");
+					}
 				}
+				userNames.add(temp);
+				userArea.add(userNames.get(userNames.lastIndexOf(temp)));
+				//userWindow.append("\n" + x.getUsername());
 			}
-			userNames.add(temp);
-			userArea.add(userNames.get(userNames.lastIndexOf(temp)));
-			//userWindow.append("\n" + x.getUsername());
+			userArea.add(Box.createRigidArea(new Dimension(5,500)));
+			//userArea.setSize(0, 0);
+			userArea.add(Box.createRigidArea(new Dimension(5,500)));
+			userArea.doLayout();
+			doLayout();
 		}
-		userArea.add(Box.createRigidArea(new Dimension(5,500)));
-		//userArea.setSize(0, 0);
-		userArea.add(Box.createRigidArea(new Dimension(5,500)));
-		userArea.doLayout();
-		doLayout();
 
 	}
 
