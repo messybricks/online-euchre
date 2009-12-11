@@ -903,7 +903,6 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 	@Override
 	public void mousePressed(MouseEvent e) 
 	{
-
 		for(card c: Cards)
 		{
 			if(e.getY() >= 215)
@@ -915,18 +914,20 @@ public class GameCanvas extends Canvas implements MouseMotionListener, MouseList
 						if((e.getY() > c.getY()) && (e.getY() < c.getY() + 96))
 						{
 							//					TODO: implement gameCanvas.clear()
-							xCon = e.getX() - c.getX();
-							yCon = e.getY() - c.getY();
-							cardSelected = true;
-							selectedCard = c;
-							origX = c.getX();
-							origY = c.getY();
+							if(c.getSuit() != ' ')
+							{
+								xCon = e.getX() - c.getX();
+								yCon = e.getY() - c.getY();
+								cardSelected = true;
+								selectedCard = c;
+								origX = c.getX();
+								origY = c.getY();
+							}
 						}
 					}
 				}
 			}
 		}
-
 	}
 
 	@Override
