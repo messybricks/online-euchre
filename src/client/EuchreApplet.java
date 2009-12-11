@@ -60,6 +60,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	// this list contains the players currently playing
 	private ArrayList<Player> playerList = new ArrayList<Player>(4);
 	private ArrayList<Player> otherTeam = new ArrayList<Player>();
+	private HashMap<String, Integer> Score = new HashMap<String, Integer>();
 	Player p1, p2, p3;
 
 
@@ -444,7 +445,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 			for(User x : users)
 			{
 				JTextArea temp = new JTextArea(1,1);
-				temp.setText("  " + x.getUsername());
+				temp.setText("  " + x.getUsername() + " 0");
 				temp.setEditable(false);
 				temp.addMouseListener(this);
 				temp.setBackground(Color.LIGHT_GRAY);
@@ -1160,5 +1161,14 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	public void setTrump(char t)
 	{
 		gameCanvas.setSuit(t);
+	}
+
+	public void setScore(String message) 
+	{
+		int index = message.indexOf(' ');
+		String name = message.substring(0, index);
+		String score = message.substring(index + 1);
+		int scr = Integer.parseInt(score);
+		addUserToWindow(users);
 	}
 }

@@ -101,6 +101,8 @@ public class NetClientThread extends NetworkThread
 				onDisplayTrump(packet);
 			else if(packet.getOpcode() == Opcode.endGame)
 				onEndGame(packet);
+			else if(packet.getOpcode() == Opcode.SendScore)
+				onSendScore(packet);
 			else
 				Trace.dprint("Received packet with unimplemented opcode '%s' - ignoring.", packet.getOpcode().toString());
 		}
@@ -430,6 +432,17 @@ public class NetClientThread extends NetworkThread
 	private void onDisplayTrump(Packet packet)
 	{
 		euchreApplet.setTrump((Character)packet.getData());
+	}
+	
+	/**
+	 * Processes a SendScore packet.
+	 * 
+	 * @param packet Packet to process
+	 */
+	private void onSendScore(Packet packet)
+	{
+		ChatObject score = (ChatObject)packet.getData();
+		euchreApplet.setScore(score.getMessage());
 	}
 	
 	/***
