@@ -20,7 +20,7 @@ public class EuchreServer
 	// default port to listen for connections on if no specific port is given at command line
 	public static final int DEFAULT_PORT = 36212;
 	// waits this many milliseconds to ensure the clients receive this server's Quit packet upon disposal
-	public static final int QUIT_SLEEP_MS = 200;
+	public static final int QUIT_SLEEP_MS = 1000;
 
 	private static ServerSocketThread thread=null;
 
