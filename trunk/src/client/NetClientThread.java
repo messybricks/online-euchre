@@ -410,7 +410,7 @@ public class NetClientThread extends NetworkThread
 	private void onThrowCard(Packet packet)
 	{
 		Trace.dprint("state is: %d",state);
-		//if(state ==-1)
+		if(state ==-1)
 		{
 			euchreApplet.displayMessage("throw a card");
 			state = Throw_Card;
