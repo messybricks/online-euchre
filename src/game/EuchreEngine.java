@@ -211,25 +211,33 @@ public class EuchreEngine
 	 */
 	private void throwCard()
 	{
-		//if someone still needs to throw a card
-		if(state < FOURTH_PLAYER_THROWS_CARD)
-		{
-			state++;
-			if(state == FIRST_PLAYER_THROWS_CARD)
-				leadingPlayerIndex = currentPlayerIndex;
-			Trace.dprint("new state: player " + (state - FIRST_PLAYER_THROWS_CARD) + " throws card");
-			Trace.dprint("current player index: " + currentPlayerIndex);
-			
-			//if this player's partner is going alone, skip them
-			if(currentPlayerIndex == notPlaying)
-				receiveCard(Card.nullCard());
+		if(!(state < FIRST_PLAYER_THROWS_CARD-1)){
+			//if someone still needs to throw a card
+			if(state < FOURTH_PLAYER_THROWS_CARD)
+			{
+				state++;
+				if(state == FIRST_PLAYER_THROWS_CARD)
+					leadingPlayerIndex = currentPlayerIndex;
+				Trace.dprint("new state: player " + (state - FIRST_PLAYER_THROWS_CARD) + " throws card");
+				Trace.dprint("current player index: " + currentPlayerIndex);
 
-			//ask current player to choose and throw a card
-			currentPlayer().sendOpcode(Opcode.throwCard);
+				//if this player's partner is going alone, skip them
+				if(currentPlayerIndex == notPlaying)
+					receiveCard(Card.nullCard());
+
+				//ask current player to choose and throw a card
+				currentPlayer().sendOpcode(Opcode.throwCard);
+			}
+			else //if the last player has thrown a card
+			{
+				endOfTrick(winnerOfTrick());
+			}
 		}
-		else //if the last player has thrown a card
+		else
 		{
-			endOfTrick(winnerOfTrick());
+			Trace.dprint("state machine error, should not be in throw card");
+			bid(currentPlayer());
+			
 		}
 	}
 
@@ -271,7 +279,7 @@ public class EuchreEngine
 		int numberOfCards = trick.length;		
 		if(goingAlone)
 			numberOfCards--;
-		
+
 		//set the suit of the left jack
 		char leftSuit = 'c';		
 		if(trump == 'c')
@@ -280,7 +288,7 @@ public class EuchreEngine
 			leftSuit = 'd';
 		else if(trump == 'd')
 			leftSuit = 'h';
-		
+
 		int winningCardIndex = leadingPlayerIndex;		//initial index of "winning card" defaults to the leading card
 
 		//for each card in the trick
@@ -296,14 +304,14 @@ public class EuchreEngine
 			//else if this card is the same suit as the current winning card and has a higher value
 			else if(trick[i].getSuit() == trick[winningCardIndex].getSuit() && trick[i].getValue() > trick[winningCardIndex].getValue())
 				winningCardIndex = i;
-			
+
 			//if this card is the right Jack
 			if(trick[i].getSuit() == trump && trick[i].getValue() == 11)
 			{
 				winningCardIndex = i;
 				break;
 			}
-			
+
 			//if this card is the left Jack
 			if(trick[i].getSuit() == leftSuit && trick[i].getValue() == 11)
 				winningCardIndex = i;
@@ -315,8 +323,8 @@ public class EuchreEngine
 
 		//set the current player to the winner of the trick
 		currentPlayerIndex = winningCardIndex;
-		
-		
+
+
 		return currentPlayer();
 	}
 
@@ -348,7 +356,7 @@ public class EuchreEngine
 		{
 			state = GOING_ALONE; // not actually asking if going alone, but throwCard requires the machine to start in this state to work properly.
 			trick = new Card[4];
-			
+
 			//currentPlayerIndex = (currentPlayerIndex + 1) % 4;	
 			throwCard();
 		}
@@ -364,23 +372,23 @@ public class EuchreEngine
 	{ 
 		state = END_OF_ROUND;
 		Trace.dprint("new state: " + state);
-			
+
 		//change current player to one of the players on the team that named trump
 		if(currentPlayer().getPID() % 2 != teamThatNamedTrump)
 			currentPlayerIndex = (currentPlayerIndex + 1) % 4;
 
 		Trace.dprint(currentPlayer().getUsername() + "'s team named trump.");
-		
+
 		//the number of tricks won by current player's team
 		int teamTricksWon = currentPlayer().getTricksWon() + cardDistributor.getPlayerOrder()[(currentPlayerIndex + 2) % 4].getTricksWon();
-		
+
 		Trace.dprint(">>>>>>> " + currentPlayer().getUsername() + "'s team has " + teamTricksWon + " points.");
-		
+
 		//if current player's team lost the round
 		if(teamTricksWon <= 2)
 		{
 			Trace.dprint(currentPlayer().getUsername() + "'s team won " + teamTricksWon + " tricks, so the other team gets 2 points");
-			
+
 			//other team gets two points
 			cardDistributor.getPlayerOrder()[(currentPlayerIndex + 1) % 4].incrementScore(2);
 			cardDistributor.getPlayerOrder()[(currentPlayerIndex + 3) % 4].incrementScore(2);
@@ -404,8 +412,8 @@ public class EuchreEngine
 			cardDistributor.getPlayerOrder()[(currentPlayerIndex + 2) % 4].incrementScore(4);
 		}
 
-		
-		
+
+
 		//Send scores to all the players
 		for(int i = 0; i < 4; i++)
 		{
@@ -417,14 +425,14 @@ public class EuchreEngine
 				displayGameMessage(currentPlayer(), "" + cardDistributor.getPlayerOrder()[j].getUsername() + "'s points: " + cardDistributor.getPlayerOrder()[j].getScore());
 			displayGameMessage(currentPlayer(), "---------------------");
 		}
-		
+
 		//CHEAT CODE: user name G0D wins the game after the first round.
 		for(int i = 0; i < 4; i++)
 		{
 			if(cardDistributor.getPlayerOrder()[i].getUsername().equals("G0D"))
 				cardDistributor.getPlayerOrder()[i].incrementScore(10);
 		}
-		
+
 		//determine if someone has won the game
 		if(currentPlayer().getScore() >= 10)
 		{
@@ -460,7 +468,7 @@ public class EuchreEngine
 			player.sendData(Opcode.SendMessage, new ChatObject(null, null, message));
 		}
 	}
-	
+
 	/**
 	 * sends an opcode to each player indicating true if their team won, false otherwise
 	 * 
