@@ -412,7 +412,7 @@ public class EuchreEngine
 			currentPlayer().resetTricksWon();
 			displayGameMessage(currentPlayer(), "---------------------");
 			for(int j = 0; j < 4; j++)
-				displayGameMessage(currentPlayer(), "" + cardDistributor.getPlayerOrder()[j].getUsername() + "'s points: " + cardDistributor.getPlayerOrder()[i].getScore());
+				displayGameMessage(currentPlayer(), "" + cardDistributor.getPlayerOrder()[j].getUsername() + "'s points: " + cardDistributor.getPlayerOrder()[j].getScore());
 			displayGameMessage(currentPlayer(), "---------------------");
 		}
 		
