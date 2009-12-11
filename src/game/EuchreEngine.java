@@ -422,7 +422,10 @@ public class EuchreEngine
 			currentPlayer().resetTricksWon();
 			displayGameMessage(currentPlayer(), "---------------------");
 			for(int j = 0; j < 4; j++)
+			{
 				displayGameMessage(currentPlayer(), "" + cardDistributor.getPlayerOrder()[j].getUsername() + "'s points: " + cardDistributor.getPlayerOrder()[j].getScore());
+				displayGameScore(currentPlayer(), "" + cardDistributor.getPlayerOrder()[j].getUsername() + " " + cardDistributor.getPlayerOrder()[j].getScore());
+			}
 			displayGameMessage(currentPlayer(), "---------------------");
 		}
 
@@ -467,6 +470,17 @@ public class EuchreEngine
 		{
 			player.sendData(Opcode.SendMessage, new ChatObject(null, null, message));
 		}
+	}
+	
+	/**
+	 * Displays a terminal message in the chat window of the given player (or to all players if player is null) 
+	 * 
+	 * @param player the player to which the message will be sent (null = all players)
+	 * @param message the message to be sent
+	 */
+	private void displayGameScore(Player player, String message)
+	{
+		player.sendData(Opcode.SendScore, new ChatObject(null, null, message));
 	}
 
 	/**
