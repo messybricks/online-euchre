@@ -211,35 +211,29 @@ public class EuchreEngine
 	 */
 	private void throwCard()
 	{
-		if(!(state < FIRST_PLAYER_THROWS_CARD-1)){
-			//if someone still needs to throw a card
-			if(state < FOURTH_PLAYER_THROWS_CARD)
-			{
-				state++;
-				if(state == FIRST_PLAYER_THROWS_CARD)
-					leadingPlayerIndex = currentPlayerIndex;
-				Trace.dprint("new state: player " + (state - FIRST_PLAYER_THROWS_CARD) + " throws card");
-				Trace.dprint("current player index: " + currentPlayerIndex);
 
-				//if this player's partner is going alone, skip them
-				if(currentPlayerIndex == notPlaying)
-					receiveCard(Card.nullCard());
-
-				//ask current player to choose and throw a card
-				currentPlayer().sendOpcode(Opcode.throwCard);
-			}
-			else //if the last player has thrown a card
-			{
-				endOfTrick(winnerOfTrick());
-			}
-		}
-		else
+		//if someone still needs to throw a card
+		if(state < FOURTH_PLAYER_THROWS_CARD)
 		{
-			Trace.dprint("state machine error, should not be in throw card");
-			bid(currentPlayer());
-			
+			state++;
+			if(state == FIRST_PLAYER_THROWS_CARD)
+				leadingPlayerIndex = currentPlayerIndex;
+			Trace.dprint("new state: player " + (state - FIRST_PLAYER_THROWS_CARD) + " throws card");
+			Trace.dprint("current player index: " + currentPlayerIndex);
+
+			//if this player's partner is going alone, skip them
+			if(currentPlayerIndex == notPlaying)
+				receiveCard(Card.nullCard());
+
+			//ask current player to choose and throw a card
+			currentPlayer().sendOpcode(Opcode.throwCard);
+		}
+		else //if the last player has thrown a card
+		{
+			endOfTrick(winnerOfTrick());
 		}
 	}
+
 
 	/**
 	 * receives the card that was thrown by the current player
@@ -471,7 +465,7 @@ public class EuchreEngine
 			player.sendData(Opcode.SendMessage, new ChatObject(null, null, message));
 		}
 	}
-	
+
 	/**
 	 * Displays a terminal message in the chat window of the given player (or to all players if player is null) 
 	 * 
