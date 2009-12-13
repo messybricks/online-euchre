@@ -79,6 +79,12 @@ public class EuchreEngine
 
 		//deal this hand
 		cardDistributor.dealRound();
+		
+		// try out sending null card nonsense to clear the screen from having stupid ass repeated cards after going alone
+		for(int i = 0; i<4; i++)
+			cardDistributor.getPlayerOrder()[i].sendData(Opcode.displayCard, new CardWrapper(Card.nullCard(), cardDistributor.getPlayerOrder()[CardDistributor.DEALER].getPID(),false));
+		
+		// show trump stuff
 		trumpCard = cardDistributor.flipTrump();
 		displayCard(trumpCard,cardDistributor.getPlayerOrder()[CardDistributor.DEALER].getPID(),false);
 
