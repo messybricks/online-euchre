@@ -192,13 +192,15 @@ public class EuchreEngine
 	public void setGoingAlone(boolean alone)
 	{
 		goingAlone = alone;
-		currentPlayerIndex = CardDistributor.LEFT;
-		throwCard();
-
+		
+		//set the person who isn't playing
 		if(alone)
 			notPlaying = (currentPlayerIndex + 2) % 4;
 		else
-			notPlaying = -1;
+			notPlaying = -1;		
+		
+		currentPlayerIndex = CardDistributor.LEFT;
+		throwCard();
 
 		trick = new Card[4];
 	}
@@ -271,8 +273,8 @@ public class EuchreEngine
 	{
 		//set the number of cards in this trick
 		int numberOfCards = trick.length;		
-		if(goingAlone)
-			numberOfCards--;
+		//if(goingAlone)
+			//numberOfCards--;
 
 		//set the suit of the left jack
 		char leftSuit = 'c';		
