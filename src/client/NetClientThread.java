@@ -17,7 +17,7 @@ public class NetClientThread extends NetworkThread
 {
 	private User associate;
 	private EuchreApplet euchreApplet;
-	private int state;
+	private int state = -1;
 	private String suit;
 	
 
@@ -410,7 +410,7 @@ public class NetClientThread extends NetworkThread
 	private void onThrowCard(Packet packet)
 	{
 		Trace.dprint("state is: %d",state);
-		//if(state ==-1)
+		if(state ==-1)
 		{
 			euchreApplet.displayMessage("throw a card");
 			state = Throw_Card;
@@ -494,6 +494,10 @@ public class NetClientThread extends NetworkThread
 			case Throw_Card:
 				if(response ==1)
 					state=-1;
+				break;
+			default:
+				state = -1;
+				Trace.dprint("defaulted through switch statement on client respond; set state to -1");
 				break;
 		}
 	}

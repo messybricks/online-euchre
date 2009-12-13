@@ -209,9 +209,8 @@ public class EuchreEngine
 			notPlaying = -1;		
 		
 		currentPlayerIndex = CardDistributor.LEFT;
-		throwCard();
-
 		trick = new Card[4];
+		throwCard();
 	}
 
 
