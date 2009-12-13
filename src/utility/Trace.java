@@ -31,12 +31,20 @@ public class Trace
 
 		for(int i = 0; i < length - 1; ++i)
 		{
-			string.append(Array.get(array, i).toString());
+			if(Array.get(array, i) == null)
+				string.append("<null>");
+			else
+				string.append(Array.get(array, i).toString());
 			string.append(", ");
 		}
 
 		if(length > 0)
-			string.append(Array.get(array, length - 1));
+		{
+			if(Array.get(array, length - 1) == null)
+				string.append("<null>");
+			else
+				string.append(Array.get(array, length - 1).toString());
+		}
 
 		string.append(']');
 		dprint(string.toString());
