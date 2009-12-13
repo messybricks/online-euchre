@@ -82,6 +82,9 @@ public class EuchreEngine
 		trumpCard = cardDistributor.flipTrump();
 		displayCard(trumpCard,cardDistributor.getPlayerOrder()[CardDistributor.DEALER].getPID(),false);
 
+		// dprint hands
+		for(int i = 0; i < 4; ++i)
+			Trace.dprintArray(cardDistributor.getPlayerOrder()[i].getCards());
 
 		//player to the left of the dealer bids
 		currentPlayerIndex = CardDistributor.LEFT;
