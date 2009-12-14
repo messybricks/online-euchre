@@ -83,10 +83,10 @@ public class CardDistributorTest extends TestCase {
 		dealer.nextRound();
 		
 		//check if players are rotated properly
-		assertTrue(dealer.getPlayerOrder()[0]==four);
-		assertTrue(dealer.getPlayerOrder()[1]==one);
-		assertTrue(dealer.getPlayerOrder()[2]==two);
-		assertTrue(dealer.getPlayerOrder()[3]==three);
+		assertTrue(dealer.getPlayerOrder()[0]==two);
+		assertTrue(dealer.getPlayerOrder()[1]==three);
+		assertTrue(dealer.getPlayerOrder()[2]==four);
+		assertTrue(dealer.getPlayerOrder()[3]==one);
 		
 	}
 

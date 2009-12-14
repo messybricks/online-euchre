@@ -36,9 +36,9 @@ public class CardTest extends TestCase {
 		assertTrue(c3.getSuit() == 'h');
 		assertTrue(c4.getSuit() == 's');
 		assertTrue(c5.getSuit() == 'd');
-		assertTrue(c6.getSuit() == 'd');
+		assertTrue(c6.getSuit() == ' ');
 		assertTrue(c7.getSuit() == 's');
-		assertTrue(c8.getSuit() == 'd');
+		assertTrue(c8.getSuit() == ' ');
 		
 		//test the test for null card.
 		assertTrue(Card.ifNull(c8));
