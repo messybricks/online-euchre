@@ -309,7 +309,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 		ignoreList = new ArrayList<String>();
 
 		//initialize fields for applet.
-		messageWindow = new JTextArea(5,0);
+		messageWindow = new JTextArea(8,0);
 		userWindow = new JTextArea(0,1);         
 		inputText = new JTextField(38);
 		submit = new JButton("Submit");
@@ -332,7 +332,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 
 
 		//TODO: initialize size of the applet <REMOVE LATER>
-		setSize(707, 550);
+		setSize(707, 595);
 
 		//set the layout manager to BorderLayout
 		setLayout(new BorderLayout());
@@ -448,7 +448,7 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 				int score = 0;
 				if(Score.get(x.getUsername()) != null)
 					score = Score.get(x.getUsername());
-				temp.setText("  " + x.getUsername() + "(" + score + ")");
+				temp.setText("  " + x.getUsername() + " (" + score + ")");
 				temp.setEditable(false);
 				temp.addMouseListener(this);
 				temp.setBackground(Color.LIGHT_GRAY);
@@ -1021,8 +1021,8 @@ public class EuchreApplet extends JApplet implements ActionListener, KeyListener
 	{
 
 
-		setSize(708, 550);
-		setSize(707, 550);
+		setSize(708, 595);
+		setSize(707, 595);
 		Trace.dprint("Entering GUI setup");
 
 		gameCanvas.drawText(client.getUser().getUsername(), 85, 300);
